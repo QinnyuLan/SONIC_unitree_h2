@@ -62,6 +62,7 @@ Bibliographic metadata is also available in [`CITATION.cff`](CITATION.cff) and [
 - [ECHO-G](https://github.com/NJU-SOARLAB/ECHO-G): speech-conditioned G1 gesture generation.
 - [MuJoCo](https://github.com/google-deepmind/mujoco): physics simulation and visualization.
 - [Unitree SDK2](https://github.com/unitreerobotics/unitree_sdk2): robot DDS communication.
+- [DFX Inspire Service](https://github.com/unitreerobotics/dfx_inspire_service): Inspire hand DDS service and serial protocol implementation.
 - [XRoboToolkit](https://github.com/XR-Robotics/XRoboToolkit-PC-Service): PICO VR device and head-and-hand tracking interfaces.
 
 See [upstream dependencies and references](docs/ACKNOWLEDGMENTS.md) for the full dependency list.

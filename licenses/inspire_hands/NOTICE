@@ -5,6 +5,8 @@ regression tests were imported from the local dfx_inspire_service project,
 an H2 adaptation of the Unitree DFX Inspire hand service. That source tree
 had no Git revision metadata. Its BSD 3-Clause license is preserved here.
 
+Upstream: https://github.com/unitreerobotics/dfx_inspire_service
+
 Original files:
   example_h2_native485.cpp
   example/hand_example.cpp

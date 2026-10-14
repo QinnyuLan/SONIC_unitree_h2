@@ -62,6 +62,7 @@ python3 tools/validation/verify_release.py
 - [ECHO-G](https://github.com/NJU-SOARLAB/ECHO-G)：语音驱动的 G1 手势生成。
 - [MuJoCo](https://github.com/google-deepmind/mujoco)：物理仿真与可视化。
 - [Unitree SDK2](https://github.com/unitreerobotics/unitree_sdk2)：机器人 DDS 通信。
+- [DFX Inspire Service](https://github.com/unitreerobotics/dfx_inspire_service)：Inspire 灵巧手 DDS 服务与串口协议实现。
 - [XRoboToolkit](https://github.com/XR-Robotics/XRoboToolkit-PC-Service)：PICO VR 设备与三点跟踪接口。
 
 完整依赖与来源见[上游依赖与参考工作](docs/ACKNOWLEDGMENTS.md)。
