@@ -51,7 +51,7 @@ Terminal 3 — choose a G1 motion clip:
 
 ```bash
 .venv_sim/bin/python -m interface.replay \
-  motions/example_g1_input/walking_quip_360_R_002__A428
+  motions/example_g1_replay/walking_quip_360_R_002__A428
 ```
 
 Replay finishes by releasing the body channel. The runtime returns to standing. `Ctrl+C` in a producer releases its channel; `Ctrl+C` in the runtime ends control with damping.
@@ -62,16 +62,16 @@ Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files, including 
 
 | Directory under `motions/` | Type | Clips |
 |---|---|---:|
-| `example_g1_input` | G1 basic | 13 |
-| `example_g1_explore_input` | G1 exploration | 7 |
-| `example_h2_input` | Native H2 | 8 |
-| `example_smpl_input` | SMPL | 8 |
+| `example_g1_replay` | G1 basic | 13 |
+| `example_g1_explore_replay` | G1 exploration | 7 |
+| `example_h2_replay` | Native H2 | 8 |
+| `example_smpl_replay` | SMPL | 8 |
 
 ```bash
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_h2_input/walking_quip_360_R_002__A428 --inspect
+  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_smpl_input/walking_quip_360_R_002__A428
+  motions/example_smpl_replay/walking_quip_360_R_002__A428
 .venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
 ```
 

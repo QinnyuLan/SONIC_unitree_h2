@@ -19,7 +19,7 @@ From the repository root:
 ```bash
 ./install.sh inputs
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_g1_input/walking_quip_360_R_002__A428 --inspect
+  motions/example_g1_replay/walking_quip_360_R_002__A428 --inspect
 ```
 
 Install the planner or teleoperation extras with `./install.sh planner` or `./install.sh teleop`. Start the policy runtime before sending commands; see [deployment](../../docs/DEPLOYMENT.md) and [message definitions](../../docs/ARCHITECTURE.md).

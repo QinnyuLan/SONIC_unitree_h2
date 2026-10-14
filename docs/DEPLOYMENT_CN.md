@@ -51,7 +51,7 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 ```bash
 .venv_sim/bin/python -m interface.replay \
-  motions/example_g1_input/walking_quip_360_R_002__A428
+  motions/example_g1_replay/walking_quip_360_R_002__A428
 ```
 
 动作结束或发送端退出后回到站立。发送端的 `Ctrl+C` 释放其指令通道；runtime 的 `Ctrl+C` 结束控制并发送阻尼指令。
@@ -62,16 +62,16 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 | `motions/` 下的目录 | 输入类型 | 数量 |
 |---|---|---:|
-| `example_g1_input` | G1 基础动作 | 13 |
-| `example_g1_explore_input` | G1 探索动作 | 7 |
-| `example_h2_input` | H2 原生动作 | 8 |
-| `example_smpl_input` | SMPL 动作 | 8 |
+| `example_g1_replay` | G1 基础动作 | 13 |
+| `example_g1_explore_replay` | G1 探索动作 | 7 |
+| `example_h2_replay` | H2 原生动作 | 8 |
+| `example_smpl_replay` | SMPL 动作 | 8 |
 
 ```bash
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_h2_input/walking_quip_360_R_002__A428 --inspect
+  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_smpl_input/walking_quip_360_R_002__A428
+  motions/example_smpl_replay/walking_quip_360_R_002__A428
 .venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
 ```
 

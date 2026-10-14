@@ -9,8 +9,8 @@ from interface.commands.protocol import envelope
 from interface.replay import Motion, SmplMotion
 
 ROOT = Path(__file__).resolve().parents[3]
-COLLECTIONS = {"example_g1_input": ("g1", 13), "example_g1_explore_input": ("g1", 7),
-               "example_h2_input": ("h2", 8), "example_smpl_input": ("smpl", 8)}
+COLLECTIONS = {"example_g1_replay": ("g1", 13), "example_g1_explore_replay": ("g1", 7),
+               "example_h2_replay": ("h2", 8), "example_smpl_replay": ("smpl", 8)}
 
 
 def csv(path):
@@ -63,7 +63,7 @@ def test_h2_native_joint_mapping_excludes_head_and_scales_velocity(tmp_path):
 
 
 def test_smpl_csv_uses_smpl_root_and_semantic_wrists():
-    clip = ROOT / "motions/example_smpl_input/forward_lunge_R_001__A359_M"
+    clip = ROOT / "motions/example_smpl_replay/forward_lunge_R_001__A359_M"
     m = Motion.load(clip)
     sample = m.sample(.4, 2)
     frames = 20 + np.arange(10) * 2  # 20 ms playback horizon, doubled source speed.
@@ -89,7 +89,7 @@ def test_smpl_npz_roundtrip_and_invalid_frame_counts(tmp_path):
 
 
 def test_conflicting_explicit_type_cannot_reinterpret_release_data():
-    clip = ROOT / "motions/example_h2_input/squat_001__A359"
+    clip = ROOT / "motions/example_h2_replay/squat_001__A359"
     with pytest.raises(ValueError, match="conflicting"):
         Motion.load(clip, reference_type="g1")
 
@@ -121,7 +121,7 @@ def test_csv_fps_metadata_override_and_zero_rejected(tmp_path):
 
 def test_collection_root_and_corrupt_first_csv_row_are_rejected(tmp_path):
     with pytest.raises(ValueError, match="one clip directory"):
-        Motion.load(ROOT / "motions/example_h2_input")
+        Motion.load(ROOT / "motions/example_h2_replay")
     (tmp_path / "joint_pos.csv").write_text(
         "bad," + ",".join(["0"] * 28) + "\n" + (",".join(["0"] * 29) + "\n") * 3)
     np.savetxt(tmp_path / "body_quat.csv", np.tile([1, 0, 0, 0], (3, 1)), delimiter=",")
@@ -129,7 +129,7 @@ def test_collection_root_and_corrupt_first_csv_row_are_rejected(tmp_path):
         Motion.load(tmp_path)
 
 
-@pytest.mark.parametrize("kind,collection", [("g1", "example_g1_input"), ("h2", "example_h2_input"), ("smpl", "example_smpl_input")])
+@pytest.mark.parametrize("kind,collection", [("g1", "example_g1_replay"), ("h2", "example_h2_replay"), ("smpl", "example_smpl_replay")])
 def test_cli_sends_detected_type_and_inspect_never_connects(monkeypatch, kind, collection):
     import interface.replay as replay
     clip = ROOT / "motions" / collection / "squat_001__A359"

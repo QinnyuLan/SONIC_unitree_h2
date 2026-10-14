@@ -4,10 +4,10 @@ These 36 clips are inputs to the independent Python motion replay process. The p
 
 | Directory | Input type | Clips | Encoder selector |
 |---|---|---:|---:|
-| `example_g1_input/` | Native G1 basic demos | 13 | 3 |
-| `example_g1_explore_input/` | Native G1 exploration demos | 7 | 3 |
-| `example_h2_input/` | Native H2 basic demos | 8 | 0 |
-| `example_smpl_input/` | SMPL demos | 8 | 2 |
+| `example_g1_replay/` | Native G1 basic demos | 13 | 3 |
+| `example_g1_explore_replay/` | Native G1 exploration demos | 7 | 3 |
+| `example_h2_replay/` | Native H2 basic demos | 8 | 0 |
+| `example_smpl_replay/` | SMPL demos | 8 | 2 |
 
 The exploration set includes kneeling, crawling and jumping. Clips with the same name in different collections contain different reference representations. Each collection's `manifest.json` records input type, frame rate, frame count, source collection and file SHA256 hashes. Motion data was copied from the corresponding `SONIC-H2/gear_sonic_deploy/reference/` collections; original clip metadata is retained as provenance. The extreme H2 collection is not included.
 
@@ -18,15 +18,15 @@ From the repository root, pass one clip directory:
 ```bash
 # Inspect without connecting to the runtime.
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_g1_input/walking_quip_360_R_002__A428 --inspect
+  motions/example_g1_replay/walking_quip_360_R_002__A428 --inspect
 
 # Send a native H2 trajectory to the running policy runtime.
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_h2_input/walking_quip_360_R_002__A428
+  motions/example_h2_replay/walking_quip_360_R_002__A428
 
 # Send the corresponding SMPL reference.
 .venv_inputs/bin/python -m interface.replay \
-  motions/example_smpl_input/walking_quip_360_R_002__A428
+  motions/example_smpl_replay/walking_quip_360_R_002__A428
 ```
 
 Replay detects the type from `manifest.json` and clip metadata. For external clips without declarations, it uses distinctive file names. Mixed H2/SMPL files without a declaration require `--type h2` or `--type smpl`; an explicit type must agree with existing metadata. The original SONIC manifest name is also supported when reading external clips.
