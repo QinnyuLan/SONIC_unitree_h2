@@ -4,7 +4,6 @@ The external Python sources are unmodified Git submodules pinned to these commit
 
 | Path | Upstream | Commit |
 |---|---|---|
-| `echo_g/` | [ECHO-G](https://github.com/NJU-SOARLAB/ECHO-G) | [`60b85fb`](https://github.com/NJU-SOARLAB/ECHO-G/commit/60b85fb932b124b1a2ddd0868f4917a73c383901) |
 | `unitree_sdk2_python/` | [Unitree Python SDK](https://github.com/unitreerobotics/unitree_sdk2_python) | [`892693e`](https://github.com/unitreerobotics/unitree_sdk2_python/commit/892693efe035ae3db7a62ed429ebd0bc15f88ca7) |
 | `xrobotoolkit_pybind/` | [XRoboToolkit Python binding](https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind) | [`c64ccf6`](https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind/commit/c64ccf6acd577a333e03b66fafe8efeeceb511b1) |
 
@@ -20,7 +19,7 @@ For an existing checkout:
 git submodule update --init --recursive
 ```
 
-`./install.sh sim2sim`, `./install.sh teleop` and `./install.sh text2motion` also initialize their required submodule. They use the commit recorded by the parent repository; they do not follow the upstream branch tip.
+`./install.sh sim2sim` and `./install.sh teleop` also initialize their required submodule. They use the commit recorded by the parent repository; they do not follow the upstream branch tip.
 
 ## Local integration
 
@@ -28,7 +27,7 @@ The simulator's `OdoState_` extension lives in [`src/sim/odometry.py`](../src/si
 
 The XRoboToolkit source, setup code, binding and common headers match the pinned upstream commit. The additional native SDK libraries and ARM64 headers are retained under [`xrobotoolkit_sdk/`](xrobotoolkit_sdk/README.md). During teleoperation installation, `tools/prepare_xrobotoolkit.py` verifies their checksums and prepares a copy of the binding sources plus the platform's SDK in `build/third_party/xrobotoolkit_pybind/`. Compilation and Python installation use that generated directory, leaving the source submodule untouched.
 
-ECHO-G is installed only by the optional `text2motion` profile. The integration calls its official condition extraction and PyTorch inference functions; it does not install benchmark or visualization extras. Model files are downloaded separately into the ignored `models/text2motion_echo_g/` directory. See [text-to-motion setup](../docs/TEXT2MOTION.md).
+ECHO-G generation uses a minimal local inference implementation under `src/interface/text2motion/`, with separately downloaded weights. Its source and weight notices are retained in [licenses/echo_g/](../licenses/echo_g/README.md); it is not a source submodule. See [text-to-motion setup](../docs/TEXT2MOTION.md).
 
 The C++ runtime's Unitree SDK remains under `src/runtime/third_party/`; it is managed with the native runtime. The SDK libraries and robot assets retain their original licenses; see the [license index](../licenses/README.md).
 

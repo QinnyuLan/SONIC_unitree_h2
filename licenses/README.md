@@ -12,9 +12,9 @@ This directory collects the notices distributed with SONIC and the imported robo
 
 The SONIC notices describe the upstream distribution; the deployment dependencies used here are listed in [Acknowledgments](../docs/ACKNOWLEDGMENTS.md).
 
-Dependencies retain the license files shipped with their source trees:
+Dependency license files and notices are retained at:
 
-- ECHO-G: [source license](../third_party/echo_g/LICENSE) (PolyForm Noncommercial), [data/weight terms](../third_party/echo_g/LICENSE-DATA-WEIGHTS) (CC BY-NC 4.0), and [notice](../third_party/echo_g/NOTICE). These terms apply to the upstream component and its weights; the optional weights are downloaded separately.
+- ECHO-G: [source license](echo_g/LICENSE) (PolyForm Noncommercial), [data/weight terms](echo_g/LICENSE-DATA-WEIGHTS) (CC BY-NC 4.0), and [notice](echo_g/NOTICE). The adapted model and feature code retain their upstream terms; see [source provenance](echo_g/README.md). Optional weights are downloaded separately.
 - [Unitree C++ SDK](../src/runtime/third_party/unitree_sdk2/LICENSE).
 - [Unitree Python SDK](../third_party/unitree_sdk2_python/LICENSE).
 - [XRoboToolkit Python binding](../third_party/xrobotoolkit_pybind/LICENSE).

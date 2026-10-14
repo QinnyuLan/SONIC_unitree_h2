@@ -15,7 +15,6 @@ from interface.paths import ROOT
 from interface.playback import ReplayBundle, sha256, wav_duration
 from interface.replay import Motion
 
-SOURCE = ROOT / "third_party/echo_g"
 SOURCE_REVISION = "60b85fb932b124b1a2ddd0868f4917a73c383901"
 MODELS = ROOT / "models/text2motion_echo_g"
 CHECKPOINT_SHA256 = "c84f31fce140cdc8c3be5e5dbc8cb8eb3a82ce1865e2d84026a0791d4735928d"
@@ -25,19 +24,10 @@ CANONICAL_TO_POLICY = [0, 6, 12, 1, 7, 13, 2, 8, 14, 3, 9, 15, 22, 4, 10,
                        16, 23, 5, 11, 17, 24, 18, 25, 19, 26, 20, 27, 21, 28]
 
 
-def verify_source():
-    if not (SOURCE / "pyproject.toml").is_file():
-        raise ValueError("ECHO-G source is missing; run ./install.sh text2motion")
-    revision = subprocess.check_output(["git", "-C", str(SOURCE), "rev-parse", "HEAD"], text=True).strip()
-    if revision != SOURCE_REVISION:
-        raise ValueError("ECHO-G source revision differs from the supported release")
-
-
 def download_models(directory=MODELS, *, checkpoint_only=False, verify_only=False):
     """Fetch pinned runtime files only; no training data or exported ONNX model."""
-    verify_source()
     directory = Path(directory)
-    manifest = json.loads((SOURCE / "manifests/condition_encoders.json").read_text())
+    manifest = json.loads((MODELS / "encoders.json").read_text())
     jobs = [(directory / "best.pt", CHECKPOINT_SHA256,
              "https://huggingface.co/gaopusen/ECHO-G/resolve/v0.2.0/best.pt")]
     if not checkpoint_only:
@@ -120,17 +110,12 @@ async def synthesize(text, output, language, voice=None):
 
 
 def generate(args):
-    verify_source()
     import torch
-    import echo_g
-    from transformers.utils import logging as transformers_logging
-    from echo_g.conditions import (load_manifest, extract_audio_conditions, extract_text_conditions,
-                                   merge_conditions, validate_word_duration)
-    from echo_g.inference import export_predictions
-    if Path(echo_g.__file__).resolve().parent != (SOURCE / "src/echo_g").resolve():
-        raise ValueError("Installed ECHO-G points to another checkout; rerun ./install.sh text2motion")
+    from interface.text2motion.echo_features import load_manifest, extract_features
+    from interface.text2motion.echo_model import predict
     torch.set_num_threads(args.threads)
-    transformers_logging.disable_progress_bar()
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise ValueError("CUDA requires a CUDA-enabled PyTorch environment")
     checkpoint = args.models / "best.pt"
     if not checkpoint.is_file() or sha256(checkpoint) != CHECKPOINT_SHA256:
         raise ValueError("ECHO-G checkpoint missing or mismatched; run the download command")
@@ -146,35 +131,19 @@ def generate(args):
     else:
         manifest = None
     if manifest:
-        utterances = load_manifest(manifest)
-        if len(utterances) != 1:
-            raise ValueError("Generate one utterance per bundle")
-        utterance = utterances[0]
-        audio = utterance.audio_path
-        if audio is None:
-            raise ValueError("Manifest must name the WAV used for feature extraction")
-        seconds = wav_duration(audio)
-        if seconds > 20:
-            raise ValueError("Split speech into utterances of at most 20 seconds")
-        validate_word_duration(utterance, seconds)
-        if audio.resolve() != (output / "speech.wav").resolve():
-            shutil.copyfile(audio, output / "speech.wav")
-        # Rebase external manifests so the complete generation record is portable.
-        manifest_record = {"stem": utterance.stem, "audio_path": "speech.wav",
-                           "transcript": utterance.transcript, "words": list(utterance.words)}
-        (output / "utterance.jsonl").write_text(json.dumps(manifest_record, ensure_ascii=False) + "\n")
-        utterances = load_manifest(output / "utterance.jsonl")
-        condition_dir = output / "generation/conditions"
-        audio_model = args.models / "wav2vec2-large-xlsr-53-english"
-        text_model = args.models / "Qwen3.5-4B"
-        if not audio_model.is_dir() or not text_model.is_dir():
-            raise ValueError("Feature encoders missing; run the download command")
+        utterance = load_manifest(manifest)
+        if utterance["audio_path"].resolve() != (output / "speech.wav").resolve():
+            shutil.copyfile(utterance["audio_path"], output / "speech.wav")
+        record = {**utterance, "audio_path": "speech.wav"}
+        (output / "utterance.jsonl").write_text(json.dumps(record, ensure_ascii=False) + "\n")
+        utterance["audio_path"] = output / "speech.wav"
         print("Extracting speech and word-aligned text features...", flush=True)
-        extract_audio_conditions(utterances, condition_dir / ".audio", str(audio_model.resolve()), 30, args.device, False, False)
-        extract_text_conditions(utterances, condition_dir / ".text", str(text_model.resolve()), -2, 256, args.device, False, False)
-        merge_conditions(utterances, condition_dir / ".audio", condition_dir / ".text", condition_dir, False)
-        condition = condition_dir / f"{utterance.stem}.pt"
-        transcript = utterance.transcript
+        condition_data = extract_features(utterance, args.models, args.device)
+        condition_dir = output / "generation/conditions"
+        condition_dir.mkdir(parents=True)
+        condition = condition_dir / f"{utterance['stem']}.pt"
+        torch.save(condition_data, condition)
+        transcript = utterance["transcript"]
     else:
         if args.audio is None:
             raise ValueError("--conditions requires the matching --audio WAV")
@@ -190,17 +159,17 @@ def generate(args):
     condition_data = torch.load(condition, map_location="cpu", weights_only=True)
     if condition_data.get("source_audio_sha256") != sha256(output / "speech.wav"):
         raise ValueError("Condition features are not bound to the supplied WAV")
-    # The upstream dataset validates feature dimensions, token times and provenance.
-    print("Generating G1 gesture with the official PyTorch EMA model...", flush=True)
-    export_predictions(checkpoint_path=checkpoint, config_path=SOURCE / "configs/sgdit_audio_text.yaml",
-                       data_root=None, condition_dir=condition_dir, output_dir=output / "generation/predictions",
-                       device_name=args.device, seeds=[args.seed], steps=8, guidance_scale=1.,
-                       batch_size=1, num_workers=0)
+    if condition_data["stem"] != condition.stem:
+        raise ValueError("Condition filename must match its recorded utterance stem")
+    print("Generating G1 gesture from the ECHO-G EMA checkpoint...", flush=True)
+    physical = predict(checkpoint, condition_data, seed=args.seed, device=args.device)
     prediction = output / "generation/predictions" / f"seed_{args.seed:03d}" / f"{condition.stem}.pt"
-    payload = torch.load(prediction, map_location="cpu", weights_only=True)
-    if payload.get("representation_units") != "physical":
-        raise ValueError("ECHO-G output is not denormalized physical motion")
-    reference = convert_motion(payload["robot_repr"].numpy(), float(payload["fps"]))
+    prediction.parent.mkdir(parents=True)
+    torch.save({"robot_repr": physical, "representation_units": "physical", "fps": 30.,
+                "stem": condition.stem, "seed": args.seed, "integration_steps": 8,
+                "guidance_scale": 1., "source_checkpoint_sha256": CHECKPOINT_SHA256,
+                "source_condition_sha256": sha256(condition)}, prediction)
+    reference = convert_motion(physical.numpy())
     np.savez(output / "motion.npz", **reference)
     motion = Motion.load(output / "motion.npz")
     if abs(len(motion.times) / motion.fps - seconds) > .05:

@@ -14,8 +14,7 @@ dependencies = ["numpy==1.26.4", "scipy==1.15.3"]
 inputs = ["pyzmq==27.1.0"]
 planner = ["pyzmq==27.1.0", "cuda-bindings==12.9.4"]
 text2motion = [
-    "pyzmq==27.1.0", "torch==2.12.1", "PyYAML==6.0.3",
-    "transformers==5.2.0", "librosa==0.11.0", "soundfile==0.13.1",
+    "pyzmq==27.1.0", "torch==2.12.1", "transformers==5.2.0",
     "edge-tts==7.3.1",
 ]
 sim = [

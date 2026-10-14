@@ -44,3 +44,4 @@ xrobotoolkit_sdk.cpython-*-*-*.so
 # Optional offline speech/gesture generator and feature encoders.
 /models/text2motion_echo_g/*
 !/models/text2motion_echo_g/README.md
+!/models/text2motion_echo_g/encoders.json

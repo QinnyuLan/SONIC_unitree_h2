@@ -33,7 +33,7 @@ flowchart LR
 | Component | Language | Model execution |
 |---|---|---|
 | Replay, planner requests, teleoperation, head/hands | Python | None |
-| Offline ECHO-G generation | Python | Optional upstream PyTorch, separate environment |
+| Offline ECHO-G generation | Python | Local PyTorch inference, separate environment |
 | G1 planner service | Python | TensorRT Python API + CUDA bindings |
 | H2 policy runtime | C++ | TensorRT C++ API + CUDA graphs |
 

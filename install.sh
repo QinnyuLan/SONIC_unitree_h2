@@ -41,9 +41,6 @@ elif [[ "$ENV_KIND" == teleop ]]; then
   "$ENV_DIR/bin/python" "$ROOT/tools/prepare_xrobotoolkit.py"
   uv pip install --python "$ENV_DIR/bin/python" 'cmake>=3.14,<4' 'pybind11==3.0.4' 'setuptools<82' wheel
   uv pip install --python "$ENV_DIR/bin/python" --no-build-isolation -e "$ROOT/build/third_party/xrobotoolkit_pybind"
-elif [[ "$ENV_KIND" == text2motion ]]; then
-  git -C "$ROOT" submodule update --init -- third_party/echo_g
-  uv pip install --python "$ENV_DIR/bin/python" --no-deps -e "$ROOT/third_party/echo_g"
 fi
 uv pip check --python "$ENV_DIR/bin/python"
 echo "Installed $ENV_KIND in $ENV_DIR"

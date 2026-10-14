@@ -88,7 +88,7 @@ Simulation and teleoperation installations, dependency checks, preflights and al
 
 ## Offline ECHO-G speech/gesture validation
 
-On 2026-10-15, the optional `.venv_text2motion` was installed from its lock file with CPU PyTorch 2.12.1, Transformers 5.2.0, and the official ECHO-G submodule at `60b85fb932b124b1a2ddd0868f4917a73c383901`. Dependency checks passed, and all 15 local model files matched their pinned SHA256 values.
+The initial integration on 2026-10-15 used CPU PyTorch 2.12.1, Transformers 5.2.0, and the official ECHO-G implementation at `60b85fb932b124b1a2ddd0868f4917a73c383901` as a reference. The current implementation loads the same weights using local model and feature code; the upstream package and submodule have been removed. Dependency checks passed, and all 15 local model files matched their pinned SHA256 values.
 
 Fresh Chinese and English text each completed Edge TTS with word timestamps, CPU audio/text feature extraction, and official EMA motion inference (eight Euler steps, guidance scale 1, seed 0). The Chinese example has 163 motion frames at 50 Hz and 3.264 seconds of speech; the English example has 177 frames and 3.528 seconds of speech. The three-file bundles are included under `motions/example_text2motion_replay/`. Cached-condition generation also passed. Generation commands are documented in [text-to-motion](TEXT2MOTION.md).
 
@@ -101,6 +101,17 @@ The following check starts a mock voice service on loopback DDS and a private IP
 ```
 
 Normal playback delivered 112896 PCM bytes in eight chunks, identical to the English WAV, after the first G1 command. A second run interrupted playback and verified that only the matching audio stream stopped and the body channel was released to `stand`. Both cases passed. The check writes its report and subprocess logs under `outputs/validation/`; choose an unused loopback DDS domain with `--domain` if needed.
+
+The inference implementation was then reduced to the three local `echo_*.py` modules. The ECHO-G submodule/package, training YAML configuration, librosa, soundfile and their unused dependencies were removed. A synchronized environment contains 50 pinned dependencies plus this project (test tools are separate). No upstream source checkout is required to download models or generate motion.
+
+On CPU with four PyTorch threads, both Chinese and English recordings were processed again from their WAVs and word-timestamp manifests. Audio features, text tokens, token times, pooled text and all exported motion arrays matched the original implementation bit for bit. EMA inference also matched for seed 7. The comparison reports are `outputs/validation/echo_minimal_model.json` and `echo_minimal_pipeline.json`. Cached-condition generation and the 15-file model check passed without the upstream package installed.
+
+The 62 command/interface regressions and 11 additional inference-input tests passed. Run the latter in the optional generation environment:
+
+```bash
+uv pip install --python .venv_text2motion/bin/python -r requirements/test.txt
+.venv_text2motion/bin/python -m pytest tests/interface/text2motion -q
+```
 
 These tests do not establish H2 firmware compatibility, speaker latency, motion quality, or closed-loop tracking. No GPU generation, robot motion or physical speaker playback was performed for this integration.
 

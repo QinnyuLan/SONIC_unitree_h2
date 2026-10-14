@@ -4,11 +4,11 @@
 
 ECHO-G 作为本工程“先生成、后回放”的 text2motion 范例：输入机器人**要说的话**，生成对应语音和伴随手势，再用统一的 motion replay 展示。它不负责理解“向前走两步”等动作规划指令。
 
-生成端是独立 Python 进程，调用固定版本的官方 PyTorch 实现，只输出文件，不启动机器人或播放声音。replay 将生成动作作为 G1 稀疏 10 帧发送给 H2 runtime；policy 和 planner 仍使用 TensorRT。
+生成端是独立 Python 进程，使用本地精简的 PyTorch 推理代码直接加载权重，只输出文件，不启动机器人或播放声音。replay 将生成动作作为 G1 稀疏 10 帧发送给 H2 runtime；policy 和 planner 仍使用 TensorRT。
 
 ## 直接展示已有示例
 
-仓库提供中英文两组短示例，无需安装 ECHO-G 或下载生成模型：
+仓库提供中英文两组短示例，无需安装生成环境或下载生成模型：
 
 ```bash
 ./install.sh inputs
@@ -38,7 +38,7 @@ sudo apt install curl ffmpeg alsa-utils
 .venv_text2motion/bin/python -m interface.text2motion.echo_g download
 ```
 
-生成环境为 `.venv_text2motion`，与 replay、planner、仿真和遥操作环境独立。安装器使用固定依赖和 CPU 版 PyTorch，并初始化固定版本的官方 ECHO-G submodule。模型下载到 `models/text2motion_echo_g/`，约 11 GB，包括 ECHO-G checkpoint、Qwen3.5-4B 和 wav2vec2。下载会校验全部 15 个运行文件的 SHA256；权重不提交 Git。
+生成环境为 `.venv_text2motion`，与 replay、planner、仿真和遥操作环境独立。安装器使用固定依赖和 CPU 版 PyTorch，不安装 ECHO-G 包或拉取其源码仓库。模型下载到 `models/text2motion_echo_g/`，约 11 GB，包括 ECHO-G checkpoint、Qwen3.5-4B 和 wav2vec2。下载会校验全部 15 个运行文件的 SHA256；权重不提交 Git。
 
 ```bash
 .venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
@@ -54,6 +54,16 @@ sudo apt install curl ffmpeg alsa-utils
 ```
 
 也可使用 `--text-file` 读取 UTF-8 文件。默认中文声音为 `zh-CN-XiaoxiaoNeural`，英文为 `en-US-JennyNeural`，可用 `--voice` 覆盖。每句话使用新的空输出目录，`--seed` 默认为 0。生成采用官方 EMA 模型、8 步 Euler、guidance scale 1；不引入 ECHO-G ONNX 导出或 ONNX Runtime。
+
+推理代码集中在 `src/interface/text2motion/` 的三个文件：
+
+| 文件 | 职责 |
+|---|---|
+| `echo_g.py` | 下载、语音合成、生成入口和 G1 回放导出 |
+| `echo_features.py` | WAV 读取、Qwen/wav2vec2 特征与词时间对齐 |
+| `echo_model.py` | audio+text 网络定义、EMA 权重加载与 8 步 Euler 推理 |
+
+权重保存参数和模型配置，因此保留匹配的网络定义；不包含训练、评估、数据集或其他模型分支。WAV 使用标准库读取，移除了 librosa、soundfile 及其附带依赖。
 
 默认使用 CPU。准备了兼容 CUDA 版 PyTorch 的独立环境后可选 `--device cuda`；本工程默认安装的 CPU 环境不能直接启用 CUDA。
 
@@ -73,7 +83,7 @@ sudo apt install curl ffmpeg alsa-utils
   --output outputs/text2motion/existing_speech
 ```
 
-模型下载完成后，此入口不需要 TTS 网络服务。特征提取直接复用官方流程，保留文本层选择、词时间对齐和来源校验。不要将字数均分作为词时间戳。
+模型下载完成后，此入口不需要 TTS 网络服务。精简后的特征提取保留发布模型要求的文本层选择、词时间对齐、FP16 存储边界和来源校验。不要将字数均分作为词时间戳。
 
 也支持已生成的官方条件文件：
 
@@ -124,4 +134,4 @@ replay 先等待播放器 READY，确认动作连接可以发送，再按回放�
 
 编译后可用 `.venv_sim/bin/python tools/check_audio_replay.py` 复现 loopback 模拟验证，包括正常播放和中断清理；不会启动 policy、连接实机或播放声音。
 
-中英文新文本已完成 CPU 全流程验证；仓库内示例已通过最小 replay 环境检查。上游版本、文件格式及许可链接见[英文说明](TEXT2MOTION.md)和[许可索引](../licenses/README.md)。
+中英文示例已完成 CPU 全流程验证。移除上游包后重新提取特征并生成动作，与原实现的特征张量和最终动作数组逐元素完全一致；额外的 seed 7 采样也完全一致。仓库内示例已通过最小 replay 环境检查。上游版本、文件格式及许可链接见[英文说明](TEXT2MOTION.md)和[许可索引](../licenses/README.md)。

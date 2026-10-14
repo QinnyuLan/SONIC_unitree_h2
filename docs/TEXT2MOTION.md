@@ -12,11 +12,11 @@ text → speech + word timestamps → ECHO-G → G1 motion + matching WAV
                                   H2 policy runtime + audio player
 ```
 
-Generation is a separate Python process using the pinned upstream PyTorch implementation. It never starts the policy, publishes robot commands or plays sound. Replay uses the same ten-frame G1 interface as other offline motions. Policy and planner inference continue to use TensorRT.
+Generation is a separate Python process using a small PyTorch inference implementation under `src/interface/text2motion/`. It loads the released weights directly. It never starts the policy, publishes robot commands or plays sound. Replay uses the same ten-frame G1 interface as other offline motions. Policy and planner inference continue to use TensorRT.
 
 ## Replay the included examples
 
-The Chinese and English examples under `motions/example_text2motion_replay/` contain the generated motion, its matching WAV and a `replay.json` manifest. They can be replayed without installing ECHO-G or downloading its models.
+The Chinese and English examples under `motions/example_text2motion_replay/` contain the generated motion, its matching WAV and a `replay.json` manifest. They can be replayed without installing the generation environment or downloading its models.
 
 ```bash
 ./install.sh inputs
@@ -46,7 +46,15 @@ sudo apt install curl ffmpeg alsa-utils
 .venv_text2motion/bin/python -m interface.text2motion.echo_g download
 ```
 
-The installer creates `.venv_text2motion`, installs the pinned CPU PyTorch environment, and initializes the unmodified ECHO-G submodule at commit `60b85fb932b124b1a2ddd0868f4917a73c383901`. It does not install benchmark or visualization extras. This profile is independent of the runtime, planner, simulator and replay environments.
+The installer creates `.venv_text2motion` with the pinned CPU PyTorch environment. Generation uses three local modules:
+
+| Module | Purpose |
+|---|---|
+| `echo_g.py` | Download, TTS, generation entry point and G1 replay export |
+| `echo_features.py` | WAV input and word-aligned Qwen/wav2vec2 features |
+| `echo_model.py` | Audio+text network, EMA weight loading and eight-step Euler inference |
+
+The checkpoint contains parameters and architecture metadata, so the matching network definition is included locally. The ECHO-G package, source submodule, training pipeline and dataset are not required. WAV decoding uses the standard library; librosa and soundfile are not dependencies. This profile is independent of the runtime, planner, simulator and replay environments.
 
 The download command fetches the audio+text EMA checkpoint and the pinned Qwen3.5-4B / wav2vec2 feature encoders into `models/text2motion_echo_g/`, approximately 11 GB in total. It verifies SHA256 for all 15 runtime files. Model files are ignored by Git. Use `download --verify-only` to check local files, or `download --checkpoint-only` when supplying existing conditions. See [model details](../models/text2motion_echo_g/README.md).
 
@@ -83,7 +91,7 @@ To use existing speech, provide a JSONL file containing one utterance with timin
   --output outputs/text2motion/existing_speech
 ```
 
-The WAV must be 16 kHz mono PCM16. With model files already downloaded, this path works without the TTS service. Text and audio feature extraction call the official upstream functions, retaining the required layer, time alignment, FP16 feature-storage boundary and provenance checks. Do not estimate timestamps by dividing words evenly.
+The WAV must be 16 kHz mono PCM16. With model files already downloaded, this path works without the TTS service. Text and audio feature extraction preserve the released encoder layers, time alignment, FP16 feature-storage boundary and provenance checks. Do not estimate timestamps by dividing words evenly.
 
 For previously generated upstream conditions:
 
@@ -135,9 +143,9 @@ The public SDK names its voice client `g1`; this adapter uses that PCM service. 
 
 ## Validation and upstream
 
-New Chinese and English text both completed TTS, CPU feature extraction and official PyTorch generation. The included bundles pass the minimal replay environment's loading and checksum checks. CPU tests cover joint order, rotation convention, resampling, audio binding, portable bundle paths and player startup/cleanup. A loopback mock Unitree voice service checks the exact PCM payload, normal completion and interrupted playback without a physical device. Reproduce it with `.venv_sim/bin/python tools/check_audio_replay.py` after the native build; see [validation records](REPRODUCIBILITY.md#offline-echo-g-speechgesture-validation). No closed-loop policy tracking or hardware playback was performed for these examples.
+Chinese and English examples completed TTS, CPU feature extraction and motion generation. After removing the upstream package, the local implementation reproduced both examples: all extracted feature tensors and final motion arrays were bitwise equal to the reference implementation. A third sampling check with seed 7 also matched exactly. The included bundles pass the minimal replay environment's loading and checksum checks. CPU tests cover joint order, rotation convention, resampling, audio binding, portable bundle paths and player startup/cleanup. A loopback mock Unitree voice service checks the exact PCM payload, normal completion and interrupted playback without a physical device. Reproduce it with `.venv_sim/bin/python tools/check_audio_replay.py` after the native build; see [validation records](REPRODUCIBILITY.md#offline-echo-g-speechgesture-validation). No closed-loop policy tracking or hardware playback was performed for these examples.
 
 - [ECHO-G source](https://github.com/NJU-SOARLAB/ECHO-G/tree/60b85fb932b124b1a2ddd0868f4917a73c383901)
-- [Official inference format](../third_party/echo_g/docs/INFERENCE.md)
+- [Official inference format](https://github.com/NJU-SOARLAB/ECHO-G/blob/60b85fb932b124b1a2ddd0868f4917a73c383901/docs/INFERENCE.md)
 - [Official model weights](https://huggingface.co/gaopusen/ECHO-G/tree/v0.2.0)
 - [Upstream license and notices](../licenses/README.md)

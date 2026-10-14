@@ -33,7 +33,7 @@ src/
 | `scripts/` | Environment setup, native build and process launchers |
 | `tests/` | Python interface and simulator regression tests |
 | `src/runtime/tests/` | C++ regression tests and fixtures |
-| `third_party/` | Pinned Unitree/XRoboToolkit/ECHO-G source submodules and native XR SDK artifacts |
+| `third_party/` | Pinned Unitree/XRoboToolkit source submodules and native XR SDK artifacts |
 | `build/runtime/` | Generated native binaries and CMake files |
 | `requirements/` | Dependency locks for each Python environment |
 | `tools/` | Offline checks and integration validation |

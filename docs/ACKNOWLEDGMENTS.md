@@ -14,8 +14,8 @@ The project citation is provided in [references.bib](references.bib) and [CITATI
 | Project | Use in this repository | Source |
 |---|---|---|
 | SONIC / GR00T Whole-Body Control | Controller architecture, motion interfaces, C++ deployment, and the shared G1 planner | [Repository](https://github.com/NVlabs/GR00T-WholeBodyControl) |
-| ECHO-G | Official PyTorch speech-conditioned G1 gesture inference and feature extraction | [Repository](https://github.com/NJU-SOARLAB/ECHO-G) · [Models](https://huggingface.co/gaopusen/ECHO-G) |
-| Qwen3.5-4B and wav2vec2 XLSR-53 English | ECHO-G text and audio feature encoders, pinned by its upstream manifest | [Qwen](https://huggingface.co/Qwen/Qwen3.5-4B) · [wav2vec2](https://huggingface.co/jonatasgrosman/wav2vec2-large-xlsr-53-english) |
+| ECHO-G | Released weights and the model/feature definitions adapted for minimal local inference | [Repository](https://github.com/NJU-SOARLAB/ECHO-G) · [Models](https://huggingface.co/gaopusen/ECHO-G) |
+| Qwen3.5-4B and wav2vec2 XLSR-53 English | ECHO-G text and audio feature encoders, pinned by the [encoder manifest](../models/text2motion_echo_g/encoders.json) | [Qwen](https://huggingface.co/Qwen/Qwen3.5-4B) · [wav2vec2](https://huggingface.co/jonatasgrosman/wav2vec2-large-xlsr-53-english) |
 | edge-tts | Optional speech synthesis with word timestamps | [Repository](https://github.com/rany2/edge-tts) |
 | MuJoCo | H2 physics simulation and visualization | [Repository](https://github.com/google-deepmind/mujoco) |
 | Unitree SDK2 and Python SDK | DDS communication with the robot and simulator | [C++ SDK](https://github.com/unitreerobotics/unitree_sdk2) · [Python SDK](https://github.com/unitreerobotics/unitree_sdk2_python) |
