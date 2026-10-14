@@ -5,6 +5,7 @@
 - [Native dependencies](NATIVE_SETUP.md): CUDA, TensorRT, Python planner bindings, and the C++ build.
 - [PICO setup](VR_SETUP.md): headset, trackers, XRoboToolkit, head and hand configuration.
 - [Planner download](PLANNER.md): pinned source, destination, and integrity checks.
+- [Offline text-to-motion](TEXT2MOTION.md) / [中文](TEXT2MOTION_CN.md): ECHO-G speech and G1 gestures, portable replay bundles, and Unitree speaker playback.
 - [Reference motion format](../motions/README.md).
 - [Released models](../models/sonic_h2_released/README.md) and [validation](REPRODUCIBILITY.md).
 - [Repository layout](LAYOUT.md).

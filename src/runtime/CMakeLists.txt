@@ -39,6 +39,10 @@ add_executable(sonic_h2_runtime src/main.cpp)
 target_link_libraries(sonic_h2_runtime PRIVATE
   sonic_runtime_headers sonic_tensorrt unitree_sdk2)
 
+# Standalone peripheral utility; neither the body runtime nor replay links it.
+add_executable(unitree_audio_player src/unitree_audio_player.cpp)
+target_link_libraries(unitree_audio_player PRIVATE unitree_sdk2)
+
 if(BUILD_TESTING)
   enable_testing()
   find_package(GTest REQUIRED)

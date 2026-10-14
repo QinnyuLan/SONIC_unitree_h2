@@ -5,7 +5,9 @@ These modules produce commands for the independent C++ policy runtime. Replay ac
 | Module | Purpose |
 |---|---|
 | `interface.commands` | Validated protocol and `RuntimeClient` |
-| `interface.replay` | Replay G1/H2/SMPL CSV/NPZ clips, including offline text-to-motion results |
+| `interface.replay` | Replay G1/H2/SMPL clips and motion/audio bundles |
+| `interface.playback` | Bundle validation and optional audio-player management |
+| `interface.text2motion.echo_g` | Download optional models and generate speech/G1 gestures offline |
 | `interface.planner.service` | TensorRT Python planner and trajectory publisher |
 | `interface.planner.client` | Locomotion requests |
 | `interface.teleop.pico` | PICO tracking, calibration and pose processing |
@@ -23,5 +25,7 @@ From the repository root:
 ```
 
 Install the planner or teleoperation extras with `./install.sh planner` or `./install.sh teleop`. Start the policy runtime before sending commands; see [deployment](../../docs/DEPLOYMENT.md) and [message definitions](../../docs/ARCHITECTURE.md).
+
+Install the optional offline ECHO-G generator with `./install.sh text2motion`; see [text-to-motion](../../docs/TEXT2MOTION.md). Its outputs replay in the minimal input environment without loading generation models.
 
 `kinematics/` and `math/` support pose processing. `paths.py` locates the checkout's shared assets and planner weight. The package has no dependency on the simulator implementation.

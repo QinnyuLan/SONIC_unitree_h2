@@ -6,7 +6,12 @@
 
 ```mermaid
 flowchart LR
-  R[Offline G1 / H2 / SMPL motion] --> M[Motion replay]
+  X[Speech text] --> G[Offline ECHO-G generator]
+  G --> R[Offline G1 / H2 / SMPL motion]
+  G --> A[Matching speech WAV]
+  R --> M[Motion replay]
+  A --> M
+  M --> S[Local or Unitree audio player]
   J[Locomotion requests] --> P[G1 planner]
   M -->|typed 10-frame references| B[H2 policy runtime]
   P -->|10 sparse G1 frames| B
@@ -28,10 +33,13 @@ flowchart LR
 | Component | Language | Model execution |
 |---|---|---|
 | Replay, planner requests, teleoperation, head/hands | Python | None |
+| Offline ECHO-G generation | Python | Optional upstream PyTorch, separate environment |
 | G1 planner service | Python | TensorRT Python API + CUDA bindings |
 | H2 policy runtime | C++ | TensorRT C++ API + CUDA graphs |
 
-Deployment uses TensorRT exclusively. The release manifest binds recorded model interfaces and metadata to ONNX SHA256 hashes; the runtime verifies those hashes before loading models. TensorRT checks the actual tensor interfaces. ONNX Runtime is used only by the optional offline model-comparison tool.
+Policy and planner inference use TensorRT. The release manifest binds recorded model interfaces and metadata to ONNX SHA256 hashes; the runtime verifies those hashes before loading models. TensorRT checks the actual tensor interfaces. ONNX Runtime is used only by the optional offline model-comparison tool.
+
+Offline speech/gesture generation lives in `src/interface/text2motion/`. It writes a portable motion/audio bundle and does not connect to the runtime. `interface.replay` validates that bundle and schedules body commands and a separate audio player. ECHO-G models and PyTorch dependencies are needed only for generation; see [text-to-motion](TEXT2MOTION.md).
 
 Python and C++ use the same engine-cache format and FP32 build policy (TensorRT's default TF32 allowance, no FP16). Cache compatibility includes model SHA256, GPU name, precision and TensorRT version. A missing or incompatible cache is rebuilt on the local GPU.
 

@@ -7,13 +7,14 @@ case "$ENV_KIND" in
   inputs) ENV_DIR="$ROOT/.venv_inputs"; EXTRA=inputs ;;
   sim2sim) ENV_DIR="$ROOT/.venv_sim"; EXTRA=sim ;;
   teleop) ENV_DIR="$ROOT/.venv_teleop"; EXTRA=teleop ;;
-  *) echo "Usage: $0 {inputs|planner|sim2sim|teleop}" >&2; exit 2 ;;
+  text2motion) ENV_DIR="$ROOT/.venv_text2motion"; EXTRA=text2motion ;;
+  *) echo "Usage: $0 {inputs|planner|sim2sim|teleop|text2motion}" >&2; exit 2 ;;
 esac
 command -v uv >/dev/null || { echo "Install uv: https://docs.astral.sh/uv/getting-started/installation/" >&2; exit 1; }
 if [[ ! -x "$ENV_DIR/bin/python" ]]; then
   uv venv "$ENV_DIR" --python 3.10 --prompt "sonic_h2_${ENV_KIND}"
 fi
-# Teleoperation uses CPU pose mathematics; model inference uses TensorRT.
+# CPU PyTorch serves teleoperation math and optional offline ECHO-G generation.
 uv pip install --python "$ENV_DIR/bin/python" --torch-backend=cpu \
   -c "$ROOT/requirements/$EXTRA.lock" -e "$ROOT[$EXTRA]"
 if [[ "$ENV_KIND" == planner ]]; then
@@ -40,6 +41,9 @@ elif [[ "$ENV_KIND" == teleop ]]; then
   "$ENV_DIR/bin/python" "$ROOT/tools/prepare_xrobotoolkit.py"
   uv pip install --python "$ENV_DIR/bin/python" 'cmake>=3.14,<4' 'pybind11==3.0.4' 'setuptools<82' wheel
   uv pip install --python "$ENV_DIR/bin/python" --no-build-isolation -e "$ROOT/build/third_party/xrobotoolkit_pybind"
+elif [[ "$ENV_KIND" == text2motion ]]; then
+  git -C "$ROOT" submodule update --init -- third_party/echo_g
+  uv pip install --python "$ENV_DIR/bin/python" --no-deps -e "$ROOT/third_party/echo_g"
 fi
 uv pip check --python "$ENV_DIR/bin/python"
 echo "Installed $ENV_KIND in $ENV_DIR"

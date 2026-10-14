@@ -6,7 +6,7 @@
 
 ## 安装
 
-如果此前没有递归克隆，先运行 `git submodule update --init --recursive`。两个上游依赖固定在仓库记录的提交，详见[第三方依赖](../third_party/README.md)。
+如果此前没有递归克隆，先运行 `git submodule update --init --recursive`。上游依赖固定在仓库记录的提交，详见[第三方依赖](../third_party/README.md)。
 
 验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6、TensorRT 10.13.3.9。CUDA 和 TensorRT 安装见 [原生依赖](NATIVE_SETUP.md)。
 
@@ -27,6 +27,7 @@ python3 tools/verify_release.py
 ./install.sh planner   # .venv_planner：TensorRT Python planner
 ./install.sh sim2sim   # .venv_sim：MuJoCo + DDS，也可执行回放
 ./install.sh teleop    # .venv_teleop：PICO、姿态转换与运动学
+./install.sh text2motion # .venv_text2motion：可选 ECHO-G 离线生成器
 ```
 
 回放和仿真无需 PyTorch。遥操作使用 CPU PyTorch 完成姿态数学计算。
@@ -58,6 +59,8 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 ## 动作回放与离线 text2motion
 
+需要语音与配套手势时，参见 [ECHO-G text2motion 指南](TEXT2MOTION_CN.md)：包含中英文示例、离线生成，以及通过 `interface.replay` 同时播放动作与本机或 Unitree 扬声器音频。仓库内的语音动作示例只需安装 inputs 环境即可回放。
+
 统一使用 `interface.replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ；离线 text2motion 结果也通过此入口发送。
 
 | `motions/` 下的目录 | 输入类型 | 数量 |
@@ -79,7 +82,7 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 G1、H2 发送未来 `0.0, 0.1, …, 0.9` 秒的 10 帧；SMPL 发送 `0.00, 0.02, …, 0.18` 秒的 10 帧，以匹配模型输入。H2 读取原生 31 维文件，排除头部并重排为 29 维原生身体关节，不使用其附带的 G1 映射文件。SMPL 使用独立的 SMPL 根旋转、关节点及腕部角度。头部仍通过独立通道控制。
 
-CSV 文件、NPZ 字段与坐标约定见[动作格式说明](../motions/README.md)，发送协议见[架构文档](ARCHITECTURE_CN.md)。本仓库负责回放离线生成的动作，不运行文本生成模型。
+CSV 文件、NPZ 字段与坐标约定见[动作格式说明](../motions/README.md)，发送协议见[架构文档](ARCHITECTURE_CN.md)。可选的 ECHO-G 生成进程独立运行，输出语音动作包，仍通过同一个 replay 入口播放。
 
 ## Sim2Real
 

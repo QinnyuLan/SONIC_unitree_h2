@@ -8,6 +8,7 @@ The C++ runtime executes the H2 encoder and decoder through TensorRT, receives c
 |---|---|
 | `CMakeLists.txt` | Native build entry |
 | `include/` | Protocol, observations, policy, robot parameters, head and hand control |
+| `src/unitree_audio_player.cpp` | Standalone PCM speaker tool for motion/audio replay, outside the policy loop |
 | `src/main.cpp` | Startup, control loop, inference scheduling and DDS output |
 | `src/inference/` | TensorRT engine loading, cache and CUDA execution |
 | `cmake/` | TensorRT SDK discovery |
@@ -24,7 +25,7 @@ bash scripts/build_controller.sh
 bash scripts/run_runtime.sh sim
 ```
 
-The build produces `build/runtime/bin/sonic_h2_runtime`. Launch scripts supply the model directory and library paths. Hardware settings are in `config/h2_deploy.env`; teleoperation settings are in `config/h2_head_adjust.env`.
+The build produces `build/runtime/bin/sonic_h2_runtime` and the independent `build/runtime/bin/unitree_audio_player`. See [speech/gesture replay](../../docs/TEXT2MOTION.md#unitree-built-in-speaker) for the audio utility. Launch scripts supply the model directory and library paths. Hardware settings are in `config/h2_deploy.env`; teleoperation settings are in `config/h2_head_adjust.env`.
 
 The equivalent CMake build is:
 

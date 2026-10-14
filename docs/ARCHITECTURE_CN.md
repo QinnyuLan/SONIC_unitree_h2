@@ -6,6 +6,7 @@
 
 - `src/runtime/`：默认站立、参考采样、encoder / decoder 推理、指令仲裁和 H2 DDS 输出。启动不依赖动作文件或 planner。
 - `src/interface/replay.py`：识别离线 G1、原生 H2 和 SMPL 动作，包括已生成的 text2motion 结果，输出对应类型的 10 帧参考。
+- `src/interface/text2motion/echo_g.py`：使用独立 PyTorch 环境离线生成语音及 G1 手势，输出带校验值的标准回放包，不连接 runtime。通用 replay 调度身体参考与独立音频播放器，见 [text2motion](TEXT2MOTION_CN.md)。
 - `src/interface/planner/service.py`：Python planner 服务；`src/interface/planner/` 完成轨迹处理，`src/interface/planner/engine.py` 直接调用 TensorRT Python API，输出相同的稀疏 10 帧。
 - `src/interface/teleop/bridge.py`：把 PICO 跟踪数据转换为 SMPL / VR 身体参考，并独立发送头部与手部指令。可订阅 planner 的下肢参考。
 - `src/interface/commands/`：轻量 Python 发送接口，无机器人 SDK 或模型依赖。仅预留 64 维 token 输入，不包含 VLA 或 GR00T 实现。

@@ -4,7 +4,7 @@ The release contains the H2 runtime for MuJoCo, hardware deployment, and PICO VR
 
 ## Validated environment
 
-Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and CUDA Python bindings 12.9.4. Python runtime dependencies are pinned in `requirements/inputs.lock`, `requirements/planner.lock`, `requirements/sim.lock` and `requirements/teleop.lock`. The simulator and teleoperation environments were installed independently from empty environments.
+Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and CUDA Python bindings 12.9.4. Python runtime dependencies are pinned in `requirements/inputs.lock`, `requirements/planner.lock`, `requirements/sim.lock`, `requirements/teleop.lock` and the optional `requirements/text2motion.lock`. The simulator and teleoperation environments were installed independently from empty environments.
 
 ## Offline checks
 
@@ -85,6 +85,24 @@ This change was not tested with GPU inference, closed-loop simulation or hardwar
 On 2026-10-15, the Unitree Python SDK and XRoboToolkit binding were replaced with pinned, unmodified upstream submodules under `third_party/`. The simulator's odometry extension moved to `src/sim/odometry.py`; its DDS type identifier, type information and serialized sample bytes match the previous implementation. The native XR SDK artifacts retain their previous SHA256 hashes.
 
 Simulation and teleoperation installations, dependency checks, preflights and all 93 Python tests passed. A fresh clone fetched both pinned submodules from their official GitHub URLs, installed simulation and teleoperation into empty environments, and passed both preflights. The parent repository and both submodules remained clean after installation. A separate headless simulator published 120 finite LowState and 120 finite odometry messages through loopback DDS domain 217. This check did not start the policy runtime or exercise GPU inference. ARM64 artifact hashes were checked, but ARM64 execution and physical devices were not tested.
+
+## Offline ECHO-G speech/gesture validation
+
+On 2026-10-15, the optional `.venv_text2motion` was installed from its lock file with CPU PyTorch 2.12.1, Transformers 5.2.0, and the official ECHO-G submodule at `60b85fb932b124b1a2ddd0868f4917a73c383901`. Dependency checks passed, and all 15 local model files matched their pinned SHA256 values.
+
+Fresh Chinese and English text each completed Edge TTS with word timestamps, CPU audio/text feature extraction, and official EMA motion inference (eight Euler steps, guidance scale 1, seed 0). The Chinese example has 163 motion frames at 50 Hz and 3.264 seconds of speech; the English example has 177 frames and 3.528 seconds of speech. The three-file bundles are included under `motions/example_text2motion_replay/`. Cached-condition generation also passed. Generation commands are documented in [text-to-motion](TEXT2MOTION.md).
+
+After this integration, all 62 Python command/interface tests and 59 C++ tests passed. The command suite includes the two shipped bundle checks, canonical joint ordering, the 6D rotation convention, SLERP across a yaw wrap, velocity resampling, file integrity, audio startup and failure cleanup. The native audio player built successfully, and release preflight passed.
+
+The following check starts a mock voice service on loopback DDS and a private IPC body receiver; it does not start the policy runtime, contact hardware, or emit sound:
+
+```bash
+.venv_sim/bin/python tools/check_audio_replay.py
+```
+
+Normal playback delivered 112896 PCM bytes in eight chunks, identical to the English WAV, after the first G1 command. A second run interrupted playback and verified that only the matching audio stream stopped and the body channel was released to `stand`. Both cases passed. The check writes its report and subprocess logs under `outputs/validation/`; choose an unused loopback DDS domain with `--domain` if needed.
+
+These tests do not establish H2 firmware compatibility, speaker latency, motion quality, or closed-loop tracking. No GPU generation, robot motion or physical speaker playback was performed for this integration.
 
 ## Saving validation reports
 

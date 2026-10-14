@@ -27,6 +27,7 @@ Install the Python environment needed for each process using [uv](https://docs.a
 ./install.sh planner   # .venv_planner: TensorRT Python planner
 ./install.sh sim2sim   # .venv_sim: MuJoCo and DDS; includes replay dependencies
 ./install.sh teleop    # .venv_teleop: PICO, pose conversion and kinematics
+./install.sh text2motion # .venv_text2motion: optional offline ECHO-G generator
 ```
 
 Only install the environments you use. No Python training framework is needed for replay or simulation. The teleoperation environment uses CPU PyTorch for pose mathematics.
@@ -58,6 +59,8 @@ Replay finishes by releasing the body channel. The runtime returns to standing. 
 
 ## Motion replay and offline text-to-motion
 
+For speech and accompanying gestures, use the [ECHO-G text-to-motion guide](TEXT2MOTION.md). It includes Chinese/English examples, offline generation, and local or Unitree speaker playback through `interface.replay`. The included speech/gesture bundles need only the input environment.
+
 Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files, including offline text-to-motion output. Input type is detected from the collection manifest and clip metadata. The bundled collections are:
 
 | Directory under `motions/` | Type | Clips |
@@ -79,7 +82,7 @@ Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files, including 
 
 G1 and H2 use ten samples at offsets `0.0, 0.1, …, 0.9` seconds. SMPL uses ten samples at `0.00, 0.02, …, 0.18` seconds. H2 reads the native 31D files, excludes head joints and sends native body policy angles. SMPL reads its own joints/root and semantic wrist angles. Head control remains independent.
 
-See [motion formats and NPZ fields](../motions/README.md) for export conventions, and [the protocol](ARCHITECTURE.md#body-data) for transmitted fields. This repository replays offline text-to-motion results; it does not run a text-generation model.
+See [motion formats and NPZ fields](../motions/README.md) for export conventions, and [the protocol](ARCHITECTURE.md#body-data) for transmitted fields. Optional ECHO-G generation runs separately and writes a motion/audio bundle consumed by the same replay entry point.
 
 ## Sim2Real
 

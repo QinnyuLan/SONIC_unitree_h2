@@ -1,6 +1,6 @@
 # Reference Motions
 
-These 36 clips are inputs to the independent Python motion replay process. The policy runtime creates its startup standing reference in memory and does not load motion files.
+The 36 reference clips and two generated speech/gesture bundles are inputs to the independent Python motion replay process. The policy runtime creates its startup standing reference in memory and does not load motion files.
 
 | Directory | Input type | Clips | Encoder selector |
 |---|---|---:|---:|
@@ -8,8 +8,9 @@ These 36 clips are inputs to the independent Python motion replay process. The p
 | `example_g1_explore_replay/` | Native G1 exploration demos | 7 | 3 |
 | `example_h2_replay/` | Native H2 basic demos | 8 | 0 |
 | `example_smpl_replay/` | SMPL demos | 8 | 2 |
+| `example_text2motion_replay/` | ECHO-G Chinese/English speech and G1 gestures | 2 | 3 |
 
-The exploration set includes kneeling, crawling and jumping. Clips with the same name in different collections contain different reference representations. Each collection's `manifest.json` records input type, frame rate, frame count, source collection and file SHA256 hashes. Motion data was copied from the corresponding `SONIC-H2/gear_sonic_deploy/reference/` collections; original clip metadata is retained as provenance. The extreme H2 collection is not included.
+The exploration set includes kneeling, crawling and jumping. Clips with the same name in different collections contain different reference representations. Each reference collection's `manifest.json` records input type, frame rate, frame count, source collection and file SHA256 hashes. Motion data was copied from the corresponding `SONIC-H2/gear_sonic_deploy/reference/` collections; original clip metadata is retained as provenance. The extreme H2 collection is not included.
 
 ## Replay
 
@@ -59,11 +60,17 @@ NPZ files use the following arrays, plus scalar `fps`. An optional scalar string
 | H2 | `h2_joint_pos[N,31]`, `root_quat[N,4]` | `h2_joint_vel[N,31]` |
 | SMPL | `joints[N,24,3]`, `root_quat[N,4]`, `wrist_joints[N,6]` | — |
 
-These use the same coordinate and joint conventions as CSV. For offline text-to-motion, export the generated motion to one of these formats; this repository does not run a text-generation model.
+These use the same coordinate and joint conventions as CSV. For offline text-to-motion, export the generated motion to one of these formats. The optional [ECHO-G integration](../docs/TEXT2MOTION.md) generates G1 motion with matching speech.
 
 ```bash
 .venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
 .venv_inputs/bin/python -m interface.replay generated_motion.npz
 ```
+
+## Speech and motion bundles
+
+Pass `motions/example_text2motion_replay/echo_g_zh` or `echo_g_en` to the same replay entry point. Each contains `motion.npz`, `speech.wav` and a `replay.json` manifest with relative paths and SHA256 hashes. The Chinese text is “大家好，欢迎来到我们的实验室。”; the English text is “Hello. Welcome to our lab.”. Generation parameters are recorded in each manifest.
+
+Replay checks both files before sending, plays audio locally by default, and supports an independent Unitree speaker adapter. Use `--inspect` to validate without playback or `--mute` for motion only. Timing overrides and looping require muted playback. See [generation and audio setup](../docs/TEXT2MOTION.md).
 
 See [deployment](../docs/DEPLOYMENT.md#motion-replay-and-offline-text-to-motion) and [the command protocol](../docs/ARCHITECTURE.md). Loading, sampling and observation checks do not establish closed-loop tracking performance; validation scope is recorded in [Reproducibility](../docs/REPRODUCIBILITY.md).

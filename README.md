@@ -6,12 +6,13 @@ Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Lea
 
 ## Overview
 
-The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. All model inference uses TensorRT.
+The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. Policy and planner inference use TensorRT. The optional ECHO-G generator prepares speech and G1 gestures offline for motion replay.
 
 | Workflow | Description | Guide |
 |---|---|---|
 | Sim2Sim | MuJoCo simulation with the C++ controller and DDS communication | [Simulation](docs/DEPLOYMENT.md#sim2sim) |
 | Sim2Real | Whole-body motion tracking on Unitree H2 | [Hardware deployment](docs/DEPLOYMENT.md#sim2real) |
+| Text-to-motion | Offline speech and G1 gesture generation with ECHO-G, presented through motion replay | [Text-to-motion](docs/TEXT2MOTION.md) |
 | VR teleoperation | PICO head-and-hand tracking with XRoboToolkit | [Teleoperation](docs/DEPLOYMENT.md#vr-teleoperation) |
 
 Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy), [`src/interface/`](src/interface/README.md) (Python command producers), and [`src/sim/`](src/sim/README.md) (simulator).
@@ -31,6 +32,7 @@ Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build
 - [Architecture and command protocol](docs/ARCHITECTURE.md): process boundaries, sparse references, and independent head/hand control.
 - [Repository layout](docs/LAYOUT.md): C++ runtime, Python services, models, configuration and motions.
 - [Installation and deployment](docs/DEPLOYMENT.md): environment setup, Sim2Sim, Sim2Real, and VR teleoperation.
+- [Offline text-to-motion](docs/TEXT2MOTION.md): Chinese/English speech, G1 gestures, and audio playback.
 - [Released model](models/sonic_h2_released/README.md): input/output interfaces and checksums.
 - [Reproducibility](docs/REPRODUCIBILITY.md): model validation, inference checks, and test results.
 - [Documentation index](docs/README.md): configuration, troubleshooting, and development notes.
@@ -56,6 +58,7 @@ Bibliographic metadata is also available in [`CITATION.cff`](CITATION.cff) and [
 ## Acknowledgments
 
 - [SONIC / GR00T Whole-Body Control](https://github.com/NVlabs/GR00T-WholeBodyControl): pretrained controller, motion representation, and deployment framework.
+- [ECHO-G](https://github.com/NJU-SOARLAB/ECHO-G): speech-conditioned G1 gesture generation.
 - [MuJoCo](https://github.com/google-deepmind/mujoco): physics simulation and visualization.
 - [Unitree SDK2](https://github.com/unitreerobotics/unitree_sdk2): robot DDS communication.
 - [XRoboToolkit](https://github.com/XR-Robotics/XRoboToolkit-PC-Service): PICO VR device and head-and-hand tracking interfaces.

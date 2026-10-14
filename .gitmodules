@@ -4,3 +4,6 @@
 [submodule "xrobotoolkit_pybind"]
 	path = third_party/xrobotoolkit_pybind
 	url = https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind.git
+[submodule "third_party/echo_g"]
+	path = third_party/echo_g
+	url = https://github.com/NJU-SOARLAB/ECHO-G.git
