@@ -6,8 +6,8 @@
     "ankle_pitch": -0.15
   },
   "arm_joint_angles_rad": {
-    "shoulder_pitch": 0.0,
+    "shoulder_pitch": 0.25,
     "shoulder_roll": 0.10,
-    "elbow": 1.50
+    "elbow": 1.00
   }
 }

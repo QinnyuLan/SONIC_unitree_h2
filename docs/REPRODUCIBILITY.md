@@ -196,6 +196,23 @@ The rebuilt runtime passed the 64 C++ tests and three startup checks. Actual Ten
 
 Local reports are `outputs/validation/standing_pose/closed_loop_044936/result.json`, `outputs/validation/standing_pose/replay_transition_045006/result.json`, and `outputs/validation/standing_pose/arms_at_sides.json`. These are simulation checks; this preset has not been tested on a physical robot.
 
+## Torso posture with arms at the sides
+
+The earlier arms-down preset passed pelvis-tilt checks but produced an approximately 8° forward torso lean. The standing reference now pairs shoulder pitch 0.25 rad with elbow 1.00 rad. The simulator reset pose uses the same values. The final change only adjusts these references; the model and controller are unchanged.
+
+The rebuilt runtime passed 64 C++ tests, three startup checks and release preflight. A 30-second unsupported standing run used actual TensorRT inference and headless MuJoCo over loopback DDS. Posture measurements use the last five seconds with policy gains active and both feet in contact, excluding shutdown damping. The COM offset is the forward projection relative to the midpoint of the longitudinal sole bounds, computed from MuJoCo mass properties and foot collision meshes.
+
+| Measurement | Previous preset | Revised preset |
+|---|---:|---:|
+| Mean torso pitch | 8.07° forward | 2.01° forward |
+| Mean COM projection offset | 2.71 cm forward | 1.50 cm forward |
+| Minimum front sole margin | 9.39 cm | 10.29 cm |
+| Mean wrist position forward of torso | 5.0 / 5.3 cm | 2.8 / 2.9 cm |
+
+A separate six-second H2 walking replay followed by eight seconds of standing also passed. Its final-five-second mean torso pitch was 0.87° forward, with a 1.92 cm forward COM offset. Both runs completed without falls, met the 20 ms simulation lag limit and sent damping commands on **o**. The additional posture checks required mean torso pitch within ±3.5°, mean COM offset within ±2.5 cm, front/rear sole margins above 5 cm and mean wrist forward reach below 6 cm.
+
+Local comparison records are `outputs/validation/standing_pose/closed_loop_044936/posture.json`, `outputs/validation/standing_pose/closed_loop_050343/posture.json`, and `outputs/validation/standing_pose/replay_transition_050436/posture.json`. These measurements assess posture in simulation and do not establish hardware balance margins.
+
 ## Saving validation reports
 
 Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:
