@@ -6,7 +6,7 @@ import platform
 from pathlib import Path
 import shutil
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "third_party/xrobotoolkit_pybind"
 SDK = ROOT / "third_party/xrobotoolkit_sdk"
 BUILD = ROOT / "build/third_party/xrobotoolkit_pybind"

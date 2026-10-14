@@ -13,7 +13,7 @@ from interface.commands import RuntimeClient, h2_reference, smpl_reference, vr_r
 from interface.commands.protocol import token_command
 from interface.teleop.bridge import standing_g1
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def main():

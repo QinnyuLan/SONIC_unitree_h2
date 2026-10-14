@@ -45,7 +45,7 @@ From the repository root:
 
 ```bash
 source scripts/setup_env.sh
-./verify_deploy.sh
+./tools/validation/check_native.sh
 bash scripts/build_controller.sh
 ```
 

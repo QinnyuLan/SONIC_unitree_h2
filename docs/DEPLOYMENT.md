@@ -15,7 +15,7 @@ sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
   libeigen3-dev nlohmann-json3-dev
 export TensorRT_ROOT="$HOME/TensorRT"
 bash scripts/build_controller.sh
-python3 tools/verify_release.py
+python3 tools/validation/verify_release.py
 ```
 
 The build produces `build/runtime/bin/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
@@ -51,7 +51,7 @@ The runtime transitions from the measured initial pose to the default pose over 
 Terminal 3 — choose a G1 motion clip:
 
 ```bash
-.venv_sim/bin/python -m interface.replay \
+.venv_sim/bin/python -m interface.motion_replay \
   motions/example_g1_replay/walking_quip_360_R_002__A428
 ```
 
@@ -59,7 +59,7 @@ Replay finishes by releasing the body channel. The runtime returns to standing. 
 
 ## Motion replay and offline text-to-motion
 
-For speech and accompanying gestures, use the [ECHO-G text-to-motion guide](TEXT2MOTION.md). It includes Chinese/English examples, offline generation, and local or Unitree speaker playback through `interface.replay`. The included speech/gesture bundles need only the input environment.
+For speech and accompanying gestures, use the [ECHO-G text-to-motion guide](TEXT2MOTION.md). It includes Chinese/English examples, offline generation, and local or Unitree speaker playback through `interface.motion_replay`. The included speech/gesture bundles need only the input environment.
 
 Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files, including offline text-to-motion output. Input type is detected from the collection manifest and clip metadata. The bundled collections are:
 
@@ -71,11 +71,11 @@ Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files, including 
 | `example_smpl_replay` | SMPL | 8 |
 
 ```bash
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_smpl_replay/walking_quip_360_R_002__A428
-.venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
+.venv_inputs/bin/python -m interface.motion_replay generated_motion.npz --inspect
 ```
 
 `--inspect` validates the clip without connecting. `--type g1|h2|smpl` labels otherwise ambiguous external data and must agree with declared metadata. `--fps` overrides the recorded frame rate; CSV defaults to 50 Hz if unspecified. `--speed` adjusts playback and velocity together; `--loop` requires a continuous loop boundary.
@@ -102,7 +102,7 @@ Download the optional shared G1 model:
 ```bash
 uv venv .venv_download --python 3.10
 uv pip install --python .venv_download/bin/python -r requirements/download.txt
-.venv_download/bin/python download_from_hf.py --planner-only
+.venv_download/bin/python tools/model_download/download_planner.py
 ```
 
 The model is downloaded to `models/motion_planner_g1/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
@@ -159,9 +159,9 @@ sudo apt install libgtest-dev zlib1g-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
 ctest --test-dir build/runtime --output-on-failure
 source scripts/setup_env.sh
-.venv_sim/bin/python tools/check_runtime.py
+.venv_sim/bin/python tools/validation/check_runtime.py
 ./install.sh planner
-.venv_planner/bin/python tools/check_runtime.py --planner
+.venv_planner/bin/python tools/validation/check_runtime.py --planner
 ```
 
 The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests startup standing, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](REPRODUCIBILITY.md) for the scope of completed checks.

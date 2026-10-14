@@ -38,7 +38,7 @@ elif [[ "$ENV_KIND" == sim2sim ]]; then
     -e "$ROOT/third_party/unitree_sdk2_python"
 elif [[ "$ENV_KIND" == teleop ]]; then
   git -C "$ROOT" submodule update --init -- third_party/xrobotoolkit_pybind
-  "$ENV_DIR/bin/python" "$ROOT/tools/prepare_xrobotoolkit.py"
+  "$ENV_DIR/bin/python" "$ROOT/tools/setup/prepare_xrobotoolkit.py"
   uv pip install --python "$ENV_DIR/bin/python" 'cmake>=3.14,<4' 'pybind11==3.0.4' 'setuptools<82' wheel
   uv pip install --python "$ENV_DIR/bin/python" --no-build-isolation -e "$ROOT/build/third_party/xrobotoolkit_pybind"
 fi

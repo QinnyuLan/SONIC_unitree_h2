@@ -71,8 +71,7 @@ def download_file(
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--planner-only", action="store_true", help="download the planner (the default and only mode)")
-    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent / "models",
+    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parents[2] / "models",
                         help="model root; planner is stored under motion_planner_g1/")
     args = parser.parse_args()
     destination = args.output_dir / PLANNER_FILE[1]

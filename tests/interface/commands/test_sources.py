@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 from interface.commands.protocol import envelope, head_command, g1_reference
-from interface.replay import Motion
+from interface.motion_replay import Motion
 from interface.teleop.bridge import unpack, pose_reference, standing_g1
 from interface.teleop.transport.packets import pack_pose_message, build_head_pose_message
 

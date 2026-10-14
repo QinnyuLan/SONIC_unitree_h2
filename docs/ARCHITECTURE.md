@@ -39,7 +39,7 @@ flowchart LR
 
 Policy and planner inference use TensorRT. The release manifest binds recorded model interfaces and metadata to ONNX SHA256 hashes; the runtime verifies those hashes before loading models. TensorRT checks the actual tensor interfaces. ONNX Runtime is used only by the optional offline model-comparison tool.
 
-Offline speech/gesture generation lives in `src/interface/text2motion/`. It writes a portable motion/audio bundle and does not connect to the runtime. `interface.replay` validates that bundle and schedules body commands and a separate audio player. ECHO-G models and PyTorch dependencies are needed only for generation; see [text-to-motion](TEXT2MOTION.md).
+Offline speech/gesture generation lives in `tools/text2motion_offline/echo_g/`, installed as the separate `text2motion_offline` package. It writes a portable motion/audio bundle and does not connect to the runtime. `interface.motion_replay` validates that bundle and schedules body commands and a separate audio player. ECHO-G models and PyTorch dependencies are needed only for generation; see [text-to-motion](TEXT2MOTION.md).
 
 Python and C++ use the same engine-cache format and FP32 build policy (TensorRT's default TF32 allowance, no FP16). Cache compatibility includes model SHA256, GPU name, precision and TensorRT version. A missing or incompatible cache is rebuilt on the local GPU.
 

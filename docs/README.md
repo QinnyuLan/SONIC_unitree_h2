@@ -9,6 +9,8 @@
 - [Reference motion format](../motions/README.md).
 - [Released models](../models/sonic_h2_released/README.md) and [validation](REPRODUCIBILITY.md).
 - [Repository layout](LAYOUT.md).
+- [Tools](../tools/README.md): model downloads, environment preparation, validation and offline generation.
+- [Motion replay](../src/interface/motion_replay/README.md): motion sampling, playback and audio support.
 - [Third-party dependencies](../third_party/README.md): pinned source submodules and native SDK artifacts.
 - [Acknowledgments](ACKNOWLEDGMENTS.md).
 - [Licenses and notices](../licenses/README.md): SONIC, robot assets and bundled dependencies.

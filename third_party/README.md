@@ -25,9 +25,9 @@ git submodule update --init --recursive
 
 The simulator's `OdoState_` extension lives in [`src/sim/odometry.py`](../src/sim/odometry.py). Its DDS type name, type identifier and serialized field layout match the previous SDK extension. The published LowCmd/LowState definitions remain upstream code. Python 3.10 and CycloneDDS 0.10.2 are pinned by this project's environment.
 
-The XRoboToolkit source, setup code, binding and common headers match the pinned upstream commit. The additional native SDK libraries and ARM64 headers are retained under [`xrobotoolkit_sdk/`](xrobotoolkit_sdk/README.md). During teleoperation installation, `tools/prepare_xrobotoolkit.py` verifies their checksums and prepares a copy of the binding sources plus the platform's SDK in `build/third_party/xrobotoolkit_pybind/`. Compilation and Python installation use that generated directory, leaving the source submodule untouched.
+The XRoboToolkit source, setup code, binding and common headers match the pinned upstream commit. The additional native SDK libraries and ARM64 headers are retained under [`xrobotoolkit_sdk/`](xrobotoolkit_sdk/README.md). During teleoperation installation, `tools/setup/prepare_xrobotoolkit.py` verifies their checksums and prepares a copy of the binding sources plus the platform's SDK in `build/third_party/xrobotoolkit_pybind/`. Compilation and Python installation use that generated directory, leaving the source submodule untouched.
 
-ECHO-G generation uses a minimal local inference implementation under `src/interface/text2motion/`, with separately downloaded weights. Its source and weight notices are retained in [licenses/echo_g/](../licenses/echo_g/README.md); it is not a source submodule. See [text-to-motion setup](../docs/TEXT2MOTION.md).
+ECHO-G generation uses a minimal local inference implementation under `tools/text2motion_offline/echo_g/`, with separately downloaded weights. Its source and weight notices are retained in [licenses/echo_g/](../licenses/echo_g/README.md); it is not a source submodule. See [text-to-motion setup](../docs/TEXT2MOTION.md).
 
 The C++ runtime's Unitree SDK remains under `src/runtime/third_party/`; it is managed with the native runtime. The SDK libraries and robot assets retain their original licenses; see the [license index](../licenses/README.md).
 

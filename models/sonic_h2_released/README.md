@@ -12,4 +12,4 @@ All tensors are float32 with batch size 1.
 
 The full encoder selectors are 0 = H2, 1 = VR three-point input, 2 = SMPL, and 3 = G1. The controller maps the 29 policy actions to the H2 body; the head is handled separately. The observation and reference orientation contracts are checked by the runtime before execution. Keep `deployment_manifest.json` beside the ONNX files: the runtime verifies each model SHA256 against this manifest, then TensorRT checks its executable tensor interface.
 
-The ONNX files retain their original bytes. Integrity hashes are recorded in [SHA256SUMS](SHA256SUMS). Run `python3 tools/verify_release.py` from the repository root to verify them. See [Reproducibility](../../docs/REPRODUCIBILITY.md) for ONNX inference checks. TensorRT engines are generated on the target machine.
+The ONNX files retain their original bytes. Integrity hashes are recorded in [SHA256SUMS](SHA256SUMS). Run `python3 tools/validation/verify_release.py` from the repository root to verify them. See [Reproducibility](../../docs/REPRODUCIBILITY.md) for ONNX inference checks. TensorRT engines are generated on the target machine.

@@ -12,7 +12,7 @@ ECHO-G 作为本工程“先生成、后回放”的 text2motion 范例：输入
 
 ```bash
 ./install.sh inputs
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_zh --inspect
 ```
 
@@ -20,11 +20,11 @@ ECHO-G 作为本工程“先生成、后回放”的 text2motion 范例：输入
 
 ```bash
 # 中文：动作与语音一起播放，语音从发送端电脑输出。
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_zh
 
 # 英文：只回放动作。
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_en --mute
 ```
 
@@ -35,33 +35,33 @@ ECHO-G 作为本工程“先生成、后回放”的 text2motion 范例：输入
 ```bash
 ./install.sh text2motion
 sudo apt install curl ffmpeg alsa-utils
-.venv_text2motion/bin/python -m interface.text2motion.echo_g download
+.venv_text2motion/bin/python -m text2motion_offline.echo_g download
 ```
 
 生成环境为 `.venv_text2motion`，与 replay、planner、仿真和遥操作环境独立。安装器使用固定依赖和 CPU 版 PyTorch，不安装 ECHO-G 包或拉取其源码仓库。模型下载到 `models/text2motion_echo_g/`，约 11 GB，包括 ECHO-G checkpoint、Qwen3.5-4B 和 wav2vec2。下载会校验全部 15 个运行文件的 SHA256；权重不提交 Git。
 
 ```bash
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --text "大家好，欢迎来到我们的实验室。" --language zh \
   --output outputs/text2motion/greeting_zh
 
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --text "Hello. Welcome to our lab." --language en \
   --output outputs/text2motion/greeting_en
 
-.venv_inputs/bin/python -m interface.replay outputs/text2motion/greeting_zh --inspect
-.venv_inputs/bin/python -m interface.replay outputs/text2motion/greeting_zh
+.venv_inputs/bin/python -m interface.motion_replay outputs/text2motion/greeting_zh --inspect
+.venv_inputs/bin/python -m interface.motion_replay outputs/text2motion/greeting_zh
 ```
 
 也可使用 `--text-file` 读取 UTF-8 文件。默认中文声音为 `zh-CN-XiaoxiaoNeural`，英文为 `en-US-JennyNeural`，可用 `--voice` 覆盖。每句话使用新的空输出目录，`--seed` 默认为 0。生成采用官方 EMA 模型、8 步 Euler、guidance scale 1；不引入 ECHO-G ONNX 导出或 ONNX Runtime。
 
-推理代码集中在 `src/interface/text2motion/` 的三个文件：
+推理代码集中在 `tools/text2motion_offline/echo_g/` 的三个文件：
 
 | 文件 | 职责 |
 |---|---|
-| `echo_g.py` | 下载、语音合成、生成入口和 G1 回放导出 |
-| `echo_features.py` | WAV 读取、Qwen/wav2vec2 特征与词时间对齐 |
-| `echo_model.py` | audio+text 网络定义、EMA 权重加载与 8 步 Euler 推理 |
+| `cli.py` | 下载、语音合成、生成入口和 G1 回放导出 |
+| `features.py` | WAV 读取、Qwen/wav2vec2 特征与词时间对齐 |
+| `model.py` | audio+text 网络定义、EMA 权重加载与 8 步 Euler 推理 |
 
 权重保存参数和模型配置，因此保留匹配的网络定义；不包含训练、评估、数据集或其他模型分支。WAV 使用标准库读取，移除了 librosa、soundfile 及其附带依赖。
 
@@ -78,7 +78,7 @@ sudo apt install curl ffmpeg alsa-utils
 ```
 
 ```bash
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --manifest path/to/utterance.jsonl --language en \
   --output outputs/text2motion/existing_speech
 ```
@@ -88,8 +88,8 @@ sudo apt install curl ffmpeg alsa-utils
 也支持已生成的官方条件文件：
 
 ```bash
-.venv_text2motion/bin/python -m interface.text2motion.echo_g download --checkpoint-only
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g download --checkpoint-only
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --conditions path/to/speech.pt --audio path/to/speech.wav \
   --output outputs/text2motion/from_conditions
 ```
@@ -123,7 +123,7 @@ build/runtime/bin/unitree_audio_player --check-only \
 build/runtime/bin/unitree_audio_player --interface eth0 --domain 0 --probe \
   motions/example_text2motion_replay/echo_g_zh/speech.wav
 
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_zh --audio-ready \
   --audio-command 'build/runtime/bin/unitree_audio_player --interface eth0 --domain 0 --play --wait-for-go'
 ```
@@ -132,6 +132,6 @@ replay 先等待播放器 READY，确认动作连接可以发送，再按回放�
 
 公开 SDK 的语音客户端位于 `g1` 命名空间。已在 loopback 模拟服务中验证 PCM 内容、播放时序与停止目标，尚未验证目标 H2 固件的 PCM 兼容性、真实声音延迟或闭环动作跟踪。
 
-编译后可用 `.venv_sim/bin/python tools/check_audio_replay.py` 复现 loopback 模拟验证，包括正常播放和中断清理；不会启动 policy、连接实机或播放声音。
+编译后可用 `.venv_sim/bin/python tools/validation/check_audio_replay.py` 复现 loopback 模拟验证，包括正常播放和中断清理；不会启动 policy、连接实机或播放声音。
 
 中英文示例已完成 CPU 全流程验证。移除上游包后重新提取特征并生成动作，与原实现的特征张量和最终动作数组逐元素完全一致；额外的 seed 7 采样也完全一致。仓库内示例已通过最小 replay 环境检查。上游版本、文件格式及许可链接见[英文说明](TEXT2MOTION.md)和[许可索引](../licenses/README.md)。

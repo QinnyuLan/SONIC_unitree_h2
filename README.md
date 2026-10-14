@@ -15,14 +15,14 @@ The policy runtime starts in the default standing pose and accepts commands from
 | Text-to-motion | Offline speech and G1 gesture generation with ECHO-G, presented through motion replay | [Text-to-motion](docs/TEXT2MOTION.md) |
 | VR teleoperation | PICO head-and-hand tracking with XRoboToolkit | [Teleoperation](docs/DEPLOYMENT.md#vr-teleoperation) |
 
-Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy), [`src/interface/`](src/interface/README.md) (Python command producers), and [`src/sim/`](src/sim/README.md) (simulator).
+Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy), [`src/interface/`](src/interface/README.md) (Python command producers), and [`src/sim/`](src/sim/README.md) (simulator). Offline generation, asset preparation and validation tools are organized under [`tools/`](tools/README.md).
 
 ## Getting Started
 
 ```bash
 git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
-python3 tools/verify_release.py
+python3 tools/validation/verify_release.py
 ```
 
 Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build the controller, and run simulation. H2 checkpoints are provided in [`models/sonic_h2_released/`](models/sonic_h2_released/). The [SONIC planner](docs/DEPLOYMENT.md#planner) is optional and runs as a separate service.

@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 from interface.commands.protocol import envelope
-from interface.replay import Motion, SmplMotion
+from interface.motion_replay import Motion, SmplMotion
 
 ROOT = Path(__file__).resolve().parents[3]
 COLLECTIONS = {"example_g1_replay": ("g1", 13), "example_g1_explore_replay": ("g1", 7),
@@ -131,7 +131,7 @@ def test_collection_root_and_corrupt_first_csv_row_are_rejected(tmp_path):
 
 @pytest.mark.parametrize("kind,collection", [("g1", "example_g1_replay"), ("h2", "example_h2_replay"), ("smpl", "example_smpl_replay")])
 def test_cli_sends_detected_type_and_inspect_never_connects(monkeypatch, kind, collection):
-    import interface.replay as replay
+    from interface.motion_replay import cli as replay
     clip = ROOT / "motions" / collection / "squat_001__A359"
     messages = []
 

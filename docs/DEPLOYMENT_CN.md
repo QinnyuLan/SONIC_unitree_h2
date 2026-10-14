@@ -15,7 +15,7 @@ sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
   libeigen3-dev nlohmann-json3-dev
 export TensorRT_ROOT="$HOME/TensorRT"
 bash scripts/build_controller.sh
-python3 tools/verify_release.py
+python3 tools/validation/verify_release.py
 ```
 
 编译生成 `build/runtime/bin/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
@@ -51,7 +51,7 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 终端 3 发送一个 G1 动作：
 
 ```bash
-.venv_sim/bin/python -m interface.replay \
+.venv_sim/bin/python -m interface.motion_replay \
   motions/example_g1_replay/walking_quip_360_R_002__A428
 ```
 
@@ -59,9 +59,9 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 ## 动作回放与离线 text2motion
 
-需要语音与配套手势时，参见 [ECHO-G text2motion 指南](TEXT2MOTION_CN.md)：包含中英文示例、离线生成，以及通过 `interface.replay` 同时播放动作与本机或 Unitree 扬声器音频。仓库内的语音动作示例只需安装 inputs 环境即可回放。
+需要语音与配套手势时，参见 [ECHO-G text2motion 指南](TEXT2MOTION_CN.md)：包含中英文示例、离线生成，以及通过 `interface.motion_replay` 同时播放动作与本机或 Unitree 扬声器音频。仓库内的语音动作示例只需安装 inputs 环境即可回放。
 
-统一使用 `interface.replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ；离线 text2motion 结果也通过此入口发送。
+统一使用 `interface.motion_replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ；离线 text2motion 结果也通过此入口发送。
 
 | `motions/` 下的目录 | 输入类型 | 数量 |
 |---|---|---:|
@@ -71,11 +71,11 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 | `example_smpl_replay` | SMPL 动作 | 8 |
 
 ```bash
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_smpl_replay/walking_quip_360_R_002__A428
-.venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
+.venv_inputs/bin/python -m interface.motion_replay generated_motion.npz --inspect
 ```
 
 `--inspect` 只检查数据，不连接 runtime。类型优先读取集合的 `manifest.json` 和动作元数据；未标注且存在歧义的外部数据使用 `--type g1|h2|smpl`，不能覆盖已有的不同类型声明。`--fps` 覆盖原始帧率；CSV 未记录帧率时默认 50 Hz。`--speed` 同时调整播放速度与关节速度，`--loop` 仅适用于首尾连续的动作。
@@ -102,7 +102,7 @@ bash scripts/run_runtime.sh real
 ```bash
 uv venv .venv_download --python 3.10
 uv pip install --python .venv_download/bin/python -r requirements/download.txt
-.venv_download/bin/python download_from_hf.py --planner-only
+.venv_download/bin/python tools/model_download/download_planner.py
 ```
 
 模型下载到 `models/motion_planner_g1/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
@@ -157,9 +157,9 @@ sudo apt install libgtest-dev zlib1g-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
 ctest --test-dir build/runtime --output-on-failure
 source scripts/setup_env.sh
-.venv_sim/bin/python tools/check_runtime.py
+.venv_sim/bin/python tools/validation/check_runtime.py
 ./install.sh planner
-.venv_planner/bin/python tools/check_runtime.py --planner
+.venv_planner/bin/python tools/validation/check_runtime.py --planner
 ```
 
 集成检查使用实际模型、合成机器人状态和私有 IPC 通道，不启动 DDS 或连接硬件，覆盖默认站立、四种身体输入、超时、来源切换以及头手独立性。已完成检查的范围见 [复现记录](REPRODUCIBILITY.md)。

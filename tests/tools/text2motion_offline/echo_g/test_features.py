@@ -7,7 +7,7 @@ import pytest
 
 torch = pytest.importorskip('torch')
 
-from interface.text2motion.echo_features import (
+from text2motion_offline.echo_g.features import (
     TIME_MAPPING, load_manifest, provenance_hashes, token_time_spans, validate_conditions,
 )
 

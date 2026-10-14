@@ -11,7 +11,7 @@ import numpy as np
 import onnx
 import onnxruntime as ort
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 MODELS = {"model_encoder_full": (1751, 64), "model_encoder": (640, 64), "model_decoder": (994, 29)}
 CONTRACT_KEYS = (
     "model_role", "policy_interface", "observation_contract",

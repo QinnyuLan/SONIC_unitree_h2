@@ -18,7 +18,7 @@ from unitree_sdk2py.idl.unitree_api.msg.dds_ import Request_, Response_, Respons
 
 from interface.commands.protocol import g1_reference
 from interface.paths import ROOT
-from interface.playback import ReplayBundle
+from interface.motion_replay.playback import ReplayBundle
 
 
 def main():
@@ -64,7 +64,7 @@ def main():
                 log_path = args.output.with_name(f'{args.output.stem}_{name}.log')
                 with log_path.open('w') as log:
                     process = subprocess.Popen(
-                        [sys.executable, '-m', 'interface.replay', str(bundle), '--endpoint', endpoint,
+                        [sys.executable, '-m', 'interface.motion_replay', str(bundle), '--endpoint', endpoint,
                          '--audio-ready', '--audio-command', command], stdout=log, stderr=log,
                         start_new_session=True)
                     messages, interrupted = [], False

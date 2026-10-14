@@ -15,14 +15,14 @@ policy runtime 启动后以默认姿态站立，接收独立 motion replay、pla
 | Text-to-motion | 使用 ECHO-G 离线生成语音与 G1 手势，通过 motion replay 展示 | [语音与动作生成](docs/TEXT2MOTION_CN.md) |
 | VR 遥操作 | 基于 PICO 与 XRoboToolkit 的头部、双手三点遥操作 | [遥操作](docs/DEPLOYMENT_CN.md#vr-遥操作) |
 
-源码分为 [`src/runtime/`](src/runtime/README.md)（C++ policy）、[`src/interface/`](src/interface/README.md)（Python 上游推理与指令发送）、[`src/sim/`](src/sim/README.md)（仿真器）。
+源码分为 [`src/runtime/`](src/runtime/README.md)（C++ policy）、[`src/interface/`](src/interface/README.md)（Python 上游推理与指令发送）、[`src/sim/`](src/sim/README.md)（仿真器）。离线生成、资源准备和验证工具按用途放在 [`tools/`](tools/README.md)。
 
 ## 快速开始
 
 ```bash
 git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
-python3 tools/verify_release.py
+python3 tools/validation/verify_release.py
 ```
 
 按照[部署指南](docs/DEPLOYMENT_CN.md)安装依赖、编译控制器并运行仿真。H2 模型位于 [`models/sonic_h2_released/`](models/sonic_h2_released/)，需要行走规划时，可另行下载并运行 [SONIC planner](docs/DEPLOYMENT_CN.md#planner)。

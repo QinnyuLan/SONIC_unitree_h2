@@ -18,7 +18,7 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from interface.playback import sha256, wav_duration
+from interface.motion_replay.playback import sha256, wav_duration
 
 TIME_MAPPING = 'character_offset_union_with_spaces_at_previous_word_end'
 

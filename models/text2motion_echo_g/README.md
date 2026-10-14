@@ -4,8 +4,8 @@ Optional models for [speech and gesture generation](../../docs/TEXT2MOTION.md). 
 
 ```bash
 ./install.sh text2motion
-.venv_text2motion/bin/python -m interface.text2motion.echo_g download
-.venv_text2motion/bin/python -m interface.text2motion.echo_g download --verify-only
+.venv_text2motion/bin/python -m text2motion_offline.echo_g download
+.venv_text2motion/bin/python -m text2motion_offline.echo_g download --verify-only
 ```
 
 The downloader installs the following ignored local files here:

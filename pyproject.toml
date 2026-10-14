@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "SONIC_unitree_h2"
 version = "0.1.0"
-description = "Unitree H2 command interfaces and MuJoCo simulator"
+description = "Unitree H2 command interfaces, offline tools and MuJoCo simulator"
 requires-python = ">=3.10,<3.12"
 license = {text = "Apache-2.0"}
 dependencies = ["numpy==1.26.4", "scipy==1.15.3"]
@@ -29,14 +29,18 @@ teleop = [
 ]
 joystick = ["pygame==2.6.1"]
 
+[tool.setuptools.package-dir]
+"" = "src"
+text2motion_offline = "tools/text2motion_offline"
+
 [tool.setuptools.packages.find]
-where = ["src"]
-include = ["interface*", "sim*"]
+where = ["src", "tools"]
+include = ["interface*", "sim*", "text2motion_offline*"]
 namespaces = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "tools"]
 
 [tool.ruff]
 line-length = 100

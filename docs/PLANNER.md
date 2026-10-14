@@ -19,11 +19,11 @@ models/motion_planner_g1/planner_sonic.onnx
 ```bash
 uv venv .venv_download --python 3.10
 uv pip install --python .venv_download/bin/python -r requirements/download.txt
-.venv_download/bin/python download_from_hf.py --planner-only
-python3 tools/verify_release.py --require-planner
+.venv_download/bin/python tools/model_download/download_planner.py
+python3 tools/validation/verify_release.py --require-planner
 ```
 
-也可以在已有 Python 环境中执行 `python -m pip install -r requirements/download.txt`，然后执行 `python download_from_hf.py --planner-only`。默认目标路径以脚本所在目录为基准，执行命令时的当前目录不影响它。
+也可以在已有 Python 环境中执行 `python -m pip install -r requirements/download.txt`，然后执行 `python tools/model_download/download_planner.py`。默认目标路径以仓库根目录为基准，由脚本位置解析，执行命令时的当前目录不影响它。
 
 若本地文件的 SHA256 已匹配，脚本直接复用，不访问网络，也不要求安装下载依赖。需要下载时，脚本使用 Hugging Face 缓存，先写临时文件，通过校验后才替换目标文件；下载或校验失败不会覆盖原文件。缓存通常在 `~/.cache/huggingface`，可通过 `HF_HOME` 指定其他磁盘。首次下载为缓存和目标副本预留至少 1.6 GB 空间。
 
@@ -38,7 +38,7 @@ SHA256:   39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea
 
 下载脚本固定 revision 和 SHA256，确保复现同一份 planner。上述 SHA256 已与本机保留的权重及 Hugging Face 文件信息核对一致。
 
-如果需要手动获取，可下载上述链接中的原始文件到同一路径，再执行 `python3 tools/verify_release.py --require-planner`。不要将网页保存为 `.onnx`。
+如果需要手动获取，可下载上述链接中的原始文件到同一路径，再执行 `python3 tools/validation/verify_release.py --require-planner`。不要将网页保存为 `.onnx`。
 
 ## 检查与运行
 
@@ -46,7 +46,7 @@ SHA256:   39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea
 # 确认文件被 Git 忽略
 git check-ignore models/motion_planner_g1/planner_sonic.onnx
 # 校验发布模型与 planner，不连接机器人
-python3 tools/verify_release.py --require-planner
+python3 tools/validation/verify_release.py --require-planner
 # 安装 TensorRT Python planner 环境
 ./install.sh planner
 # 独立 planner 服务
@@ -71,7 +71,7 @@ source scripts/setup_env.sh
 
 ```bash
 source scripts/setup_env.sh
-.venv_planner/bin/python tools/check_runtime.py --planner
+.venv_planner/bin/python tools/validation/check_runtime.py --planner
 ```
 
 此检查使用合成机器人状态，不连接机器人或 PICO。

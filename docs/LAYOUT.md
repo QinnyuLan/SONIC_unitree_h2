@@ -4,18 +4,27 @@ Source code is split into three components:
 
 ```text
 src/
-├── runtime/       # C++ SONIC policy execution and Unitree DDS output
-├── interface/     # Python upstream inference and command producers
-└── sim/           # Python MuJoCo simulator and DDS bridge
+├── runtime/             # C++ SONIC policy execution and Unitree DDS output
+├── interface/          # Online Python command producers and planner
+│   ├── motion_replay/  # Motion sampling, playback and optional audio
+│   ├── planner/
+│   ├── teleop/
+│   └── peripherals/
+└── sim/                # Python MuJoCo simulator and DDS bridge
+
+tools/
+├── model_download/     # Download model assets
+├── setup/              # Prepare build dependencies
+├── validation/         # Check files, models and integration
+└── text2motion_offline/
+    └── echo_g/         # Offline speech and G1 motion generation
 ```
 
 | Path | Contents |
 |---|---|
 | `src/runtime/` | Encoder/decoder inference, observations, command arbitration, head/hand output, native SDK and CMake build |
 | `src/interface/commands/` | Message schema, validation and Python command client |
-| `src/interface/replay.py` | Offline G1/H2/SMPL motion and text-to-motion replay |
-| `src/interface/playback.py` | Portable motion/audio bundles, checksums and audio-player lifecycle |
-| `src/interface/text2motion/` | Optional offline ECHO-G speech/gesture generator and model download |
+| `src/interface/motion_replay/` | G1/H2/SMPL motion loading, reference sampling, playback and optional audio |
 | `src/interface/planner/` | Planner service, request client, TensorRT engine and trajectory processing |
 | `src/interface/teleop/` | PICO input, SMPL/VR adapter, calibration, tracking transport and visualization |
 | `src/interface/peripherals/` | Head/hand command client and optional Inspire serial tools |
@@ -36,14 +45,17 @@ src/
 | `third_party/` | Pinned Unitree/XRoboToolkit source submodules and native XR SDK artifacts |
 | `build/runtime/` | Generated native binaries and CMake files |
 | `requirements/` | Dependency locks for each Python environment |
-| `tools/` | Offline checks and integration validation |
+| `tools/model_download/` | Pinned model downloads and checksums |
+| `tools/setup/` | Native dependency build preparation |
+| `tools/validation/` | Release preflight, model and integration checks |
+| `tools/text2motion_offline/echo_g/` | Offline speech/gesture generation using ECHO-G weights |
 | `docs/` | Installation, deployment, architecture and reproducibility guides |
 | `licenses/` | Upstream software notices and robot-asset licenses |
 | `outputs/validation/` | Local validation reports, ignored by Git |
 
-`runtime` accepts commands from `interface` through ZeroMQ. `sim` exchanges robot state and motor targets with `runtime` through DDS. The simulator does not import the Python input services, and the input services do not import the simulator. Both read shared robot resources from `assets/`.
+`runtime` accepts commands from `interface` through ZeroMQ. `sim` exchanges robot state and motor targets with `runtime` through DDS. The simulator does not import the Python input services, and the input services do not import the simulator. Both read shared robot resources from `assets/`. Offline generation writes motion/audio bundles for replay and does not run inside the online interface. See [tool categories and commands](../tools/README.md).
 
-Python packages `interface` and `sim` are installed from the root `pyproject.toml` using `./install.sh`. The installer uses an editable installation, so resources resolve against this checkout even when a process starts from another working directory. Keep `assets/`, `config/` and `models/` with the checkout.
+The root `pyproject.toml` installs `interface` and `sim` from `src/`, and `text2motion_offline` from `tools/`. Use `./install.sh` with the environment profile for the process you need. The installer uses an editable installation, so resources resolve against this checkout even when a process starts from another working directory. Keep `assets/`, `config/` and `models/` with the checkout.
 
 Build the C++ runtime with `bash scripts/build_controller.sh`; the executable is `build/runtime/bin/sonic_h2_runtime`. See the [runtime guide](../src/runtime/README.md), [interface guide](../src/interface/README.md), and [simulator guide](../src/sim/README.md).
 

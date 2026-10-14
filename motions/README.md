@@ -18,15 +18,15 @@ From the repository root, pass one clip directory:
 
 ```bash
 # Inspect without connecting to the runtime.
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_g1_replay/walking_quip_360_R_002__A428 --inspect
 
 # Send a native H2 trajectory to the running policy runtime.
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_h2_replay/walking_quip_360_R_002__A428
 
 # Send the corresponding SMPL reference.
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_smpl_replay/walking_quip_360_R_002__A428
 ```
 
@@ -63,8 +63,8 @@ NPZ files use the following arrays, plus scalar `fps`. An optional scalar string
 These use the same coordinate and joint conventions as CSV. For offline text-to-motion, export the generated motion to one of these formats. The optional [ECHO-G integration](../docs/TEXT2MOTION.md) generates G1 motion with matching speech.
 
 ```bash
-.venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
-.venv_inputs/bin/python -m interface.replay generated_motion.npz
+.venv_inputs/bin/python -m interface.motion_replay generated_motion.npz --inspect
+.venv_inputs/bin/python -m interface.motion_replay generated_motion.npz
 ```
 
 ## Speech and motion bundles

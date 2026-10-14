@@ -12,8 +12,8 @@ import subprocess
 import numpy as np
 from scipy.spatial.transform import Rotation, Slerp
 from interface.paths import ROOT
-from interface.playback import ReplayBundle, sha256, wav_duration
-from interface.replay import Motion
+from interface.motion_replay.playback import ReplayBundle, sha256, wav_duration
+from interface.motion_replay import Motion
 
 SOURCE_REVISION = "60b85fb932b124b1a2ddd0868f4917a73c383901"
 MODELS = ROOT / "models/text2motion_echo_g"
@@ -111,8 +111,8 @@ async def synthesize(text, output, language, voice=None):
 
 def generate(args):
     import torch
-    from interface.text2motion.echo_features import load_manifest, extract_features
-    from interface.text2motion.echo_model import predict
+    from .features import load_manifest, extract_features
+    from .model import predict
     torch.set_num_threads(args.threads)
     if args.device == "cuda" and not torch.cuda.is_available():
         raise ValueError("CUDA requires a CUDA-enabled PyTorch environment")
@@ -185,7 +185,7 @@ def generate(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(prog="python -m text2motion_offline.echo_g", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     download = commands.add_parser("download", help="download and verify pinned models")
     download.add_argument("--models", type=Path, default=MODELS)

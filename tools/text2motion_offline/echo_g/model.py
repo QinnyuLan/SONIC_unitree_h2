@@ -14,7 +14,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .echo_features import validate_conditions
+from .features import validate_conditions
 
 
 def modulate(values, shift, scale):

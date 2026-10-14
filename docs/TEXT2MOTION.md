@@ -12,7 +12,7 @@ text → speech + word timestamps → ECHO-G → G1 motion + matching WAV
                                   H2 policy runtime + audio player
 ```
 
-Generation is a separate Python process using a small PyTorch inference implementation under `src/interface/text2motion/`. It loads the released weights directly. It never starts the policy, publishes robot commands or plays sound. Replay uses the same ten-frame G1 interface as other offline motions. Policy and planner inference continue to use TensorRT.
+Generation is a separate Python process using a small PyTorch inference implementation under `tools/text2motion_offline/echo_g/`. It loads the released weights directly. It never starts the policy, publishes robot commands or plays sound. Replay uses the same ten-frame G1 interface as other offline motions. Policy and planner inference continue to use TensorRT.
 
 ## Replay the included examples
 
@@ -20,7 +20,7 @@ The Chinese and English examples under `motions/example_text2motion_replay/` con
 
 ```bash
 ./install.sh inputs
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_en --inspect
 ```
 
@@ -28,11 +28,11 @@ Start the simulator and policy runtime as described in [deployment](DEPLOYMENT.m
 
 ```bash
 # Sound plays on the computer running replay; requires alsa-utils/aplay.
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_en
 
 # Chinese example, motion only.
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_zh --mute
 ```
 
@@ -43,16 +43,16 @@ Audio is enabled when a bundle contains a WAV. `--inspect` checks files without 
 ```bash
 ./install.sh text2motion
 sudo apt install curl ffmpeg alsa-utils
-.venv_text2motion/bin/python -m interface.text2motion.echo_g download
+.venv_text2motion/bin/python -m text2motion_offline.echo_g download
 ```
 
 The installer creates `.venv_text2motion` with the pinned CPU PyTorch environment. Generation uses three local modules:
 
 | Module | Purpose |
 |---|---|
-| `echo_g.py` | Download, TTS, generation entry point and G1 replay export |
-| `echo_features.py` | WAV input and word-aligned Qwen/wav2vec2 features |
-| `echo_model.py` | Audio+text network, EMA weight loading and eight-step Euler inference |
+| `cli.py` | Download, TTS, generation entry point and G1 replay export |
+| `features.py` | WAV input and word-aligned Qwen/wav2vec2 features |
+| `model.py` | Audio+text network, EMA weight loading and eight-step Euler inference |
 
 The checkpoint contains parameters and architecture metadata, so the matching network definition is included locally. The ECHO-G package, source submodule, training pipeline and dataset are not required. WAV decoding uses the standard library; librosa and soundfile are not dependencies. This profile is independent of the runtime, planner, simulator and replay environments.
 
@@ -63,16 +63,16 @@ CPU generation is the tested default. `--device cuda` is available in an environ
 ## Generate a speech/gesture bundle
 
 ```bash
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --text "大家好，欢迎来到我们的实验室。" --language zh \
   --output outputs/text2motion/greeting_zh
 
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --text "Hello. Welcome to our lab." --language en \
   --output outputs/text2motion/greeting_en
 
-.venv_inputs/bin/python -m interface.replay outputs/text2motion/greeting_zh --inspect
-.venv_inputs/bin/python -m interface.replay outputs/text2motion/greeting_zh
+.venv_inputs/bin/python -m interface.motion_replay outputs/text2motion/greeting_zh --inspect
+.venv_inputs/bin/python -m interface.motion_replay outputs/text2motion/greeting_zh
 ```
 
 Use `--text-file` for UTF-8 input. The default voices are `zh-CN-XiaoxiaoNeural` and `en-US-JennyNeural`; `--voice` overrides them. Each request needs a new or empty output directory. `--seed` controls sampling and defaults to 0. Generation uses the official EMA checkpoint, eight Euler steps and guidance scale 1.
@@ -86,7 +86,7 @@ To use existing speech, provide a JSONL file containing one utterance with timin
 ```
 
 ```bash
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --manifest path/to/utterance.jsonl --language en \
   --output outputs/text2motion/existing_speech
 ```
@@ -96,7 +96,7 @@ The WAV must be 16 kHz mono PCM16. With model files already downloaded, this pat
 For previously generated upstream conditions:
 
 ```bash
-.venv_text2motion/bin/python -m interface.text2motion.echo_g generate \
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate \
   --conditions path/to/speech.pt --audio path/to/speech.wav \
   --output outputs/text2motion/from_conditions
 ```
@@ -132,7 +132,7 @@ build/runtime/bin/unitree_audio_player --check-only \
 build/runtime/bin/unitree_audio_player --interface eth0 --domain 0 --probe \
   motions/example_text2motion_replay/echo_g_zh/speech.wav
 
-.venv_inputs/bin/python -m interface.replay \
+.venv_inputs/bin/python -m interface.motion_replay \
   motions/example_text2motion_replay/echo_g_zh --audio-ready \
   --audio-command 'build/runtime/bin/unitree_audio_player --interface eth0 --domain 0 --play --wait-for-go'
 ```
@@ -143,7 +143,7 @@ The public SDK names its voice client `g1`; this adapter uses that PCM service. 
 
 ## Validation and upstream
 
-Chinese and English examples completed TTS, CPU feature extraction and motion generation. After removing the upstream package, the local implementation reproduced both examples: all extracted feature tensors and final motion arrays were bitwise equal to the reference implementation. A third sampling check with seed 7 also matched exactly. The included bundles pass the minimal replay environment's loading and checksum checks. CPU tests cover joint order, rotation convention, resampling, audio binding, portable bundle paths and player startup/cleanup. A loopback mock Unitree voice service checks the exact PCM payload, normal completion and interrupted playback without a physical device. Reproduce it with `.venv_sim/bin/python tools/check_audio_replay.py` after the native build; see [validation records](REPRODUCIBILITY.md#offline-echo-g-speechgesture-validation). No closed-loop policy tracking or hardware playback was performed for these examples.
+Chinese and English examples completed TTS, CPU feature extraction and motion generation. After removing the upstream package, the local implementation reproduced both examples: all extracted feature tensors and final motion arrays were bitwise equal to the reference implementation. A third sampling check with seed 7 also matched exactly. The included bundles pass the minimal replay environment's loading and checksum checks. CPU tests cover joint order, rotation convention, resampling, audio binding, portable bundle paths and player startup/cleanup. A loopback mock Unitree voice service checks the exact PCM payload, normal completion and interrupted playback without a physical device. Reproduce it with `.venv_sim/bin/python tools/validation/check_audio_replay.py` after the native build; see [validation records](REPRODUCIBILITY.md#offline-echo-g-speechgesture-validation). No closed-loop policy tracking or hardware playback was performed for these examples.
 
 - [ECHO-G source](https://github.com/NJU-SOARLAB/ECHO-G/tree/60b85fb932b124b1a2ddd0868f4917a73c383901)
 - [Official inference format](https://github.com/NJU-SOARLAB/ECHO-G/blob/60b85fb932b124b1a2ddd0868f4917a73c383901/docs/INFERENCE.md)

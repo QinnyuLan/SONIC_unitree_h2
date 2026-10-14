@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def sha256(path: Path) -> str:
@@ -69,7 +69,15 @@ def main() -> int:
         "models/sonic_h2_released/deployment_manifest.json",
         "src/runtime/src/main.cpp",
         "src/runtime/include/observations.hpp",
-        "src/interface/replay.py",
+        "src/interface/motion_replay/__main__.py",
+        "src/interface/motion_replay/cli.py",
+        "src/interface/motion_replay/motion.py",
+        "src/interface/motion_replay/playback.py",
+        "tools/text2motion_offline/echo_g/__main__.py",
+        "tools/text2motion_offline/echo_g/cli.py",
+        "tools/text2motion_offline/echo_g/features.py",
+        "tools/text2motion_offline/echo_g/model.py",
+        "models/text2motion_echo_g/encoders.json",
         "src/interface/teleop/bridge.py",
         "src/interface/planner/service.py",
         "src/interface/planner/motion.py",
@@ -88,8 +96,8 @@ def main() -> int:
             print(f"[{'OK' if ok else 'FAIL':7}] SHA256 XR SDK {entry['path']}")
             good = good and ok
     # Use the same destination and pinned checksum as the download command.
-    sys.path.insert(0, str(ROOT))
-    from download_from_hf import PLANNER_FILE, PLANNER_SHA256
+    sys.path.insert(0, str(ROOT / "tools/model_download"))
+    from download_planner import PLANNER_FILE, PLANNER_SHA256
     planner = ROOT / "models" / PLANNER_FILE[1]
     planner_ok = check_file(planner, required=args.require_planner)
     if planner.is_file():
@@ -97,7 +105,7 @@ def main() -> int:
         print(f"[{'OK' if planner_ok else 'FAIL':7}] SHA256 G1 planner")
     else:
         print("G1 planner is downloaded separately; see docs/PLANNER.md.")
-        print("  python3 download_from_hf.py --planner-only")
+        print("  python3 tools/model_download/download_planner.py")
     good = good and planner_ok
     sums = ROOT / "models/sonic_h2_released/SHA256SUMS"
     if sums.is_file():

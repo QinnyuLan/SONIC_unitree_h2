@@ -11,11 +11,11 @@ Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and CUDA Python bi
 From the repository root:
 
 ```bash
-python3 tools/verify_release.py
+python3 tools/validation/verify_release.py
 ./install.sh sim2sim
-.venv_sim/bin/python tools/verify_release.py --imports --sim
+.venv_sim/bin/python tools/validation/verify_release.py --imports --sim
 ./install.sh teleop
-.venv_teleop/bin/python tools/verify_release.py --teleop
+.venv_teleop/bin/python tools/validation/verify_release.py --teleop
 ```
 
 The simulator check loads the H2 closed-loop assets and advances 100 physics steps. The teleoperation check loads the XRoboToolkit binding, VR mapper, and G1/H2 kinematics without initializing devices. Add `--require-planner` to require the separately downloaded planner.
@@ -24,7 +24,7 @@ Run the Python regression suites in their respective environments:
 
 ```bash
 uv pip install --python .venv_sim/bin/python -r requirements/test.txt
-.venv_sim/bin/python -m pytest tests/sim tests/interface/commands -q
+.venv_sim/bin/python -m pytest tests/sim tests/interface/commands tests/interface/motion_replay -q
 uv pip install --python .venv_teleop/bin/python -r requirements/test.txt
 .venv_teleop/bin/python -m pytest tests/interface/teleop -q
 ```
@@ -43,7 +43,7 @@ For ONNX graph, interface, checksum, and CPU inference checks:
 ```bash
 uv venv .venv_model_validation --python 3.10
 uv pip install --python .venv_model_validation/bin/python -r requirements/model_validation.txt
-.venv_model_validation/bin/python tools/validate_released_models.py
+.venv_model_validation/bin/python tools/validation/validate_released_models.py
 ```
 
 ## Deployment validation
@@ -53,7 +53,7 @@ On 2026-10-15, source code was separated into `src/runtime/`, `src/interface/`, 
 - 45 shared C++ regression tests and 12 runtime/protocol tests passed. These cover the unchanged model contract, native joint mappings, history order, sparse sampling, quaternion handling, ownership, expiry and separate head input.
 - 27 simulator tests (53 additional subtests), 32 command/planner/replay/adapter tests and 34 teleoperation tests passed.
 - The minimal `.venv_inputs` and dedicated `.venv_planner` installations passed. CSV replay validation and producer command-line parsing passed. Simulator/teleoperation preflight and all released model hashes passed.
-- `tools/check_runtime.py --planner` ran the actual FP32 full encoder, decoder and G1 planner from an empty working directory using synthetic robot state and private IPC sockets. Startup standing, G1/VR/SMPL/token input, timeout-to-standing, producer takeover, head/hand independence, synthetic PICO packet conversion and planner inference all passed. DDS was not initialized by this check.
+- `tools/validation/check_runtime.py --planner` ran the actual FP32 full encoder, decoder and G1 planner from an empty working directory using synthetic robot state and private IPC sockets. Startup standing, G1/VR/SMPL/token input, timeout-to-standing, producer takeover, head/hand independence, synthetic PICO packet conversion and planner inference all passed. DDS was not initialized by this check.
 - The latest DDS closed-loop attempt did not complete: runtime encoder initialization and a separate system GPU query both became unresponsive. The simulator initialized its relocated assets and DDS bridge, then stopped on its realtime-lag guard. The previous 2026-10-14 check completed ten seconds on loopback DDS domain 211 with elastic support and 334 finite standing-state frames; that historical result is retained separately and does not validate the current closed loop. No free-standing stability or motion-tracking benchmark was performed.
 - Sim, real and PICO launcher previews passed. Hardware control was not started; no real robot or PICO device was connected during validation.
 - Published ONNX bytes are unchanged. The prior CPU and GPU model-comparison records remain applicable to those model files; they are not evidence of live hardware performance.
@@ -67,7 +67,7 @@ Reproduce the model/transport integration test after building:
 ```bash
 ./install.sh planner
 source scripts/setup_env.sh
-.venv_planner/bin/python tools/check_runtime.py --planner
+.venv_planner/bin/python tools/validation/check_runtime.py --planner
 ```
 
 ## Typed motion replay validation
@@ -97,12 +97,12 @@ After this integration, all 62 Python command/interface tests and 59 C++ tests p
 The following check starts a mock voice service on loopback DDS and a private IPC body receiver; it does not start the policy runtime, contact hardware, or emit sound:
 
 ```bash
-.venv_sim/bin/python tools/check_audio_replay.py
+.venv_sim/bin/python tools/validation/check_audio_replay.py
 ```
 
 Normal playback delivered 112896 PCM bytes in eight chunks, identical to the English WAV, after the first G1 command. A second run interrupted playback and verified that only the matching audio stream stopped and the body channel was released to `stand`. Both cases passed. The check writes its report and subprocess logs under `outputs/validation/`; choose an unused loopback DDS domain with `--domain` if needed.
 
-The inference implementation was then reduced to the three local `echo_*.py` modules. The ECHO-G submodule/package, training YAML configuration, librosa, soundfile and their unused dependencies were removed. A synchronized environment contains 50 pinned dependencies plus this project (test tools are separate). No upstream source checkout is required to download models or generate motion.
+The inference implementation was then reduced to the local CLI, feature extraction and model modules. The ECHO-G submodule/package, training YAML configuration, librosa, soundfile and their unused dependencies were removed. A synchronized environment contains 50 pinned dependencies plus this project (test tools are separate). No upstream source checkout is required to download models or generate motion.
 
 On CPU with four PyTorch threads, both Chinese and English recordings were processed again from their WAVs and word-timestamp manifests. Audio features, text tokens, token times, pooled text and all exported motion arrays matched the original implementation bit for bit. EMA inference also matched for seed 7. The comparison reports are `outputs/validation/echo_minimal_model.json` and `echo_minimal_pipeline.json`. Cached-condition generation and the 15-file model check passed without the upstream package installed.
 
@@ -110,10 +110,25 @@ The 62 command/interface regressions and 11 additional inference-input tests pas
 
 ```bash
 uv pip install --python .venv_text2motion/bin/python -r requirements/test.txt
-.venv_text2motion/bin/python -m pytest tests/interface/text2motion -q
+.venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
 ```
 
 These tests do not establish H2 firmware compatibility, speaker latency, motion quality, or closed-loop tracking. No GPU generation, robot motion or physical speaker playback was performed for this integration.
+
+## Layout and tool-entry validation
+
+Motion replay is packaged under `src/interface/motion_replay/`; offline ECHO-G generation is packaged separately under `tools/text2motion_offline/echo_g/`. Downloads, build preparation and validation scripts are grouped by purpose in `tools/`. All five installed Python environments were refreshed after this reorganization.
+
+The 57 command/replay regressions and 16 offline generation tests passed. From outside the checkout, the installed replay and generation module entry points resolved correctly, the planner downloader verified the existing model at its original destination, and simulation/teleoperation preflights passed. The relocated native prerequisite check, XRoboToolkit preparation and ONNX CPU validation tools also passed. The runtime GPU test's command-line entry was checked without starting inference.
+
+The new ECHO-G entry completed English WAV/text feature extraction and CPU motion generation; every exported motion array was identical to the published English example. The generated bundle loaded in the minimal replay environment. The relocated audio integration tool passed normal and interrupted playback against loopback mocks. These checks exercised no hardware or GPU inference.
+
+Current regression commands:
+
+```bash
+.venv_sim/bin/python -m pytest tests/interface/commands tests/interface/motion_replay -q
+.venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
+```
 
 ## Saving validation reports
 
@@ -128,7 +143,7 @@ git submodule status --recursive > outputs/validation/submodules.txt
 After installing the test dependencies above, save Python test results:
 
 ```bash
-.venv_sim/bin/python -m pytest tests/sim tests/interface/commands -q \
+.venv_sim/bin/python -m pytest tests/sim tests/interface/commands tests/interface/motion_replay -q \
   --junitxml=outputs/validation/sim-and-commands.xml
 .venv_teleop/bin/python -m pytest tests/interface/teleop -q \
   --junitxml=outputs/validation/teleoperation.xml
@@ -144,7 +159,7 @@ GTEST_OUTPUT="json:$PWD/outputs/validation/" \
 After installing the model-validation environment, save the ONNX check report:
 
 ```bash
-.venv_model_validation/bin/python tools/validate_released_models.py \
+.venv_model_validation/bin/python tools/validation/validate_released_models.py \
   --report outputs/validation/model_validation.json
 ```
 
