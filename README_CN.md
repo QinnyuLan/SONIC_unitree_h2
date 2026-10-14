@@ -32,7 +32,7 @@ python3 tools/verify_release.py
 - [工程结构](docs/LAYOUT.md)：C++ runtime、Python 服务、模型、配置与动作示例。
 - [安装与部署](docs/DEPLOYMENT_CN.md)：环境配置、Sim2Sim、Sim2Real 和 VR 遥操作。
 - [发布模型说明](models/released/README.md)：输入输出接口与文件校验。
-- [复现记录](release/REPRODUCIBILITY.md)：模型验证、推理检查与测试结果。
+- [复现记录](docs/REPRODUCIBILITY.md)：模型验证、推理检查与测试结果。
 - [文档索引](docs/README.md)：配置、故障排查与开发说明。
 
 ## 引用
@@ -64,6 +64,6 @@ python3 tools/verify_release.py
 
 ## 许可证
 
-源代码采用 Apache-2.0 许可证，基于 SONIC 的模型权重遵循 NVIDIA Open Model License。第三方组件保留各自的许可证，详见 [LICENSE](LICENSE) 与[第三方声明](legal/)。
+源代码采用 Apache-2.0 许可证，基于 SONIC 的模型权重遵循 NVIDIA Open Model License。第三方组件保留各自的许可证，详见 [LICENSE](LICENSE) 与[第三方声明](licenses/README.md)。
 
 Licensed by NVIDIA Corporation under the NVIDIA Open Model License.

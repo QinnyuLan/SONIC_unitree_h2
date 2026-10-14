@@ -156,4 +156,4 @@ source scripts/setup_env.sh
 .venv_planner/bin/python tools/check_runtime.py --planner
 ```
 
-The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests startup standing, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](../release/REPRODUCIBILITY.md) for the scope of completed checks.
+The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests startup standing, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](REPRODUCIBILITY.md) for the scope of completed checks.

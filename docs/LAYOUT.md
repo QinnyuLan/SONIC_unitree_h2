@@ -34,7 +34,9 @@ src/
 | `build/runtime/` | Generated native binaries and CMake files |
 | `requirements/` | Dependency locks for each Python environment |
 | `tools/` | Offline checks and integration validation |
-| `docs/`, `release/`, `legal/` | Guides, validation records and licenses |
+| `docs/` | Installation, deployment, architecture and reproducibility guides |
+| `licenses/` | Upstream software notices and robot-asset licenses |
+| `outputs/validation/` | Local validation reports, ignored by Git |
 
 `runtime` accepts commands from `interface` through ZeroMQ. `sim` exchanges robot state and motor targets with `runtime` through DDS. The simulator does not import the Python input services, and the input services do not import the simulator. Both read shared robot resources from `assets/`.
 
@@ -42,4 +44,4 @@ Python packages `interface` and `sim` are installed from the root `pyproject.tom
 
 Build the C++ runtime with `bash scripts/build_controller.sh`; the executable is `build/runtime/bin/sonic_h2_runtime`. See the [runtime guide](../src/runtime/README.md), [interface guide](../src/interface/README.md), and [simulator guide](../src/sim/README.md).
 
-The planner weight at `models/planner/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](../release/REPRODUCIBILITY.md).
+The planner weight at `models/planner/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](REPRODUCIBILITY.md).

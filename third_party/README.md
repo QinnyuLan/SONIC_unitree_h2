@@ -27,6 +27,6 @@ The simulator's `OdoState_` extension lives in [`src/sim/odometry.py`](../src/si
 
 The XRoboToolkit source, setup code, binding and common headers match the pinned upstream commit. The additional native SDK libraries and ARM64 headers are retained under [`xrobotoolkit_sdk/`](xrobotoolkit_sdk/README.md). During teleoperation installation, `tools/prepare_xrobotoolkit.py` verifies their checksums and prepares a copy of the binding sources plus the platform's SDK in `build/third_party/xrobotoolkit_pybind/`. Compilation and Python installation use that generated directory, leaving the source submodule untouched.
 
-The C++ runtime's Unitree SDK remains under `src/runtime/third_party/`; it is managed with the native runtime. The SDK libraries and robot assets retain their original licenses.
+The C++ runtime's Unitree SDK remains under `src/runtime/third_party/`; it is managed with the native runtime. The SDK libraries and robot assets retain their original licenses; see the [license index](../licenses/README.md).
 
 To update a submodule, select and test a specific upstream commit, then commit the updated Git link in this repository. Changes specific to this deployment belong in `src/`, rather than in the submodule working trees.

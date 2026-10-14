@@ -156,10 +156,6 @@ def main() -> int:
         except Exception as exc:
             good = False
             print(f"[FAIL   ] teleoperation: {exc}")
-    manifest = ROOT / "release/source_manifest.json"
-    if manifest.is_file():
-        data = json.loads(manifest.read_text())
-        print(f"manifest: {data.get('file_count')} files, {data.get('total_bytes')} bytes")
     print("preflight: PASS" if good else "preflight: FAIL")
     return 0 if good else 1
 

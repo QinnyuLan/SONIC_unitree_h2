@@ -23,4 +23,8 @@ The project citation is provided in [references.bib](references.bib) and [CITATI
 | NVIDIA CUDA Python | CUDA memory, streams and graphs for the Python planner | [Repository](https://github.com/NVIDIA/cuda-python) |
 | ONNX Runtime | Optional offline model validation | [Repository](https://github.com/microsoft/onnxruntime) |
 
-Source provenance is recorded in [source_manifest.json](../release/source_manifest.json). Vendored libraries and assets retain their original copyright and license notices; see [LICENSE](../LICENSE) and [legal/](../legal/).
+## Source provenance
+
+The initial deployment extraction used the `SONIC-H2` checkout at commit `4716be4bcc5f8c61c5f26e946905036f78eee478`, together with its local H2 deployment changes. Subsequent changes are tracked in this repository's Git history. The source SDK revisions are pinned by [.gitmodules](../.gitmodules) and the submodule commits; native XR artifacts have a separate [checksum manifest](../third_party/xrobotoolkit_sdk/manifest.json).
+
+Software and robot assets retain their original copyright and license notices. See the root [LICENSE](../LICENSE) and the consolidated [license index](../licenses/README.md).

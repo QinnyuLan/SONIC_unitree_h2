@@ -70,14 +70,49 @@ source scripts/setup_env.sh
 .venv_planner/bin/python tools/check_runtime.py --planner
 ```
 
-Machine-readable records: [deployment checks](deployment_validation.json), [shared C++ tests](cpp_tests.json), [runtime tests](runtime_tests.json), [MuJoCo connection test](runtime_sim_validation.json), [CPU model checks](model_validation.json), [GPU model checks](gpu_model_validation.json), and [planner checksum](planner_validation.json), and [Python/TensorRT planner comparison](python_planner_validation.json).
-
 ## Third-party dependency validation
 
 On 2026-10-15, the Unitree Python SDK and XRoboToolkit binding were replaced with pinned, unmodified upstream submodules under `third_party/`. The simulator's odometry extension moved to `src/sim/odometry.py`; its DDS type identifier, type information and serialized sample bytes match the previous implementation. The native XR SDK artifacts retain their previous SHA256 hashes.
 
-Simulation and teleoperation installations, dependency checks, preflights and all 93 Python tests passed. A fresh clone fetched both pinned submodules from their official GitHub URLs, installed simulation and teleoperation into empty environments, and passed both preflights. The parent repository and both submodules remained clean after installation. A separate headless simulator published 120 finite LowState and 120 finite odometry messages through loopback DDS domain 217. This check did not start the policy runtime or exercise GPU inference. ARM64 artifact hashes were checked, but ARM64 execution and physical devices were not tested. Details are recorded in [third-party validation](third_party_validation.json).
+Simulation and teleoperation installations, dependency checks, preflights and all 93 Python tests passed. A fresh clone fetched both pinned submodules from their official GitHub URLs, installed simulation and teleoperation into empty environments, and passed both preflights. The parent repository and both submodules remained clean after installation. A separate headless simulator published 120 finite LowState and 120 finite odometry messages through loopback DDS domain 217. This check did not start the policy runtime or exercise GPU inference. ARM64 artifact hashes were checked, but ARM64 execution and physical devices were not tested.
 
-## Release inventory
+## Saving validation reports
 
-[source_manifest.json](source_manifest.json) inventories the current tracked release files, excluding the manifest itself, local planner, environments, build products, and logs. Submodule URLs and commit IDs are recorded separately from the parent repository files. Original source provenance and the published model hashes are retained. Models are unchanged by the deployment cleanup.
+Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:
+
+```bash
+mkdir -p outputs/validation
+git rev-parse HEAD > outputs/validation/commit.txt
+git submodule status --recursive > outputs/validation/submodules.txt
+```
+
+After installing the test dependencies above, save Python test results:
+
+```bash
+.venv_sim/bin/python -m pytest tests/sim tests/interface/commands -q \
+  --junitxml=outputs/validation/sim-and-commands.xml
+.venv_teleop/bin/python -m pytest tests/interface/teleop -q \
+  --junitxml=outputs/validation/teleoperation.xml
+```
+
+After building the native tests, save their JSON reports:
+
+```bash
+GTEST_OUTPUT="json:$PWD/outputs/validation/" \
+  ctest --test-dir build/runtime --output-on-failure
+```
+
+After installing the model-validation environment, save the ONNX check report:
+
+```bash
+.venv_model_validation/bin/python tools/validate_released_models.py \
+  --report outputs/validation/model_validation.json
+```
+
+Package these reports for attachment to the corresponding GitHub release:
+
+```bash
+tar -czf outputs/validation-reports.tar.gz -C outputs/validation .
+```
+
+Reports describe the environment and revision in which they were produced; rerun the relevant checks for a new release. Keep model interface manifests and checksums with the models under `models/released/`. Source provenance is documented in [Acknowledgments](ACKNOWLEDGMENTS.md); Git records the source files and pinned submodules.

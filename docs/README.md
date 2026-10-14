@@ -6,7 +6,8 @@
 - [PICO setup](VR_SETUP.md): headset, trackers, XRoboToolkit, head and hand configuration.
 - [Planner download](PLANNER.md): pinned source, destination, and integrity checks.
 - [Reference motion format](../motions/README.md).
-- [Released models](../models/released/README.md) and [validation](../release/REPRODUCIBILITY.md).
+- [Released models](../models/released/README.md) and [validation](REPRODUCIBILITY.md).
 - [Repository layout](LAYOUT.md).
 - [Third-party dependencies](../third_party/README.md): pinned source submodules and native SDK artifacts.
 - [Acknowledgments](ACKNOWLEDGMENTS.md).
+- [Licenses and notices](../licenses/README.md): SONIC, robot assets and bundled dependencies.

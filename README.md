@@ -32,7 +32,7 @@ Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build
 - [Repository layout](docs/LAYOUT.md): C++ runtime, Python services, models, configuration and motions.
 - [Installation and deployment](docs/DEPLOYMENT.md): environment setup, Sim2Sim, Sim2Real, and VR teleoperation.
 - [Released model](models/released/README.md): input/output interfaces and checksums.
-- [Reproducibility](release/REPRODUCIBILITY.md): model validation, inference checks, and test results.
+- [Reproducibility](docs/REPRODUCIBILITY.md): model validation, inference checks, and test results.
 - [Documentation index](docs/README.md): configuration, troubleshooting, and development notes.
 
 ## Citation
@@ -64,6 +64,6 @@ See [upstream dependencies and references](docs/ACKNOWLEDGMENTS.md) for the full
 
 ## License
 
-Source code is licensed under Apache-2.0. SONIC-derived model weights are covered by the NVIDIA Open Model License. Third-party components retain their respective licenses; see [LICENSE](LICENSE) and [third-party notices](legal/).
+Source code is licensed under Apache-2.0. SONIC-derived model weights are covered by the NVIDIA Open Model License. Third-party components retain their respective licenses; see [LICENSE](LICENSE) and [third-party notices](licenses/README.md).
 
 Licensed by NVIDIA Corporation under the NVIDIA Open Model License.

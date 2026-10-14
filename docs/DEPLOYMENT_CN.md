@@ -154,4 +154,4 @@ source scripts/setup_env.sh
 .venv_planner/bin/python tools/check_runtime.py --planner
 ```
 
-集成检查使用实际模型、合成机器人状态和私有 IPC 通道，不启动 DDS 或连接硬件，覆盖默认站立、四种身体输入、超时、来源切换以及头手独立性。已完成检查的范围见 [复现记录](../release/REPRODUCIBILITY.md)。
+集成检查使用实际模型、合成机器人状态和私有 IPC 通道，不启动 DDS 或连接硬件，覆盖默认站立、四种身体输入、超时、来源切换以及头手独立性。已完成检查的范围见 [复现记录](REPRODUCIBILITY.md)。
