@@ -134,8 +134,19 @@ def main():
     parser.add_argument("--runtime", default="tcp://127.0.0.1:5558")
     parser.add_argument("--state", default="tcp://127.0.0.1:5559")
     parser.add_argument("--publish-only", action="store_true")
+    parser.add_argument("--keyboard", action="store_true", help="run planner inference and keyboard control in this terminal")
+    parser.add_argument("--startup-timeout", type=float, default=600, help="keyboard worker startup timeout in seconds")
     args = parser.parse_args()
-    serve(args)
+    if args.keyboard:
+        if not np.isfinite(args.startup_timeout) or args.startup_timeout <= 0:
+            parser.error("--startup-timeout must be finite and positive")
+        from interface.planner.keyboard import run
+        try:
+            run(args)
+        except (RuntimeError, ValueError, OSError) as error:
+            parser.error(str(error))
+    else:
+        serve(args)
 
 
 if __name__ == "__main__":

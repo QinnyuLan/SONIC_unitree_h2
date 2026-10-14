@@ -59,6 +59,14 @@ bash scripts/run_planner.sh
 
 服务、上下文构造、30 Hz → 50 Hz 重采样、轨迹混合和稀疏 10 帧发送均由 Python 完成。模型通过 TensorRT Python API 推理，CUDA 缓冲区持续复用，使用 CUDA Graph 执行。policy runtime 继续使用 C++ TensorRT。
 
+仿真器、runtime 分别运行在前两个终端时，在第三个终端启动键盘控制及 planner：
+
+```bash
+bash scripts/run_planner.sh --keyboard
+```
+
+按键与模式说明见[接口文档](../src/interface/README.md#planner-keyboard-control)。不带 `--keyboard` 时为独立服务，由其他发送端提供规划请求：
+
 ```bash
 # 与启动脚本等价；需要先配置原生库路径
 source scripts/setup_env.sh

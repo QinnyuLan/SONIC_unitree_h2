@@ -34,57 +34,39 @@ python3 tools/validation/verify_release.py
 
 ## Sim2Sim
 
-### 一键演示
+分别打开三个终端，均进入仓库根目录。
 
-编译 runtime 并安装 `sim2sim` 环境后，在本机图形桌面的终端执行以下任一命令：
-
-```bash
-# H2 policy 跟踪 G1 参考动作
-bash scripts/demo_sim.sh replay
-# G1 planner：以 0.3 m/s 向前行走 12 秒（需安装 planner 环境并下载模型）
-bash scripts/demo_sim.sh planner
-```
-
-脚本会启动仿真器、policy runtime 和独立的输入进程。TensorRT 引擎在仿真开始前准备好，首次构建可能需要数分钟。终端提示站立策略已运行后，点击 MuJoCo 窗口并按 **9** 解除弹力带支撑；观察无支撑站立，再回到终端按 **Enter** 开始动作。脚本会检查支撑是否已解除。动作结束后回到站立，继续观察三秒后关闭演示。`Ctrl+C` 停止本次演示及其子进程。
-
-演示使用 loopback DDS domain **220** 和独立指令通道。建议依次运行两个 demo；需要并行时用 `--domain` 指定未使用的 domain。日志、runtime 状态和仿真物理数据保存在 `outputs/demos/`。脚本完成表示指令被接收并返回站立，动作跟踪质量仍需结合窗口表现和物理记录判断。
-
-```bash
-# 同一入口选择 H2 或 SMPL 动作
-bash scripts/demo_sim.sh replay --motion motions/example_h2_replay/squat_001__A359
-# 调整 planner 速度和行走时长
-bash scripts/demo_sim.sh planner --speed 0.2 --seconds 8
-# 仅检查文件与动作数据，不启动 GPU 推理、DDS 或窗口
-bash scripts/demo_sim.sh replay --check
-bash scripts/demo_sim.sh planner --check
-```
-
-GPU 访问或引擎准备失败时，查看脚本输出目录中的 `gpu.log` 或 `warmup.log`。启动超时或任一组件异常退出都会停止演示。如果 GPU 进程收到强制退出信号仍无法结束，需要先恢复主机 GPU 状态再重试，不能据此判断 policy 的跟踪质量。当前验证范围见[测试记录](REPRODUCIBILITY.md#current-simulation-demo-checks)。
-
-### 分进程启动
-
-终端 1 启动仿真：
+终端 1：启动仿真器。
 
 ```bash
 bash scripts/run_h2_paper_sim.sh
 ```
 
-终端 2 启动 runtime：
+终端 2：启动 SONIC policy runtime。
 
 ```bash
 bash scripts/run_runtime.sh sim
 ```
 
-runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略，等待指令。两端默认使用 loopback、DDS domain 0；更换 domain 时，在两个终端设置相同的 `DDS_DOMAIN`。仿真初始启用弹性支撑，准备好后通过仿真窗口控制解除。
+runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略、等待指令。两端默认使用 loopback、DDS domain 0；更换 domain 时，在两个终端设置相同的 `DDS_DOMAIN`。站立策略开始运行后，点击仿真窗口并按 **9** 解除弹力带，观察无支撑站立，再发送动作指令。
 
-终端 3 发送一个 G1 动作：
+终端 3：启动交互式 motion replay。
 
 ```bash
-.venv_sim/bin/python -m interface.motion_replay \
-  motions/example_g1_replay/walking_quip_360_R_002__A428
+.venv_inputs/bin/python -m interface.motion_replay --keyboard
 ```
 
-动作结束或发送端退出后回到站立。发送端的 `Ctrl+C` 释放其指令通道；runtime 的 `Ctrl+C` 结束控制并发送阻尼指令。
+按 **1 / 2 / 3 / 4** 选择 G1 / G1 探索 / H2 / SMPL 集合，用 **上下方向键** 选择动作，按 **Enter** 播放。**空格** 暂停/继续；**n/p** 切换并播放下一条/上一条；**x** 停止并回到动作开头。仅选择动作不会自动播放。暂停、播放结束或退出时释放身体指令，runtime 回到站立。**q**、**Esc** 或 **Ctrl+C** 退出回放界面。
+
+使用 planner 时，保持终端 1、2 运行，退出 replay，将终端 3 改为：
+
+```bash
+bash scripts/run_planner.sh --keyboard
+```
+
+该终端同时运行 TensorRT planner 工作进程和键盘面板。**1 / 2 / 3** 选择慢走 / 行走 / 跑步，**0** 选择静止；**W/S** 前进/后退，**A/D** 左右平移，**Q/E** 转向，**+/-** 调整速度。**空格** 停止并返回站立，**Esc** 或 **Ctrl+C** 退出面板及 planner 工作进程。完整按键及全部模式切换见[接口说明](../src/interface/README.md#planner-keyboard-control)。
+
+两个输入面板均等待 runtime 的新鲜状态后才发送动作。状态中断后，回放会暂停且不会自动恢复，planner 会清除键盘指令。退出输入端后，仿真器和 runtime 继续运行。planner 需要单独安装环境、下载权重，首次构建引擎可能需要数分钟。安装与测试范围见 [planner 配置](PLANNER.md)和[验证记录](REPRODUCIBILITY.md)。
 
 ## 动作回放与离线 text2motion
 
@@ -166,20 +148,20 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 
 执行 `./install.sh planner` 安装 planner 环境。安装脚本使用 `$TensorRT_ROOT/python` 中与 C++ SDK 配套的 TensorRT Python wheel；文件位于其他位置时设置 `TENSORRT_WHEEL`。
 
-在 runtime 运行时，另开终端启动服务：
+上面的三终端流程中，在终端 3 同时启动键盘面板和推理工作进程：
 
 ```bash
-bash scripts/run_planner.sh
+bash scripts/run_planner.sh --keyboard
 ```
 
-再开终端发送规划请求：
+需要程序化控制时，使用不带 `--keyboard` 的 `bash scripts/run_planner.sh` 启动服务，再从独立客户端发送规划请求：
 
 ```bash
 .venv_inputs/bin/python -m interface.planner.client \
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
-Python planner 独立完成 TensorRT 推理、轨迹混合及稀疏参考输出；runtime 只接收结果。请求停止后回到站立。`--publish-only` 只在 5561 端口发布结果，供遥操作适配端组合下肢参考，不直接占用 runtime 身体通道。
+Python planner 独立完成 TensorRT 推理、轨迹混合及稀疏参考输出；runtime 只接收结果。请求停止后回到站立。`--publish-only` 只在 5561 端口发布结果，供遥操作适配端组合下肢参考，不直接占用 runtime 身体通道。键盘模式的工作进程日志保存在 `outputs/planner/`。
 
 ## VR 遥操作
 

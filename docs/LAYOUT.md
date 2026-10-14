@@ -15,7 +15,6 @@ src/
 tools/
 ├── model_download/     # Download model assets
 ├── setup/              # Prepare build dependencies
-├── demos/              # Launch interactive simulation demonstrations
 ├── validation/         # Check files, models and integration
 └── text2motion_offline/
     └── echo_g/         # Offline speech and G1 motion generation
@@ -48,7 +47,6 @@ tools/
 | `requirements/` | Dependency locks for each Python environment |
 | `tools/model_download/` | Pinned model downloads and checksums |
 | `tools/setup/` | Native dependency build preparation |
-| `tools/demos/` | Orchestrate independent simulator, runtime and replay/planner processes |
 | `tools/validation/` | Release preflight, model and integration checks |
 | `tools/text2motion_offline/echo_g/` | Offline speech/gesture generation using ECHO-G weights |
 | `tools/robot_services/inspire_hands/` | Independent C++ Inspire hand service and robot systemd configuration |

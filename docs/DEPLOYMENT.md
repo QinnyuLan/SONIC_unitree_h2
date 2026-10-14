@@ -34,34 +34,7 @@ Only install the environments you use. No Python training framework is needed fo
 
 ## Sim2Sim
 
-### Interactive demos
-
-After building the runtime and installing `sim2sim`, run either demo from a terminal on the local graphical desktop:
-
-```bash
-# G1 reference motion tracked by the H2 policy
-bash scripts/demo_sim.sh replay
-# G1 planner: walk forward at 0.3 m/s for 12 seconds (requires the planner environment/model)
-bash scripts/demo_sim.sh planner
-```
-
-Each command starts the simulator, policy runtime and its independent input process. The launcher prepares TensorRT engines before starting simulation; first use may take several minutes. Once the terminal reports that the standing policy is running, click the MuJoCo window and press **9** to release the elastic support. Observe unsupported standing, then return to the terminal and press **Enter** to begin motion. The launcher checks that the support has been released. Motion ends with a return to standing; three seconds later the demo closes. `Ctrl+C` stops the demo and its child processes.
-
-The demos use loopback DDS domain **220** and private command sockets. Run one at a time, or select an unused domain with `--domain`. Logs, runtime states and physics diagnostics are saved under `outputs/demos/`. Completion confirms command delivery and return to standing; inspect motion quality in the viewer and diagnostics before treating a clip as validated for tracking.
-
-```bash
-# Select an H2 or SMPL clip through the same replay entry point
-bash scripts/demo_sim.sh replay --motion motions/example_h2_replay/squat_001__A359
-# Change planner speed and duration
-bash scripts/demo_sim.sh planner --speed 0.2 --seconds 8
-# Check files and motion data without launching GPU inference, DDS or a viewer
-bash scripts/demo_sim.sh replay --check
-bash scripts/demo_sim.sh planner --check
-```
-
-If GPU access or engine preparation fails, inspect `gpu.log` or `warmup.log` in the printed output directory. The demo exits on startup timeout or a failed component. A GPU process that remains blocked after a kill signal requires host-level recovery before retrying; it is not evidence of a policy tracking failure. See [validation status](REPRODUCIBILITY.md#current-simulation-demo-checks).
-
-### Separate processes
+Run three separate terminals from the repository root.
 
 Terminal 1 — simulator:
 
@@ -69,22 +42,31 @@ Terminal 1 — simulator:
 bash scripts/run_h2_paper_sim.sh
 ```
 
-Terminal 2 — policy runtime:
+Terminal 2 — SONIC policy runtime:
 
 ```bash
 bash scripts/run_runtime.sh sim
 ```
 
-The runtime transitions from the measured initial pose to the default pose over three seconds, then runs the standing policy. No motion file or planner is loaded. Both processes use loopback DDS domain 0; set `DDS_DOMAIN` in both terminals to use another domain. The simulator starts with its elastic support enabled; release it using the simulator controls when ready.
+The runtime transitions from the measured initial pose to the default pose over three seconds, then runs the standing policy while waiting for inputs. Both processes use loopback DDS domain 0; set the same `DDS_DOMAIN` in both terminals to change it. Once the standing policy is running, click the simulator window and press **9** to release the elastic support. Observe unsupported standing before sending motion commands.
 
-Terminal 3 — choose a G1 motion clip:
+Terminal 3 — interactive motion replay:
 
 ```bash
-.venv_sim/bin/python -m interface.motion_replay \
-  motions/example_g1_replay/walking_quip_360_R_002__A428
+.venv_inputs/bin/python -m interface.motion_replay --keyboard
 ```
 
-Replay finishes by releasing the body channel. The runtime returns to standing. `Ctrl+C` in a producer releases its channel; `Ctrl+C` in the runtime ends control with damping.
+Press **1 / 2 / 3 / 4** to choose G1 / G1 exploration / H2 / SMPL. Use **Up/Down** to select a clip and **Enter** to play it. **Space** pauses/resumes; **n/p** switches to and plays the next/previous clip; **x** stops and rewinds. Selection alone does not start motion. Pausing, finishing or quitting releases the body channel so the runtime returns to standing. **q**, **Esc** or **Ctrl+C** closes the replay interface.
+
+For planner control, keep terminals 1 and 2 running, exit replay, and replace terminal 3 with:
+
+```bash
+bash scripts/run_planner.sh --keyboard
+```
+
+This terminal runs the TensorRT planner worker and its keyboard panel. **1 / 2 / 3** selects slow walk / walk / run; **0** selects idle. **W/S** moves forward/backward, **A/D** strafes, **Q/E** changes heading, and **+/-** adjusts speed. **Space** returns to standing; **Esc** or **Ctrl+C** closes the panel and planner worker. Full controls, including all planner modes, are in the [interface guide](../src/interface/README.md#planner-keyboard-control).
+
+Both input panels wait for fresh runtime state before sending motion. Replay does not automatically resume after a state interruption, and planner keyboard commands are cleared. Closing an input panel leaves the simulator and policy runtime running. The planner environment/model must be installed separately; first engine construction may take several minutes. See [planner setup](PLANNER.md) and [validation records](REPRODUCIBILITY.md).
 
 ## Motion replay and offline text-to-motion
 
@@ -166,20 +148,20 @@ The model is downloaded to `models/motion_planner_g1/planner_sonic.onnx`, ignore
 
 Install its environment with `./install.sh planner`. The installer uses the TensorRT Python wheel from `$TensorRT_ROOT/python`, matching the native SDK; set `TENSORRT_WHEEL` if the wheel is stored elsewhere.
 
-With the runtime running, start the service in another terminal:
+For the three-terminal simulation workflow above, start the keyboard panel and inference worker together in terminal 3:
 
 ```bash
-bash scripts/run_planner.sh
+bash scripts/run_planner.sh --keyboard
 ```
 
-Send a request from a third terminal:
+For programmatic control, run `bash scripts/run_planner.sh` without `--keyboard`, then send requests from a separate client:
 
 ```bash
 .venv_inputs/bin/python -m interface.planner.client \
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
-The Python planner owns TensorRT inference, trajectory blending and conversion to sparse G1 references. The runtime only receives those references. Stopping planner requests returns the runtime to standing. The service also publishes its output on port 5561; `--publish-only` disables direct body-channel forwarding for use by the teleoperation bridge.
+The Python planner owns TensorRT inference, trajectory blending and conversion to sparse G1 references. The runtime only receives those references. Stopping planner requests returns the runtime to standing. The service also publishes its output on port 5561; `--publish-only` disables direct body-channel forwarding for use by the teleoperation bridge. Keyboard worker logs are saved under `outputs/planner/`.
 
 ## VR teleoperation
 

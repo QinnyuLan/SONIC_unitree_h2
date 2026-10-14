@@ -73,6 +73,9 @@ def main() -> int:
         "src/interface/motion_replay/cli.py",
         "src/interface/motion_replay/motion.py",
         "src/interface/motion_replay/playback.py",
+        "src/interface/motion_replay/keyboard.py",
+        "src/interface/terminal.py",
+        "src/interface/commands/status.py",
         "tools/text2motion_offline/echo_g/__main__.py",
         "tools/text2motion_offline/echo_g/cli.py",
         "tools/text2motion_offline/echo_g/features.py",
@@ -87,6 +90,7 @@ def main() -> int:
         "models/text2motion_echo_g/encoders.json",
         "src/interface/teleop/bridge.py",
         "src/interface/planner/service.py",
+        "src/interface/planner/keyboard.py",
         "src/interface/planner/motion.py",
         "src/interface/planner/engine.py",
     ]

@@ -5,13 +5,17 @@ import time
 
 import numpy as np
 from interface.commands import RuntimeClient
+from interface.paths import ROOT
 from .motion import Motion, REFERENCE_TYPES
 from .playback import AudioPlayer, ReplayBundle, wav_duration
 
 
 def main():
     parser = argparse.ArgumentParser(prog="python -m interface.motion_replay", description=__doc__)
-    parser.add_argument("motion", type=Path, help="CSV clip, NPZ, or directory containing replay.json")
+    parser.add_argument("motion", type=Path, nargs="?", help="CSV clip, NPZ, or directory containing replay.json")
+    parser.add_argument("--keyboard", action="store_true", help="interactive collection browser and playback")
+    parser.add_argument("--state", default="tcp://127.0.0.1:5559", help="runtime status for keyboard control")
+    parser.add_argument("--motions-root", type=Path, default=ROOT / "motions")
     parser.add_argument("--type", choices=sorted(REFERENCE_TYPES), dest="reference_type",
                         help="type for unlabelled input; must agree with existing metadata")
     parser.add_argument("--fps", type=float, help="override source fps (CSV fallback: 50)")
@@ -25,6 +29,19 @@ def main():
     parser.add_argument("--audio-ready", action="store_true", help="player supports READY/PLAY handshake")
     parser.add_argument("--audio-delay", type=float, default=0, help="delay audio relative to motion, seconds")
     args = parser.parse_args()
+    if args.keyboard:
+        if args.motion is not None or args.inspect or args.fps is not None or args.reference_type is not None:
+            parser.error("--keyboard selects typed clips from collections; omit motion, --inspect, --fps and --type")
+        if not np.isfinite(args.speed) or args.speed <= 0:
+            parser.error("--speed must be positive")
+        from .keyboard import run
+        try:
+            run(args)
+        except (ValueError, OSError) as error:
+            parser.error(str(error))
+        return
+    if args.motion is None:
+        parser.error("provide a motion path or use --keyboard")
     try:
         bundle = ReplayBundle.load(args.motion) if (args.motion / "replay.json").is_file() else None
         motion = Motion.load(bundle.motion if bundle else args.motion, args.fps, args.reference_type)
