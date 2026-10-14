@@ -18,7 +18,7 @@ uv pip install --python "$ENV_DIR/bin/python" --torch-backend=cpu \
   -c "$ROOT/requirements/$EXTRA.lock" -e "$ROOT/gear_sonic[$EXTRA]"
 if [[ "$ENV_KIND" == planner ]]; then
   # Use the Python bindings shipped with the same TensorRT SDK as the C++ runtime.
-  source "$ROOT/gear_sonic_deploy/scripts/setup_env.sh"
+  source "$ROOT/scripts/setup_env.sh"
   if [[ -n "${TENSORRT_WHEEL:-}" ]]; then
     TRT_WHEELS=("$TENSORRT_WHEEL")
   else

@@ -1,5 +1,5 @@
 {
-  "planner_local_path": "gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx",
+  "planner_local_path": "models/planner/planner_sonic.onnx",
   "repository": "nvidia/GEAR-SONIC",
   "revision": "72935a37d3860204617ebaaf6c855a1c5aff7b8c",
   "sha256": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",

@@ -48,11 +48,12 @@ def main() -> int:
         "gear_sonic/scripts/pico_manager_thread_server.py",
         "scripts/build_controller.sh",
         "gear_sonic/utils/mujoco_sim/wbc_configs/h2_native_sonic_unitree_ros_loop.yaml",
-        "gear_sonic_deploy/deploy.sh",
-        "gear_sonic_deploy/scripts/run_h2_sim2sim.sh",
-        "gear_sonic_deploy/scripts/run_h2_sim2real_four_kp.sh",
-        "gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh",
-        "gear_sonic_deploy/policy/release/observation_config_h2_native.yaml",
+        "scripts/run_h2_teleop_head_adjust.sh",
+        "runtime/CMakeLists.txt",
+        "runtime/src/inference/InferenceEngine.cpp",
+        "runtime/third_party/unitree_sdk2/CMakeLists.txt",
+        "config/h2_deploy.env",
+        "scripts/run_runtime.sh",
         "models/released/model_encoder_full.onnx",
         "models/released/model_encoder.onnx",
         "models/released/model_decoder.onnx",
@@ -70,7 +71,7 @@ def main() -> int:
     # Use the same destination and pinned checksum as the download command.
     sys.path.insert(0, str(ROOT))
     from download_from_hf import PLANNER_FILE, PLANNER_SHA256
-    planner = ROOT / "gear_sonic_deploy" / PLANNER_FILE[1]
+    planner = ROOT / "models" / PLANNER_FILE[1]
     planner_ok = check_file(planner, required=args.require_planner)
     if planner.is_file():
         planner_ok = sha256(planner) == PLANNER_SHA256
@@ -87,7 +88,7 @@ def main() -> int:
             ok = path.is_file() and sha256(path) == expected
             print(f"[{'OK' if ok else 'FAIL':7}] SHA256 {path.relative_to(ROOT)}")
             good = good and ok
-    for script in ROOT.glob("gear_sonic_deploy/scripts/*.sh"):
+    for script in ROOT.glob("scripts/*.sh"):
         if not os.access(script, os.X_OK):
             print(f"[WARN   ] not executable: {script.relative_to(ROOT)}")
     if args.imports:

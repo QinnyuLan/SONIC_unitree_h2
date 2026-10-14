@@ -37,6 +37,6 @@ MUJOCO_LOG.TXT
 # Rebuild the Python binding for the target machine (native SDK libraries are included).
 xrobotoolkit_sdk.cpython-*-*-*.so
 
-# Shared SONIC planner: downloaded locally for VR deployment.
-/gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
-/gear_sonic_deploy/planner/target_vel/V2/.planner_sonic.onnx.*.part
+# Shared SONIC planner: downloaded locally for the optional planner service.
+/models/planner/planner_sonic.onnx
+/models/planner/.planner_sonic.onnx.*.part

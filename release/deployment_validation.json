@@ -1,6 +1,6 @@
 {
   "date": "2026-10-14",
-  "scope": "Python input services and planner, TensorRT inference, C++ policy runtime",
+  "scope": "Consolidated C++ runtime layout, Python input services and planner, TensorRT inference",
   "environment": {
     "python": "3.10.20",
     "cuda": "12.6",
@@ -52,5 +52,18 @@
     "No physical robot validation",
     "No live PICO validation",
     "MuJoCo smoke test retained elastic support"
-  ]
+  ],
+  "layout": {
+    "native_build_entry": "runtime/CMakeLists.txt",
+    "runtime_binary": "runtime/build/bin/sonic_h2_runtime",
+    "native_sdk": "runtime/third_party/unitree_sdk2",
+    "planner_model": "models/planner/planner_sonic.onnx",
+    "configuration": "config/",
+    "replay_examples": "motions/example/",
+    "clean_native_build": true,
+    "vendored_sdk_unchanged": true,
+    "planner_download_reuses_verified_file": true,
+    "clean_checkout_preflight": true,
+    "clean_checkout_production_cmake": true
+  }
 }

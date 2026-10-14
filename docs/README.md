@@ -5,7 +5,7 @@
 - [Native dependencies](NATIVE_SETUP.md): CUDA, TensorRT, Python planner bindings, and the C++ build.
 - [PICO setup](VR_SETUP.md): headset, trackers, XRoboToolkit, head and hand configuration.
 - [Planner download](PLANNER.md): pinned source, destination, and integrity checks.
-- [Reference motion format](../gear_sonic_deploy/reference/REFERENCE_MOTION_TYPES.md).
+- [Reference motion format](../motions/README.md).
 - [Released models](../models/released/README.md) and [validation](../release/REPRODUCIBILITY.md).
 - [Repository layout](LAYOUT.md).
 - [Acknowledgments](ACKNOWLEDGMENTS.md).

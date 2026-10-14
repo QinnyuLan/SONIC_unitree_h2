@@ -14,7 +14,7 @@ from gear_sonic.commands.protocol import array, envelope
 from gear_sonic.commands.receiver import Receiver
 from gear_sonic.planner.motion import G1Planner
 
-DEFAULT_MODEL = Path(__file__).resolve().parents[2] / "gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx"
+DEFAULT_MODEL = Path(__file__).resolve().parents[2] / "models/planner/planner_sonic.onnx"
 
 
 def valid_state(state, wall_ms=None):

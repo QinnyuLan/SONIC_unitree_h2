@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download and verify the shared SONIC G1 planner used by H2 VR deployment."""
+"""Download and verify the shared SONIC G1 planner used by the independent planner service."""
 import argparse
 import hashlib
 import os
@@ -8,7 +8,7 @@ import shutil
 import tempfile
 
 REPO_ID = "nvidia/GEAR-SONIC"
-PLANNER_FILE = ("planner_sonic.onnx", "planner/target_vel/V2/planner_sonic.onnx")
+PLANNER_FILE = ("planner_sonic.onnx", "planner/planner_sonic.onnx")
 PLANNER_REVISION = "72935a37d3860204617ebaaf6c855a1c5aff7b8c"
 PLANNER_SHA256 = "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea"
 
@@ -72,8 +72,8 @@ def download_file(
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--planner-only", action="store_true", help="download the planner (the default and only mode)")
-    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent / "gear_sonic_deploy",
-                        help="deployment root; planner is stored under planner/target_vel/V2")
+    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent / "models",
+                        help="model root; planner is stored under planner/")
     args = parser.parse_args()
     destination = args.output_dir / PLANNER_FILE[1]
     if destination.is_file() and _sha256_file(destination) == PLANNER_SHA256:

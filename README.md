@@ -27,6 +27,7 @@ Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build
 ## Documentation
 
 - [Architecture and command protocol](docs/ARCHITECTURE.md): process boundaries, sparse references, and independent head/hand control.
+- [Repository layout](docs/LAYOUT.md): C++ runtime, Python services, models, configuration and motions.
 - [Installation and deployment](docs/DEPLOYMENT.md): environment setup, Sim2Sim, Sim2Real, and VR teleoperation.
 - [Released model](models/released/README.md): input/output interfaces and checksums.
 - [Reproducibility](release/REPRODUCIBILITY.md): model validation, inference checks, and test results.

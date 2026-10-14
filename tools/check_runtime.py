@@ -24,7 +24,7 @@ def main():
         temp = Path(temp)
         endpoints = {key: f'ipc://{temp}/{key}' for key in ('body', 'head', 'hands', 'state', 'planner', 'planned')}
         log = stack.enter_context((temp / 'runtime.log').open('w+'))
-        process = subprocess.Popen([str(ROOT / 'gear_sonic_deploy/target/release/sonic_h2_runtime'),
+        process = subprocess.Popen([str(ROOT / 'runtime/build/bin/sonic_h2_runtime'),
             '--dry-run', '--model-dir', str(ROOT / 'models/released'),
             '--command-bind', endpoints['body'], '--head-bind', endpoints['head'],
             '--hands-bind', endpoints['hands'], '--state-bind', endpoints['state']], cwd=temp, stdout=log, stderr=log)
@@ -111,7 +111,7 @@ def main():
         if args.planner:
             planner_log = stack.enter_context((temp / 'planner.log').open('w+'))
             planner = subprocess.Popen([str(ROOT / '.venv_planner/bin/python'), '-m', 'gear_sonic.sources.planner',
-                '--model', str(ROOT / 'gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx'),
+                '--model', str(ROOT / 'models/planner/planner_sonic.onnx'),
                 '--input-bind', endpoints['planner'], '--output-bind', endpoints['planned'],
                 '--runtime', endpoints['body'], '--state', endpoints['state']], cwd=temp, stdout=planner_log, stderr=planner_log)
             def stop_planner():

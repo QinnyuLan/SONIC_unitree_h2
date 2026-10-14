@@ -21,7 +21,9 @@ flowchart LR
   F --> K[Dex3 / Inspire DDS]
 ```
 
-`runtime/` owns standing, reference sampling, encoder/decoder inference, command arbitration and H2 output. It contains no planner, motion-file reader, PICO device code or text-generation model. `gear_sonic/sources/` contains Python producers and the planner service. `gear_sonic/planner/` implements context preparation, resampling and trajectory blending in NumPy. `gear_sonic/inference/tensorrt.py` calls the TensorRT Python API directly. Shared native inference/math and robot constants remain under `gear_sonic_deploy/src/`.
+`runtime/` owns the complete C++ execution path: standing, reference sampling, encoder/decoder inference, command arbitration and H2 output. Its headers, TensorRT wrapper, Unitree SDK and build configuration are contained in this directory. The executable has no planner, motion-file reader, PICO device code or text-generation model. Motion readers and kinematics used by regression tests are isolated under `runtime/tests/`.
+
+`gear_sonic/sources/` contains Python producers and the planner service. `gear_sonic/planner/` implements context preparation, resampling and trajectory blending in NumPy. `gear_sonic/inference/tensorrt.py` calls the TensorRT Python API directly. Models live under `models/`, replay examples under `motions/`, and deployment settings under `config/`. See the [repository layout](LAYOUT.md).
 
 | Component | Language | Model execution |
 |---|---|---|

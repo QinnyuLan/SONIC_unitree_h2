@@ -7,7 +7,7 @@
 下载脚本和 planner 服务使用相同路径；也可将已有权重放入此位置：
 
 ```text
-gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
+models/planner/planner_sonic.onnx
 ```
 
 此文件已加入根目录 `.gitignore`，不会随普通 `git add` / `git push` 上传。新克隆的仓库不含该权重。文件大小为 773,952,989 字节（约 738 MiB）。runtime、离线动作回放和原地 SMPL/VR 遥操作不依赖 planner；摇杆行走需要启动独立 planner 服务。
@@ -44,7 +44,7 @@ SHA256:   39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea
 
 ```bash
 # 确认文件被 Git 忽略
-git check-ignore gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
+git check-ignore models/planner/planner_sonic.onnx
 # 校验发布模型与 planner，不连接机器人
 python3 tools/verify_release.py --require-planner
 # 安装 TensorRT Python planner 环境
@@ -61,7 +61,7 @@ bash scripts/run_planner.sh
 
 ```bash
 # 与启动脚本等价；需要先配置原生库路径
-source gear_sonic_deploy/scripts/setup_env.sh
+source scripts/setup_env.sh
 .venv_planner/bin/python -m gear_sonic.sources.planner
 ```
 
@@ -70,7 +70,7 @@ source gear_sonic_deploy/scripts/setup_env.sh
 运行实际模型与通信集成检查：
 
 ```bash
-source gear_sonic_deploy/scripts/setup_env.sh
+source scripts/setup_env.sh
 .venv_planner/bin/python tools/check_runtime.py --planner
 ```
 

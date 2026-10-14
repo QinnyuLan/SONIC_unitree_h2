@@ -10,13 +10,13 @@ Validated on Ubuntu x86_64 with Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9. F
 
 ```bash
 sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
-  libeigen3-dev nlohmann-json3-dev zlib1g-dev
+  libeigen3-dev nlohmann-json3-dev
 export TensorRT_ROOT="$HOME/TensorRT"
 bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-The build produces `gear_sonic_deploy/target/release/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
+The build produces `runtime/build/bin/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
 
 Install the Python environment needed for each process using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
@@ -49,7 +49,7 @@ Terminal 3 — choose a G1 motion clip:
 
 ```bash
 .venv_sim/bin/python -m gear_sonic.sources.motion_replay \
-  gear_sonic_deploy/reference/example/walking_quip_360_R_002__A428
+  motions/example/walking_quip_360_R_002__A428
 ```
 
 Replay finishes by releasing the body channel. The runtime returns to standing. `Ctrl+C` in a producer releases its channel; `Ctrl+C` in the runtime ends control with damping.
@@ -76,7 +76,7 @@ CSV input uses `joint_pos.csv`, optional `joint_vel.csv`, and the first quaterni
 
 ## Sim2Real
 
-Set the robot interface, DDS domain, hand backend and joint gain scales in [`h2_deploy.env`](../gear_sonic_deploy/config/h2_deploy.env). Prepare robot support and emergency stop before enabling control.
+Set the robot interface, DDS domain, hand backend and joint gain scales in [`h2_deploy.env`](../config/h2_deploy.env). Prepare robot support and emergency stop before enabling control.
 
 ```bash
 bash scripts/run_runtime.sh real --print-command
@@ -95,7 +95,7 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python download_from_hf.py --planner-only
 ```
 
-The model stays at `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
+The model is downloaded to `models/planner/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
 
 Install its environment with `./install.sh planner`. The installer uses the TensorRT Python wheel from `$TensorRT_ROOT/python`, matching the native SDK; set `TENSORRT_WHEEL` if the wheel is stored elsewhere.
 
@@ -120,16 +120,16 @@ Follow [PICO setup](VR_SETUP.md), then start the runtime in simulation or on the
 
 ```bash
 # PICO tracking and calibration
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh pico
+bash scripts/run_h2_teleop_head_adjust.sh pico
 # Translate tracking into body/head/hand messages
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh bridge
+bash scripts/run_h2_teleop_head_adjust.sh bridge
 # Optional: joystick locomotion and lower-body planning during VR control
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh planner
+bash scripts/run_h2_teleop_head_adjust.sh planner
 ```
 
 The bridge sends SMPL references for the full-body pose mode and VR three-point references for the PICO VR mode. `bridge --pose-kind vr` uses wrist/head targets in pose mode too. Without a planner, VR uses a standing lower-body reference. SMPL packets contain ten samples at 20 ms intervals; the live tracking window introduces about 180 ms of reference buffering. Head pitch/yaw and hand targets use separate sockets and never enter the body policy.
 
-Head settings belong to [`h2_head_adjust.env`](../gear_sonic_deploy/config/h2_head_adjust.env); the hand backend belongs to `h2_deploy.env`. The PICO feedback port is **5559**. For multi-machine operation, explicitly bind the relevant runtime sockets to the network interface and pass matching endpoints to the bridge. Synchronize system clocks; commands carry wall-clock timestamps and expire.
+Head settings belong to [`h2_head_adjust.env`](../config/h2_head_adjust.env); the hand backend belongs to `h2_deploy.env`. The PICO feedback port is **5559**. For multi-machine operation, explicitly bind the relevant runtime sockets to the network interface and pass matching endpoints to the bridge. Synchronize system clocks; commands carry wall-clock timestamps and expire.
 
 ## Independent head and hand commands
 
@@ -145,10 +145,10 @@ Each process refreshes its own command until interrupted. Head targets are clamp
 ## Validation
 
 ```bash
-sudo apt install libgtest-dev
+sudo apt install libgtest-dev zlib1g-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir gear_sonic_deploy/build --output-on-failure
-source gear_sonic_deploy/scripts/setup_env.sh
+ctest --test-dir runtime/build --output-on-failure
+source scripts/setup_env.sh
 .venv_sim/bin/python tools/check_runtime.py
 ./install.sh planner
 .venv_planner/bin/python tools/check_runtime.py --planner

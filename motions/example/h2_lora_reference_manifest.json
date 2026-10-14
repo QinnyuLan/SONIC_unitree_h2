@@ -1,0 +1,22 @@
+{
+  "schema": "sonic_typed_reference_manifest_v1",
+  "description": "Original SONIC G1 reference demos for the native G1 selector branch.",
+  "output_dir": "motions/example",
+  "fps": 50,
+  "reference_type": "g1",
+  "motions": [
+    {"motion_name": "dance_in_da_party_001__A464", "reference_type": "g1"},
+    {"motion_name": "dance_in_da_party_001__A464_M", "reference_type": "g1"},
+    {"motion_name": "forward_lunge_R_001__A359_M", "reference_type": "g1"},
+    {"motion_name": "macarena_001__A545", "reference_type": "g1"},
+    {"motion_name": "macarena_001__A545_M", "reference_type": "g1"},
+    {"motion_name": "neutral_kick_R_001__A543", "reference_type": "g1"},
+    {"motion_name": "neutral_kick_R_001__A543_M", "reference_type": "g1"},
+    {"motion_name": "squat_001__A359", "reference_type": "g1"},
+    {"motion_name": "tired_forward_lunge_R_001__A359_M", "reference_type": "g1"},
+    {"motion_name": "tired_one_leg_jumping_R_001__A359", "reference_type": "g1"},
+    {"motion_name": "tired_one_leg_jumping_R_001__A359_M", "reference_type": "g1"},
+    {"motion_name": "walking_quip_360_R_002__A428", "reference_type": "g1"},
+    {"motion_name": "walking_quip_360_R_002__A428_M", "reference_type": "g1"}
+  ]
+}

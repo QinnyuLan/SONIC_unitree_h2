@@ -6,10 +6,12 @@ The validated workstation uses Ubuntu x86_64, CUDA 12.6, TensorRT 10.13.3.9. The
 
 ## System packages
 
+The build requires CMake 3.18 or newer, a C++20 compiler, CUDA 12 and TensorRT 10.
+
 ```bash
 sudo apt update
 sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
-  libeigen3-dev nlohmann-json3-dev zlib1g-dev \
+  libeigen3-dev nlohmann-json3-dev \
   libgl1 libglib2.0-0
 ```
 
@@ -42,11 +44,11 @@ The planner uses the [TensorRT Python API](https://docs.nvidia.com/deeplearning/
 From the repository root:
 
 ```bash
-source gear_sonic_deploy/scripts/setup_env.sh
+source scripts/setup_env.sh
 ./verify_deploy.sh
 bash scripts/build_controller.sh
 ```
 
-The build produces `gear_sonic_deploy/target/release/sonic_h2_runtime`; the planner is a Python module. Build and launch scripts do not install system packages or edit shell startup files.
+The build produces `runtime/build/bin/sonic_h2_runtime`; the planner is a Python module. Build and launch scripts do not install system packages or edit shell startup files.
 
-For offline C++ tests, additionally install `libgtest-dev`, build with `-DBUILD_TESTING=ON`, then run `ctest --test-dir gear_sonic_deploy/build --output-on-failure`.
+For offline C++ tests, additionally install `libgtest-dev zlib1g-dev`, build with `-DBUILD_TESTING=ON`, then run `ctest --test-dir runtime/build --output-on-failure`.

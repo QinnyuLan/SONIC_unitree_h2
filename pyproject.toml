@@ -5,4 +5,4 @@ pythonpath = ["."]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-exclude = ["external_dependencies", "gear_sonic_deploy/thirdparty"]
+exclude = ["external_dependencies", "runtime/third_party"]

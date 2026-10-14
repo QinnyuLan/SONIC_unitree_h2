@@ -22,10 +22,10 @@ The installer builds the included XRoboToolkit binding for the local Python envi
 
 ## H2 configuration
 
-Set the robot network interface and DDS domain in [`h2_deploy.env`](../gear_sonic_deploy/config/h2_deploy.env). Set the hand backend in the same file, and head angles in [`h2_head_adjust.env`](../gear_sonic_deploy/config/h2_head_adjust.env). The default head pitch is 40 degrees with fixed yaw; `right-stick` mode enables pitch adjustment. Use `HAND_BACKEND=none` when no Inspire hand service is connected.
+Set the robot network interface and DDS domain in [`h2_deploy.env`](../config/h2_deploy.env). Set the hand backend in the same file, and head angles in [`h2_head_adjust.env`](../config/h2_head_adjust.env). The default head pitch is 40 degrees with fixed yaw; `right-stick` mode enables pitch adjustment. Use `HAND_BACKEND=none` when no Inspire hand service is connected.
 
 The default VR mapper uses G1 kinematics, matching the shared SONIC planner. The G1 URDF and meshes included in the repository are required for that mapping. The controller still drives H2.
 
 Start the runtime, PICO tracking process and teleoperation adapter separately. Add the independent [planner](PLANNER.md) service for joystick locomotion, as shown in the [deployment guide](DEPLOYMENT.md#vr-teleoperation). Use the PICO manager controls for tracking calibration. First-time device calibration and robot enabling require the operator at the robot.
 
-For direct serial Inspire hands, the optional tools `h2_inspire_hand_serial_bridge.py` and `inspire_hand_serial_command.py` in `gear_sonic_deploy/scripts/` expose their device and communication options through `--help`.
+For direct serial Inspire hands, the optional tools `h2_inspire_hand_serial_bridge.py` and `inspire_hand_serial_command.py` in `scripts/` expose their device and communication options through `--help`.

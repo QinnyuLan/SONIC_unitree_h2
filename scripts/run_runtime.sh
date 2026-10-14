@@ -13,9 +13,9 @@ for ARG in "$@"; do
   if [[ "$ARG" == --print-command ]]; then PRINT_ONLY=true; else EXTRA+=("$ARG"); fi
 done
 cd "$ROOT"
-COMMAND=("$ROOT/gear_sonic_deploy/target/release/sonic_h2_runtime" --model-dir "$ROOT/models/released")
+COMMAND=("$ROOT/runtime/build/bin/sonic_h2_runtime" --model-dir "$ROOT/models/released")
 if [[ "$MODE" == real ]]; then
-  source "${H2_DEPLOY_CONFIG:-$ROOT/gear_sonic_deploy/config/h2_deploy.env}"
+  source "${H2_DEPLOY_CONFIG:-$ROOT/config/h2_deploy.env}"
   COMMAND+=(--network "$NETWORK_INTERFACE" --domain "$DDS_DOMAIN" --hand-backend "$HAND_BACKEND"
     --left-ankle-kp "$LEFT_ANKLE_KP" --right-ankle-kp "$RIGHT_ANKLE_KP"
     --left-ankle-roll-kp "$LEFT_ANKLE_ROLL_KP" --right-ankle-roll-kp "$RIGHT_ANKLE_ROLL_KP"
@@ -28,7 +28,7 @@ fi
 COMMAND+=("${EXTRA[@]}")
 if "$PRINT_ONLY"; then printf '%q ' "${COMMAND[@]}"; printf '\n'; exit 0; fi
 [[ -x "${COMMAND[0]}" ]] || { echo "Build first: bash scripts/build_controller.sh" >&2; exit 1; }
-source "$ROOT/gear_sonic_deploy/scripts/setup_env.sh"
+source "$ROOT/scripts/setup_env.sh"
 if [[ "$MODE" == real ]]; then
   echo "H2 will move to its default standing pose and accept commands on $NETWORK_INTERFACE (DDS $DDS_DOMAIN)."
   read -r -p "Type RUN to start robot control: " RESPONSE

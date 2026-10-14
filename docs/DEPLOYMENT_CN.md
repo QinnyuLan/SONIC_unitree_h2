@@ -10,13 +10,13 @@
 
 ```bash
 sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
-  libeigen3-dev nlohmann-json3-dev zlib1g-dev
+  libeigen3-dev nlohmann-json3-dev
 export TensorRT_ROOT="$HOME/TensorRT"
 bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-编译生成 `gear_sonic_deploy/target/release/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
+编译生成 `runtime/build/bin/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
 
 安装 [uv](https://docs.astral.sh/uv/getting-started/installation/) 后，按需选择 Python 环境：
 
@@ -49,7 +49,7 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 ```bash
 .venv_sim/bin/python -m gear_sonic.sources.motion_replay \
-  gear_sonic_deploy/reference/example/walking_quip_360_R_002__A428
+  motions/example/walking_quip_360_R_002__A428
 ```
 
 动作结束或发送端退出后回到站立。发送端的 `Ctrl+C` 释放其指令通道；runtime 的 `Ctrl+C` 结束控制并发送阻尼指令。
@@ -76,7 +76,7 @@ CSV 读取 `joint_pos.csv`、可选的 `joint_vel.csv` 和 `body_quat.csv` 中�
 
 ## Sim2Real
 
-在 [`h2_deploy.env`](../gear_sonic_deploy/config/h2_deploy.env) 设置机器人网卡、DDS domain、手部后端和增益。准备好支撑与急停后运行：
+在 [`h2_deploy.env`](../config/h2_deploy.env) 设置机器人网卡、DDS domain、手部后端和增益。准备好支撑与急停后运行：
 
 ```bash
 bash scripts/run_runtime.sh real --print-command
@@ -95,7 +95,7 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python download_from_hf.py --planner-only
 ```
 
-模型路径保持 `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
+模型下载到 `models/planner/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
 
 执行 `./install.sh planner` 安装 planner 环境。安装脚本使用 `$TensorRT_ROOT/python` 中与 C++ SDK 配套的 TensorRT Python wheel；文件位于其他位置时设置 `TENSORRT_WHEEL`。
 
@@ -120,16 +120,16 @@ Python planner 独立完成 TensorRT 推理、轨迹混合及稀疏参考输出�
 
 ```bash
 # 设备读取与标定
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh pico
+bash scripts/run_h2_teleop_head_adjust.sh pico
 # 转换为身体、头部和手部三路指令
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh bridge
+bash scripts/run_h2_teleop_head_adjust.sh bridge
 # 可选：摇杆行走和 VR 下肢规划
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh planner
+bash scripts/run_h2_teleop_head_adjust.sh planner
 ```
 
 全身姿态模式发送 SMPL，PICO 的 VR 模式发送腕部/头部三点目标。`bridge --pose-kind vr` 可让姿态模式也使用三点目标。没有 planner 时，VR 使用站立下肢参考。SMPL 为间隔 20 ms 的 10 帧；实时输入窗口约引入 180 ms 缓冲延迟。
 
-头部 pitch/yaw 和灵巧手走独立通道，不进入身体 policy。头部设置在 [`h2_head_adjust.env`](../gear_sonic_deploy/config/h2_head_adjust.env)，手部后端在 `h2_deploy.env`。PICO 状态反馈端口改为 **5559**。跨机器时显式设置 runtime 的监听地址与发送端 endpoint，并同步系统时间。
+头部 pitch/yaw 和灵巧手走独立通道，不进入身体 policy。头部设置在 [`h2_head_adjust.env`](../config/h2_head_adjust.env)，手部后端在 `h2_deploy.env`。PICO 状态反馈端口改为 **5559**。跨机器时显式设置 runtime 的监听地址与发送端 endpoint，并同步系统时间。
 
 ## 独立头部和手部控制
 
@@ -143,10 +143,10 @@ bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh planner
 ## 验证
 
 ```bash
-sudo apt install libgtest-dev
+sudo apt install libgtest-dev zlib1g-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir gear_sonic_deploy/build --output-on-failure
-source gear_sonic_deploy/scripts/setup_env.sh
+ctest --test-dir runtime/build --output-on-failure
+source scripts/setup_env.sh
 .venv_sim/bin/python tools/check_runtime.py
 ./install.sh planner
 .venv_planner/bin/python tools/check_runtime.py --planner
