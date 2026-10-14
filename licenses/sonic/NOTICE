@@ -1,0 +1,9 @@
+SONIC model attribution
+
+The released H2 policy weights are derived from NVIDIA's GEAR-SONIC model.
+This attribution applies to the SONIC model and its derivatives.
+
+Licensed by NVIDIA Corporation under the NVIDIA Open Model License
+
+Upstream model: https://huggingface.co/nvidia/GEAR-SONIC
+License: https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/

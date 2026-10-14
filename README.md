@@ -78,6 +78,4 @@ See [upstream dependencies and references](docs/ACKNOWLEDGMENTS.md) for the full
 
 ## License
 
-Source code is licensed under Apache-2.0. SONIC-derived model weights are covered by the NVIDIA Open Model License. Third-party components retain their respective licenses; see [LICENSE](LICENSE) and [third-party notices](licenses/README.md).
-
-Licensed by NVIDIA Corporation under the NVIDIA Open Model License.
+Unless otherwise noted, source code is licensed under Apache-2.0. Model weights and third-party components are subject to their respective licenses; see [LICENSE](LICENSE) and [licenses and notices](licenses/README.md).
