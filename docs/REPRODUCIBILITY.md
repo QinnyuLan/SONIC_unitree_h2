@@ -130,6 +130,21 @@ Current regression commands:
 .venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
 ```
 
+## Robot hand service
+
+The H2 PC2 Inspire DDS-to-RS-485 service has an independent CMake build under `tools/robot_services/inspire_hands/`. It builds with the bundled Unitree SDK or an installed SDK selected through `UNITREE_SDK_ROOT`. Both configurations compiled on the development x86_64 host, and the staged installation resolved DDS libraries from its own `lib/` directory.
+
+Three CTest suites cover ten tests: serial probing/backoff/reconnection, DDS-to-serial delivery with a read-only client default and no replay of disconnected commands, and systemd readiness/heartbeat with a deliberately blocked serial worker. A separate temporary systemd user service on loopback verified that missing USB ports do not restart the daemon, a paused main process triggers watchdog recovery, a killed process restarts, and explicit stop remains stopped. No physical serial port or robot was used; ARM64 compilation and PC2 boot/hardware acceptance remain device-side checks.
+
+```bash
+cmake -S tools/robot_services/inspire_hands -B build/inspire_hands -DBUILD_TESTING=ON
+cmake --build build/inspire_hands -j2
+ctest --test-dir build/inspire_hands --output-on-failure
+python3 tools/validation/check_inspire_watchdog.py
+```
+
+The watchdog tool requires a running systemd user manager and writes `outputs/validation/inspire_watchdog.json`. Full installation, autostart and device acceptance steps are in the [robot hand service guide](INSPIRE_HANDS.md) / [中文](INSPIRE_HANDS_CN.md).
+
 ## Saving validation reports
 
 Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:

@@ -1,0 +1,24 @@
+[Unit]
+Description=SONIC H2 Inspire hands DDS to RS-485 service
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=unitree
+Group=unitree
+SupplementaryGroups=dialout
+EnvironmentFile=/etc/sonic/inspire-hands.env
+ExecStart=/opt/SONIC_unitree_h2/inspire_hands/bin/inspire_hand_service --network ${NETWORK_INTERFACE} --domain ${DDS_DOMAIN} --hands both --right-port ${RIGHT_PORT} --left-port ${LEFT_PORT} --right-id ${RIGHT_ID} --left-id ${LEFT_ID}
+Restart=always
+RestartSec=2s
+WatchdogSec=10s
+WatchdogSignal=SIGKILL
+TimeoutStartSec=30s
+TimeoutStopSec=5s
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

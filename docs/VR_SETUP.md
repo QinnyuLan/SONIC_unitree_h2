@@ -29,3 +29,5 @@ The default VR mapper uses G1 kinematics, matching the shared SONIC planner. The
 Start the runtime, PICO tracking process and teleoperation adapter separately. Add the independent [planner](PLANNER.md) service for joystick locomotion, as shown in the [deployment guide](DEPLOYMENT.md#vr-teleoperation). Use the PICO manager controls for tracking calibration. First-time device calibration and robot enabling require the operator at the robot.
 
 For direct serial Inspire hands, run `.venv_teleop/bin/python -m interface.peripherals.serial_bridge --help` or `.venv_teleop/bin/python -m interface.peripherals.serial_command --help` for device and communication options.
+
+For the standard H2 PC2 DDS-to-serial setup, use the included [Inspire hand service](INSPIRE_HANDS.md) / [中文](INSPIRE_HANDS_CN.md). It supplies the robot-side daemon, stable port configuration, autostart and watchdog. The direct serial bridge is an alternative for locally attached hands; it must not share ports with the PC2 service.

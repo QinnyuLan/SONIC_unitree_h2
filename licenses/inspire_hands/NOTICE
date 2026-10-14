@@ -1,0 +1,21 @@
+Inspire RH56 hand service
+
+The H2 service, serial protocol helpers, DDS test client and original serial
+regression tests were imported from the local dfx_inspire_service project,
+an H2 adaptation of the Unitree DFX Inspire hand service. That source tree
+had no Git revision metadata. Its BSD 3-Clause license is preserved here.
+
+Original files:
+  example_h2_native485.cpp
+  example/hand_example.cpp
+  include/SerialPort.h
+  include/inspire.h
+  tests/test_native485_probe.py
+  tests/test_native485_dds.py
+
+The deployment subset lives in tools/robot_services/inspire_hands/ and
+tests/tools/robot_services/inspire_hands/. Integration adds an independent
+build, configurable DDS domain, a read-only client default, systemd readiness
+and watchdog notifications, and fault-injection checks. The older G1/H1
+executables and the original machine-specific service configuration are not
+distributed with this subset. Subsequent changes are recorded in Git.

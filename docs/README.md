@@ -4,6 +4,7 @@
 - [Runtime architecture and command protocol](ARCHITECTURE.md) / [中文](ARCHITECTURE_CN.md).
 - [Native dependencies](NATIVE_SETUP.md): CUDA, TensorRT, Python planner bindings, and the C++ build.
 - [PICO setup](VR_SETUP.md): headset, trackers, XRoboToolkit, head and hand configuration.
+- [Robot hand service](INSPIRE_HANDS.md) / [中文](INSPIRE_HANDS_CN.md): PC2 build, RS-485 mapping, autostart, watchdog and rollback.
 - [Planner download](PLANNER.md): pinned source, destination, and integrity checks.
 - [Offline text-to-motion](TEXT2MOTION.md) / [中文](TEXT2MOTION_CN.md): ECHO-G speech and G1 gestures, portable replay bundles, and Unitree speaker playback.
 - [Reference motion format](../motions/README.md).

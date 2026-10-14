@@ -33,6 +33,7 @@ Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build
 - [Repository layout](docs/LAYOUT.md): C++ runtime, Python services, models, configuration and motions.
 - [Installation and deployment](docs/DEPLOYMENT.md): environment setup, Sim2Sim, Sim2Real, and VR teleoperation.
 - [Offline text-to-motion](docs/TEXT2MOTION.md): Chinese/English speech, G1 gestures, and audio playback.
+- [Robot hand service](docs/INSPIRE_HANDS.md): Inspire DDS/RS-485 deployment, autostart and watchdog.
 - [Released model](models/sonic_h2_released/README.md): input/output interfaces and checksums.
 - [Reproducibility](docs/REPRODUCIBILITY.md): model validation, inference checks, and test results.
 - [Documentation index](docs/README.md): configuration, troubleshooting, and development notes.

@@ -93,7 +93,9 @@ bash scripts/run_runtime.sh real --print-command
 bash scripts/run_runtime.sh real
 ```
 
-The launcher prints the target interface and requires `RUN` before starting. The robot moves to its default standing pose automatically. Start replay or another producer separately using the same commands as simulation. Gain settings affect initialization and policy control; damping on shutdown is unchanged. `HAND_BACKEND=none` disables hand DDS, `inspire` uses the existing Inspire service, and `dex3` uses Unitree Dex3.
+The launcher prints the target interface and requires `RUN` before starting. The robot moves to its default standing pose automatically. Start replay or another producer separately using the same commands as simulation. Gain settings affect initialization and policy control; damping on shutdown is unchanged. `HAND_BACKEND=none` disables hand DDS, `inspire` connects to the robot's Inspire service, and `dex3` uses Unitree Dex3.
+
+For Inspire hands, install the included `tools/robot_services/inspire_hands/` service on H2 PC2 first. Follow the [robot hand service guide](INSPIRE_HANDS.md) for serial mapping, autostart, watchdog setup and read-only checks. This service runs independently of the body policy.
 
 ## Planner
 

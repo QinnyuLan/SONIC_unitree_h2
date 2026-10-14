@@ -33,6 +33,7 @@ python3 tools/validation/verify_release.py
 - [工程结构](docs/LAYOUT.md)：C++ runtime、Python 服务、模型、配置与动作示例。
 - [安装与部署](docs/DEPLOYMENT_CN.md)：环境配置、Sim2Sim、Sim2Real 和 VR 遥操作。
 - [离线 text2motion](docs/TEXT2MOTION_CN.md)：中英文语音、G1 手势生成及音频回放。
+- [机器人端手部服务](docs/INSPIRE_HANDS_CN.md)：Inspire DDS/RS-485 部署、开机自启动与看门狗。
 - [发布模型说明](models/sonic_h2_released/README.md)：输入输出接口与文件校验。
 - [复现记录](docs/REPRODUCIBILITY.md)：模型验证、推理检查与测试结果。
 - [文档索引](docs/README.md)：配置、故障排查与开发说明。

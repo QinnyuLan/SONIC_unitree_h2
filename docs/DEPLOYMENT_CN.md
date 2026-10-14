@@ -93,7 +93,9 @@ bash scripts/run_runtime.sh real --print-command
 bash scripts/run_runtime.sh real
 ```
 
-启动器显示目标网卡，输入 `RUN` 后开始控制，并自动过渡到默认站姿。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接已有 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
+启动器显示目标网卡，输入 `RUN` 后开始控制，并自动过渡到默认站姿。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接机器人端 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
+
+使用 Inspire 灵巧手时，先在 H2 PC2 部署仓库中的 `tools/robot_services/inspire_hands/` 服务。串口映射、开机自启动、看门狗和只读验收见[机器人端手部服务指南](INSPIRE_HANDS_CN.md)。该服务独立于身体 policy 运行。
 
 ## Planner
 

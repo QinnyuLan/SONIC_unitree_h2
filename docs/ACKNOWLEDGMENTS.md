@@ -19,6 +19,7 @@ The project citation is provided in [references.bib](references.bib) and [CITATI
 | edge-tts | Optional speech synthesis with word timestamps | [Repository](https://github.com/rany2/edge-tts) |
 | MuJoCo | H2 physics simulation and visualization | [Repository](https://github.com/google-deepmind/mujoco) |
 | Unitree SDK2 and Python SDK | DDS communication with the robot and simulator | [C++ SDK](https://github.com/unitreerobotics/unitree_sdk2) · [Python SDK](https://github.com/unitreerobotics/unitree_sdk2_python) |
+| Unitree DFX Inspire hand service | H2 PC2 DDS-to-RS-485 service and hand protocol helpers | [Source notice](../licenses/inspire_hands/NOTICE) · [Deployment](INSPIRE_HANDS.md) |
 | Unitree robot descriptions | Robot models and meshes | [MuJoCo assets](https://github.com/unitreerobotics/unitree_mujoco) · [ROS descriptions](https://github.com/unitreerobotics/unitree_ros) |
 | XRoboToolkit PC Service | PICO device communication and head/controller tracking | [Repository](https://github.com/XR-Robotics/XRoboToolkit-PC-Service) |
 | XRoboToolkit Python binding | Python interface to the PC Service SDK | [Repository](https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind) |

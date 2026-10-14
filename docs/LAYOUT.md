@@ -49,6 +49,7 @@ tools/
 | `tools/setup/` | Native dependency build preparation |
 | `tools/validation/` | Release preflight, model and integration checks |
 | `tools/text2motion_offline/echo_g/` | Offline speech/gesture generation using ECHO-G weights |
+| `tools/robot_services/inspire_hands/` | Independent C++ Inspire hand service and robot systemd configuration |
 | `docs/` | Installation, deployment, architecture and reproducibility guides |
 | `licenses/` | Upstream software notices and robot-asset licenses |
 | `outputs/validation/` | Local validation reports, ignored by Git |
