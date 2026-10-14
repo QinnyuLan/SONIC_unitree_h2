@@ -1,8 +1,11 @@
 # SONIC_unitree_h2
 
-Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999).
+[![Project Page](https://img.shields.io/badge/Project-Page-4A90E2?logo=googlechrome&logoColor=white)](https://bfm-trace.github.io/)
+[![arXiv Paper](https://img.shields.io/badge/Paper-arXiv-b31b1b?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2610.17999)
+[![Interactive Demo](https://img.shields.io/badge/Interactive-Demo-2ea44f?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPHBhdGggZmlsbD0id2hpdGUiIGQ9Ik03IDN2MThsMTUtOXoiLz48L3N2Zz4%3D)](https://bfm-trace.github.io/demo/index.html)
+[![中文](https://img.shields.io/badge/Language-%E4%B8%AD%E6%96%87-8A2BE2?logo=googletranslate&logoColor=white)](README_CN.md)
 
-[Project Page](https://bfm-trace.github.io/) · [arXiv](https://arxiv.org/abs/2610.17999) · [Interactive Demo](https://bfm-trace.github.io/demo/index.html) · [中文](README_CN.md)
+Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999).
 
 ## Overview
 

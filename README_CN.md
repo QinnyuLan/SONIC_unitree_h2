@@ -1,8 +1,11 @@
 # SONIC_unitree_h2
 
-论文 [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999) 的 Unitree H2 部署官方实现。
+[![Project Page](https://img.shields.io/badge/Project-Page-4A90E2?logo=googlechrome&logoColor=white)](https://bfm-trace.github.io/)
+[![arXiv Paper](https://img.shields.io/badge/Paper-arXiv-b31b1b?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2610.17999)
+[![Interactive Demo](https://img.shields.io/badge/Interactive-Demo-2ea44f?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPHBhdGggZmlsbD0id2hpdGUiIGQ9Ik03IDN2MThsMTUtOXoiLz48L3N2Zz4%3D)](https://bfm-trace.github.io/demo/index.html)
+[![English](https://img.shields.io/badge/Language-English-8A2BE2?logo=googletranslate&logoColor=white)](README.md)
 
-[项目主页](https://bfm-trace.github.io/) · [arXiv 论文](https://arxiv.org/abs/2610.17999) · [在线演示](https://bfm-trace.github.io/demo/index.html) · [English](README.md)
+论文 [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999) 的 Unitree H2 部署官方实现。
 
 ## 项目概览
 
