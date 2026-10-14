@@ -40,6 +40,8 @@ From the repository root:
 
 Start the simulator or robot runtime before playback. `--inspect` only validates files. Use `--mute` for motion-only playback; see [motion formats](../../motions/README.md) and [audio setup](../../docs/TEXT2MOTION.md).
 
+The complete H2 introductions are `motions/example_text2motion_replay/h2_trace_intro_zh` (Chinese, 73 s) and `h2_trace_intro_en` (English, 78 s). Pass either directory to the same replay command. These use standing leg references with generated waist/arm gestures; `h2_trace_intro_full_body_zh` / `h2_trace_intro_full_body_en` retain the full-body references for simulation comparison. Their motion, audio, scripts and subtitles are included; playback does not load ECHO-G or call a speech service.
+
 The shared Python motion API is `from interface.motion_replay import Motion, SmplMotion`.
 
 ### Keyboard playback

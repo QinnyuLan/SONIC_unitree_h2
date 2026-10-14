@@ -36,6 +36,8 @@ python3 tools/validation/verify_release.py
 
 按照[部署指南](docs/DEPLOYMENT_CN.md)安装依赖、编译控制器并运行仿真。H2 模型位于 [`models/sonic_h2_released/`](models/sonic_h2_released/)，需要行走规划时，可另行下载并运行 [SONIC planner](docs/DEPLOYMENT_CN.md#planner)。
 
+[中英文 H2 自我介绍 demo](docs/TEXT2MOTION_CN.md#直接展示已有示例)已包含语音和 ECHO-G 动作，可直接通过 motion replay 播放，无需配置 ECHO-G 或下载生成模型。
+
 ## 文档
 
 - [架构与指令协议](docs/ARCHITECTURE_CN.md)：独立 runtime、稀疏参考、头部和手部通道。

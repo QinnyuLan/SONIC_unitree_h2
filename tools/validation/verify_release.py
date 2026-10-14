@@ -81,6 +81,7 @@ def main() -> int:
         "tools/text2motion_offline/echo_g/cli.py",
         "tools/text2motion_offline/echo_g/features.py",
         "tools/text2motion_offline/echo_g/model.py",
+        "tools/text2motion_offline/echo_g/sequence.py",
         "tools/robot_services/inspire_hands/CMakeLists.txt",
         "tools/robot_services/inspire_hands/src/main.cpp",
         "tools/robot_services/inspire_hands/src/hand_client.cpp",

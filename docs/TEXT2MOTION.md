@@ -16,24 +16,38 @@ Generation is a separate Python process using a small PyTorch inference implemen
 
 ## Replay the included examples
 
-The Chinese and English examples under `motions/example_text2motion_replay/` contain the generated motion, its matching WAV and a `replay.json` manifest. They can be replayed without installing the generation environment or downloading its models.
+The complete H2 introduction demos under `motions/example_text2motion_replay/` include generated G1 gestures, matching speech, the script, subtitles and a `replay.json` manifest. Playback uses the input environment and the H2 runtime; it needs no ECHO-G installation, generation weights or network service.
+
+| Language | Bundle | Duration | Script |
+|---|---|---:|---|
+| Chinese, standing | `h2_trace_intro_zh` | 73.04 s | [Chinese script](../motions/example_text2motion_replay/h2_trace_intro_zh/script.txt) |
+| English, standing | `h2_trace_intro_en` | 78.48 s | [English script](../motions/example_text2motion_replay/h2_trace_intro_en/script.txt) |
+
+Full-body comparison bundles are `h2_trace_intro_full_body_zh` and `h2_trace_intro_full_body_en`, with the same durations and identical speech. The standing demos keep ECHO-G waist and arm gestures, replace the twelve leg references with the standard G1 standing pose, and use an upright root reference. The policy still controls all H2 joints. The full-body versions retain generated leg and root motion within each utterance. Compare their leg movement and body sway with the standing references in simulation; neither mode locks the H2 to a world position.
+
+Both languages introduce H2, TRACE transfer, motion tracking, VR teleoperation and ECHO-G. Each consists of seven generated utterances, with one-second silent motion transitions between them. The original short greetings remain available as `echo_g_zh` and `echo_g_en`.
 
 ```bash
 ./install.sh inputs
 .venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_text2motion_replay/echo_g_en --inspect
+  motions/example_text2motion_replay/h2_trace_intro_zh --inspect
 ```
 
 Start the simulator and policy runtime as described in [deployment](DEPLOYMENT.md#sim2sim). Wait for the runtime to enter its standing policy, then run:
 
 ```bash
-# Sound plays on the computer running replay; requires alsa-utils/aplay.
+# Terminal 3, after starting the simulator and enabling the runtime in terminals 1/2.
+# Chinese introduction with local sound; requires alsa-utils/aplay.
 .venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_text2motion_replay/echo_g_en
+  motions/example_text2motion_replay/h2_trace_intro_zh
 
-# Chinese example, motion only.
+# English introduction with local sound.
 .venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_text2motion_replay/echo_g_zh --mute
+  motions/example_text2motion_replay/h2_trace_intro_en
+
+# Full-body comparison (simulator).
+.venv_inputs/bin/python -m interface.motion_replay \
+  motions/example_text2motion_replay/h2_trace_intro_full_body_zh
 ```
 
 Audio is enabled when a bundle contains a WAV. `--inspect` checks files without connecting or playing; `--mute` disables sound. Stop other body producers first, or use `--takeover` to replace their input. Replay completion releases the body channel to standing.
@@ -46,13 +60,14 @@ sudo apt install curl ffmpeg alsa-utils
 .venv_text2motion/bin/python -m text2motion_offline.echo_g download
 ```
 
-The installer creates `.venv_text2motion` with the pinned CPU PyTorch environment. Generation uses three local modules:
+The installer creates `.venv_text2motion` with the pinned CPU PyTorch environment. Generation uses these local modules:
 
 | Module | Purpose |
 |---|---|
 | `cli.py` | Download, TTS, generation entry point and G1 replay export |
 | `features.py` | WAV input and word-aligned Qwen/wav2vec2 features |
 | `model.py` | Audio+text network, EMA weight loading and eight-step Euler inference |
+| `sequence.py` | Paragraph generation, silent motion transitions and subtitle export |
 
 The checkpoint contains parameters and architecture metadata, so the matching network definition is included locally. The ECHO-G package, source submodule, training pipeline and dataset are not required. WAV decoding uses the standard library; librosa and soundfile are not dependencies. This profile is independent of the runtime, planner, simulator and replay environments.
 
@@ -78,6 +93,26 @@ CPU generation is the tested default. `--device cuda` is available in an environ
 Use `--text-file` for UTF-8 input. The default voices are `zh-CN-XiaoxiaoNeural` and `en-US-JennyNeural`; `--voice` overrides them. Each request needs a new or empty output directory. `--seed` controls sampling and defaults to 0. Generation uses the official EMA checkpoint, eight Euler steps and guidance scale 1.
 
 The optional Edge TTS adapter uses a network service and requests actual word boundaries. Each utterance must fit within 20 seconds and 256 text tokens. Longer input is rejected rather than truncated. Speech is prepared completely before motion generation and playback; this is not streaming speech generation.
+
+### Complete scripts
+
+Use `generate-script` for a script with blank lines between paragraphs. Each paragraph must fit the utterance limits above. The output is one continuous replay bundle:
+
+```bash
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate-script \
+  --text-file motions/example_text2motion_replay/h2_trace_intro_zh/script.txt \
+  --language zh --seed 0 --pause 1.0 --body-mode standing \
+  --output outputs/text2motion/h2_trace_intro_zh
+
+.venv_text2motion/bin/python -m text2motion_offline.echo_g generate-script \
+  --text-file motions/example_text2motion_replay/h2_trace_intro_en/script.txt \
+  --language en --seed 0 --pause 1.0 --body-mode standing \
+  --output outputs/text2motion/h2_trace_intro_en
+```
+
+`--body-mode standing` applies the presentation reference described above; `--body-mode full-body` (the default) keeps the generated full-body reference. The paired bundled versions share the same source utterances, audio and timing; their manifests record the body mode and standing joint values.
+
+Paragraph seeds increment from `--seed`; the bundled demos use seeds 0–6. Composition preserves each speech waveform, pads its endpoint to the 50 Hz frame grid, and inserts `--pause` seconds of silence. A quintic smoothstep interpolates each joint within the two endpoint angles, with zero transition slope at both ends; root orientation uses smooth SLERP after aligning the next paragraph's heading. Velocities are recomputed on the final timeline. Paragraphs are not overlapped or time-stretched. The manifest records their start times, seeds and source hashes; `script.txt` and `subtitles.srt` accompany the final bundle. TTS service updates can change regenerated speech, so use the committed assets for the exact published demos.
 
 To use existing speech, provide a JSONL file containing one utterance with timings measured from that same WAV:
 
@@ -113,11 +148,11 @@ motion.npz        # G1 joint_pos, joint_vel, root_quat, fps, reference_type
 speech.wav        # the exact speech used to generate the motion
 ```
 
-Additional extraction and inference records stay under `generation/`; they are not needed for playback. Copy the three bundle files together to the replay computer. Paths inside `replay.json` are relative, and replay validates both motion and audio hashes before sending commands.
+Additional extraction and inference records stay under `generation/`; they are not needed for playback. Copy the three bundle files together to the replay computer; complete-script bundles also include the optional script and subtitles. Paths inside `replay.json` are relative, and replay validates both motion and audio hashes before sending commands.
 
 ECHO-G produces physical 39D motion at 30 Hz. The adapter reorders its 29 canonical G1 joints into SONIC semantic order, reconstructs root quaternions from the two-row 6D rotation representation, and resamples to 50 Hz. Velocities are time derivatives, with zero terminal velocity. The remaining root-velocity/yaw channels are not motor targets. Runtime receives `kind: g1`, selecting encoder branch 3; no G1-to-H2 joint projection is applied.
 
-Audio playback uses the original frame rate and speed. `--speed`, `--fps` overrides and `--loop` require `--mute`. `--audio-delay SECONDS` delays audio relative to motion to compensate a measured playback/tracking offset. A successful motion send means it was queued, not that the policy accepted or tracked it. Playback shares a sender clock; speaker buffering and robot tracking latency are not hardware synchronized. Clips are independent utterances without cross-utterance transition blending.
+Audio playback uses the original frame rate and speed. `--speed`, `--fps` overrides and `--loop` require `--mute`. `--audio-delay SECONDS` delays audio relative to motion to compensate a measured playback/tracking offset. A successful motion send means it was queued, not that the policy accepted or tracked it. Playback shares a sender clock; speaker buffering and robot tracking latency are not hardware synchronized. `generate` exports one utterance; `generate-script` inserts transitions between its paragraphs before playback.
 
 ## Unitree built-in speaker
 
@@ -143,7 +178,9 @@ The public SDK names its voice client `g1`; this adapter uses that PCM service. 
 
 ## Validation and upstream
 
-Chinese and English examples completed TTS, CPU feature extraction and motion generation. After removing the upstream package, the local implementation reproduced both examples: all extracted feature tensors and final motion arrays were bitwise equal to the reference implementation. A third sampling check with seed 7 also matched exactly. The included bundles pass the minimal replay environment's loading and checksum checks. CPU tests cover joint order, rotation convention, resampling, audio binding, portable bundle paths and player startup/cleanup. A loopback mock Unitree voice service checks the exact PCM payload, normal completion and interrupted playback without a physical device. Reproduce it with `.venv_sim/bin/python tools/validation/check_audio_replay.py` after the native build; see [validation records](REPRODUCIBILITY.md#offline-echo-g-speechgesture-validation). No closed-loop policy tracking or hardware playback was performed for these examples.
+All four complete introductions finished headless H2 policy tracking without falls and returned to standing. Maximum horizontal displacement was 0.20/0.18 m for Chinese/English standing references and 0.28/0.34 m for full-body references. See [measurements and test scope](REPRODUCIBILITY.md#complete-h2-introduction-demos). These runs used local simulation and silent audio decoding, not a physical robot or speaker.
+
+The original short Chinese and English greetings completed TTS, CPU feature extraction and motion generation. After removing the upstream package, the local implementation reproduced both short examples: all extracted feature tensors and final motion arrays were bitwise equal to the reference implementation. A third sampling check with seed 7 also matched exactly. The included bundles pass the minimal replay environment's loading and checksum checks. CPU tests cover joint order, rotation convention, resampling, audio binding, portable bundle paths and player startup/cleanup. A loopback mock Unitree voice service checks the exact PCM payload, normal completion and interrupted playback without a physical device. Reproduce it with `.venv_sim/bin/python tools/validation/check_audio_replay.py` after the native build; see [validation records](REPRODUCIBILITY.md#offline-echo-g-speechgesture-validation). That equivalence check did not test policy tracking or physical speaker playback. Complete-introduction simulation results are recorded separately in [Reproducibility](REPRODUCIBILITY.md#complete-h2-introduction-demos).
 
 - [ECHO-G source](https://github.com/NJU-SOARLAB/ECHO-G/tree/60b85fb932b124b1a2ddd0868f4917a73c383901)
 - [Official inference format](https://github.com/NJU-SOARLAB/ECHO-G/blob/60b85fb932b124b1a2ddd0868f4917a73c383901/docs/INFERENCE.md)

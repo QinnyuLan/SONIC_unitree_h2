@@ -136,8 +136,9 @@ def test_audio_player_failure_before_ready_stops_before_motion(monkeypatch, tmp_
 
 
 @pytest.mark.parametrize('language', ['zh', 'en'])
-def test_published_speech_gesture_bundles(language):
-    assets = ReplayBundle.load(ROOT / 'motions/example_text2motion_replay' / f'echo_g_{language}')
+@pytest.mark.parametrize('name', ['echo_g', 'h2_trace_intro', 'h2_trace_intro_full_body'])
+def test_published_speech_gesture_bundles(language, name):
+    assets = ReplayBundle.load(ROOT / 'motions/example_text2motion_replay' / f'{name}_{language}')
     motion = Motion.load(assets.motion)
     metadata = assets.metadata['metadata']
     assert motion.reference_type == metadata['reference_type'] == 'g1'
@@ -147,3 +148,21 @@ def test_published_speech_gesture_bundles(language):
     assert metadata['input_text'] and metadata['tts_voice']
     assert abs(len(motion.times) / motion.fps - wav_duration(assets.audio)) < .05
     motion.sample(.2)
+
+
+@pytest.mark.parametrize('language', ['zh', 'en'])
+def test_intro_comparisons_share_speech_and_upper_body_gestures(language):
+    root = ROOT / 'motions/example_text2motion_replay'
+    standing = ReplayBundle.load(root / f'h2_trace_intro_{language}')
+    full = ReplayBundle.load(root / f'h2_trace_intro_full_body_{language}')
+    assert standing.audio.read_bytes() == full.audio.read_bytes()
+    for name in ('script.txt', 'subtitles.srt'):
+        assert (standing.motion.parent / name).read_bytes() == (full.motion.parent / name).read_bytes()
+    a, b = Motion.load(standing.motion), Motion.load(full.motion)
+    # Waist and arms use SONIC semantic order. Playback needs no generator import.
+    upper = [2, 5, 8, 11, 12, 15, 16, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+    np.testing.assert_array_equal(a.q[:, upper], b.q[:, upper])
+    np.testing.assert_array_equal(a.dq[:, upper], b.dq[:, upper])
+    assert standing.metadata['metadata']['body_mode'] == 'standing'
+    assert full.metadata['metadata']['body_mode'] == 'full-body'
+    assert standing.metadata['metadata']['segments'] == full.metadata['metadata']['segments']

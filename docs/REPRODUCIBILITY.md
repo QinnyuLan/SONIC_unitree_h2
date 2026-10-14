@@ -213,6 +213,30 @@ A separate six-second H2 walking replay followed by eight seconds of standing al
 
 Local comparison records are `outputs/validation/standing_pose/closed_loop_044936/posture.json`, `outputs/validation/standing_pose/closed_loop_050343/posture.json`, and `outputs/validation/standing_pose/replay_transition_050436/posture.json`. These measurements assess posture in simulation and do not establish hardware balance margins.
 
+## Complete H2 introduction demos
+
+The supplied Chinese script was preserved and translated into English. Each language uses seven Edge TTS utterances and seven genuine ECHO-G audio+text predictions, with seeds 0–6, the pinned EMA checkpoint, eight Euler steps and guidance scale 1. The default Chinese/English voices are recorded in each manifest. Generation ran in the CPU text-to-motion environment.
+
+Four portable bundles are included: Chinese (73.04 s) and English (78.48 s), each with standing and full-body references. Each pair shares identical PCM speech, scripts, subtitles, waist/arm references and paragraph timing. The standing version replaces twelve G1 leg references with the standard G1 standing pose and sets the root reference upright. The full-body version retains generated leg/root motion within each paragraph. Both use bounded quintic transitions and heading-aligned quaternion interpolation between paragraphs; large endpoint velocities cannot cause transition angle overshoot. Audio is padded with silence to the 50 Hz frame grid and between paragraphs, without stretching or overlapping speech.
+
+The generation/composition suite passed 22 tests and the motion-replay suite passed 31 tests. Checks cover paragraph preservation, incremented seeds, exact PCM preservation, subtitle timing, heading continuity, bounded transitions with high endpoint velocities, semantic standing-leg indices, published bundle checksums and equivalence of paired upper-body references. All four bundles load in the minimal input environment without PyTorch, ECHO-G weights or a speech service.
+
+```bash
+.venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
+.venv_sim/bin/python -m pytest tests/interface/motion_replay -q
+```
+
+Closed-loop measurements use the actual C++ policy and headless H2 MuJoCo simulator over loopback DDS domain 223. Policy control starts with **]** after initialization, elastic support is released, the complete speech motion plays once, and eight seconds of idle standing follow. Measurements cover unsupported control with position gains active, excluding final stop damping. The audio backend is ALSA null: file decoding and process lifecycle are exercised, while real speaker latency is not measured. Recorded simulation states can be rendered afterward without changing the physics timestep or its 20 ms realtime-lag limit. No physical robot was used.
+
+| Bundle | Minimum base height | Maximum pelvis tilt | Maximum horizontal displacement | Maximum sim lag |
+|---|---:|---:|---:|---:|
+| `h2_trace_intro_zh` | 0.990 m | 4.44° | 0.201 m | 2.56 ms |
+| `h2_trace_intro_full_body_zh` | 0.965 m | 14.06° | 0.278 m | 18.28 ms |
+| `h2_trace_intro_en` | 0.990 m | 4.27° | 0.183 m | 18.28 ms |
+| `h2_trace_intro_full_body_en` | 0.985 m | 9.48° | 0.341 m | 6.74 ms |
+
+All four full-length runs completed without falls or non-finite states, returned to the idle body channel, restored terminal settings and sent damping commands on **o**. These are completion and stability checks, not a joint-tracking accuracy benchmark or hardware acceptance. Neither standing nor full-body references hold an absolute world position. Local reports are indexed in `outputs/validation/echo_g_intro/results.json`; paired comparison videos under the same directory are rendered from recorded simulation states with the corresponding WAV.
+
 ## Saving validation reports
 
 Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:

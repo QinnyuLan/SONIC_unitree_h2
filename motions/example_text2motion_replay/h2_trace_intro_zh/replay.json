@@ -1,0 +1,138 @@
+{
+  "schema": "sonic.replay.v1",
+  "metadata": {
+    "generator": "ECHO-G",
+    "source_revision": "60b85fb932b124b1a2ddd0868f4917a73c383901",
+    "checkpoint_sha256": "c84f31fce140cdc8c3be5e5dbc8cb8eb3a82ce1865e2d84026a0791d4735928d",
+    "reference_type": "g1",
+    "language": "zh",
+    "tts_voice": "zh-CN-XiaoxiaoNeural",
+    "input_text": "大家好，我是宇树 H2。很高兴见到你！今天，我想一边说，一边动，让你认识我。\n\n我比 G1 高大，但我不是它的放大版。身体比例、关节和重量都不一样，同一个动作，也需要不同的控制。\n\n借助 TRACE，我用上了 SONIC 在 G1 上学到的运动经验，再让控制方式，适应我自己的身体。\n\n不必从零训练。一张 GPU，大约八小时，就完成了这次迁移训练。换了身体，学过的本领也能继续用。\n\n我能跟随丰富的全身参考动作，也能通过 VR 遥操作，跟随人类的示范。从伸手到转身，全身都要一起配合。\n\n就比如，我现在正在通过ECHO-G，生成伴随说话的动作参考，虽然这是G1的动作序列，但依然能被我直接理解并执行。\n\n我是 H2。新的身体，不必从零开始。很高兴认识你，我们下次见！",
+    "audio_seconds": 73.04,
+    "motion_frames": 3652,
+    "motion_fps": 50,
+    "composition": {
+      "method": "bounded_quintic_joint_bridge_and_heading_aligned_slerp_v1",
+      "pause_seconds": 1.0,
+      "audio": "unaltered PCM with silence padding"
+    },
+    "body_mode": "standing",
+    "standing_reference": {
+      "joint_indices_semantic": [
+        0,
+        1,
+        3,
+        4,
+        6,
+        7,
+        9,
+        10,
+        13,
+        14,
+        17,
+        18
+      ],
+      "joint_angles_rad": [
+        -0.312,
+        -0.312,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.669,
+        0.669,
+        -0.363,
+        -0.363,
+        0.0,
+        0.0
+      ],
+      "root_quat_wxyz": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "preserved": "generated waist and arm gestures"
+    },
+    "segments": [
+      {
+        "index": 1,
+        "text": "大家好，我是宇树 H2。很高兴见到你！今天，我想一边说，一边动，让你认识我。",
+        "start_seconds": 0.0,
+        "speech_seconds": 8.688,
+        "padded_seconds": 8.7,
+        "seed": 0,
+        "source_motion_sha256": "18ea8368aa124295b4871880bdb8ae74a50be67d56bc5864d73bff494c28e906",
+        "source_audio_sha256": "f586416eaa178ad97cc06eb92d23a33252879085eb87ff5ee4158cd6e4bc72bf"
+      },
+      {
+        "index": 2,
+        "text": "我比 G1 高大，但我不是它的放大版。身体比例、关节和重量都不一样，同一个动作，也需要不同的控制。",
+        "start_seconds": 9.7,
+        "speech_seconds": 9.84,
+        "padded_seconds": 9.84,
+        "seed": 1,
+        "source_motion_sha256": "5f58d86a298bdcaafb6a7b76b4e869eefefeae478977deef5d61074fc3c902df",
+        "source_audio_sha256": "b80a0247142f44117b315cce10485eea6d68ed879f77fe452defb542a563f730"
+      },
+      {
+        "index": 3,
+        "text": "借助 TRACE，我用上了 SONIC 在 G1 上学到的运动经验，再让控制方式，适应我自己的身体。",
+        "start_seconds": 20.54,
+        "speech_seconds": 8.448,
+        "padded_seconds": 8.46,
+        "seed": 2,
+        "source_motion_sha256": "01a91417050676652a821428ffc37c57a010a871f0112b955751e93a4b67836f",
+        "source_audio_sha256": "18f654799bf0b75ff2bbe81581867ed887023f332bd07e020a694e867a5743f4"
+      },
+      {
+        "index": 4,
+        "text": "不必从零训练。一张 GPU，大约八小时，就完成了这次迁移训练。换了身体，学过的本领也能继续用。",
+        "start_seconds": 30.0,
+        "speech_seconds": 10.632,
+        "padded_seconds": 10.64,
+        "seed": 3,
+        "source_motion_sha256": "0d2fb2153d00f91341602f8c05058f0bce8868f121dc0c09b88a1d4d3e5f51f9",
+        "source_audio_sha256": "62bbf5ca24ab5207288360d7252c30d5cf9023390cf3c4c65162516b5e41877c"
+      },
+      {
+        "index": 5,
+        "text": "我能跟随丰富的全身参考动作，也能通过 VR 遥操作，跟随人类的示范。从伸手到转身，全身都要一起配合。",
+        "start_seconds": 41.64,
+        "speech_seconds": 10.68,
+        "padded_seconds": 10.68,
+        "seed": 4,
+        "source_motion_sha256": "6c4dfa532c81f074c0009494b60b3923070a9703d73d17546c8b0e895526dad2",
+        "source_audio_sha256": "4d4c2a1ac510d5c57c71b82444aa8270ec6257ebd085046cd842a15305083d3a"
+      },
+      {
+        "index": 6,
+        "text": "就比如，我现在正在通过ECHO-G，生成伴随说话的动作参考，虽然这是G1的动作序列，但依然能被我直接理解并执行。",
+        "start_seconds": 53.32,
+        "speech_seconds": 11.208,
+        "padded_seconds": 11.22,
+        "seed": 5,
+        "source_motion_sha256": "68a45bfde8dba76fd5180582edfe6484a0d94f0ff6943caeb851616b809d14af",
+        "source_audio_sha256": "909e4a7e597bd458a371240a224b8a371e28df35f0b40f4b4420688e141e7d9f"
+      },
+      {
+        "index": 7,
+        "text": "我是 H2。新的身体，不必从零开始。很高兴认识你，我们下次见！",
+        "start_seconds": 65.54,
+        "speech_seconds": 7.488,
+        "padded_seconds": 7.5,
+        "seed": 6,
+        "source_motion_sha256": "8a7d85db1f3424587373acc2ded4a977f11f8205540cf8ba4bea1683e61ca689",
+        "source_audio_sha256": "7acd6df1470086c0978a170f1c42019d069aeb62809d66ba62c71d23efd041fb"
+      }
+    ]
+  },
+  "motion": {
+    "file": "motion.npz",
+    "sha256": "f2d46054c2b628bd95a480e9cb574950bb74d8f8ebae4d6604f78dc97ae0aae7"
+  },
+  "audio": {
+    "file": "speech.wav",
+    "sha256": "d24e82510dfca35b0a43217809ed162af074d85d0d6436c6a66dc0206fd99aea"
+  }
+}

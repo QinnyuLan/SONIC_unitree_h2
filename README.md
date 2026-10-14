@@ -36,6 +36,8 @@ python3 tools/validation/verify_release.py
 
 Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build the controller, and run simulation. H2 checkpoints are provided in [`models/sonic_h2_released/`](models/sonic_h2_released/). The [SONIC planner](docs/DEPLOYMENT.md#planner) is optional and runs as a separate service.
 
+The [Chinese and English H2 introduction demos](docs/TEXT2MOTION.md#replay-the-included-examples) include speech and ECHO-G gestures ready for motion replay. No ECHO-G setup or generation models are needed to play them.
+
 ## Documentation
 
 - [Architecture and command protocol](docs/ARCHITECTURE.md): process boundaries, sparse references, and independent head/hand control.

@@ -39,6 +39,8 @@ The output is a portable motion/audio bundle. Send it through the independent re
 
 See [text-to-motion](../docs/TEXT2MOTION.md) / [中文](../docs/TEXT2MOTION_CN.md) for dependencies, existing speech input and speaker setup.
 
+For complete scripts, use `generate-script --text-file SCRIPT.txt --language en --body-mode standing --output OUTPUT`. Separate utterances with blank lines; the tool generates each paragraph and joins them with silent motion transitions. The ready-to-play Chinese/English H2 introductions are under `motions/example_text2motion_replay/h2_trace_intro_zh` and `h2_trace_intro_en`.
+
 ## Robot services
 
 Build the Inspire hand service independently of the policy runtime:

@@ -1,6 +1,6 @@
 # Reference Motions
 
-The 36 reference clips and two generated speech/gesture bundles are inputs to the independent Python motion replay process. The policy runtime creates its startup standing reference in memory and does not load motion files.
+The 36 reference clips and six generated speech/gesture bundles are inputs to the independent Python motion replay process. The policy runtime creates its startup standing reference in memory and does not load motion files.
 
 | Directory | Input type | Clips | Encoder selector |
 |---|---|---:|---:|
@@ -8,7 +8,7 @@ The 36 reference clips and two generated speech/gesture bundles are inputs to th
 | `example_g1_explore_replay/` | Native G1 exploration demos | 7 | 3 |
 | `example_h2_replay/` | Native H2 basic demos | 8 | 0 |
 | `example_smpl_replay/` | SMPL demos | 8 | 2 |
-| `example_text2motion_replay/` | ECHO-G Chinese/English speech and G1 gestures | 2 | 3 |
+| `example_text2motion_replay/` | ECHO-G Chinese/English speech and G1 gestures | 6 | 3 |
 
 The exploration set includes kneeling, crawling and jumping. Clips with the same name in different collections contain different reference representations. Each reference collection's `manifest.json` records input type, frame rate, frame count, source collection and file SHA256 hashes. Motion data was copied from the corresponding `SONIC-H2/gear_sonic_deploy/reference/` collections; original clip metadata is retained as provenance. The extreme H2 collection is not included.
 
@@ -69,7 +69,20 @@ These use the same coordinate and joint conventions as CSV. For offline text-to-
 
 ## Speech and motion bundles
 
-Pass `motions/example_text2motion_replay/echo_g_zh` or `echo_g_en` to the same replay entry point. Each contains `motion.npz`, `speech.wav` and a `replay.json` manifest with relative paths and SHA256 hashes. The Chinese text is “大家好，欢迎来到我们的实验室。”; the English text is “Hello. Welcome to our lab.”. Generation parameters are recorded in each manifest.
+Pass a directory under `motions/example_text2motion_replay/` to the same replay entry point:
+
+| Bundle | Content | Duration |
+|---|---|---:|
+| `h2_trace_intro_zh` | Chinese H2/TRACE introduction, standing | 73.04 s |
+| `h2_trace_intro_en` | English H2/TRACE introduction, standing | 78.48 s |
+| `h2_trace_intro_full_body_zh` | Chinese introduction, generated full-body comparison | 73.04 s |
+| `h2_trace_intro_full_body_en` | English introduction, generated full-body comparison | 78.48 s |
+| `echo_g_zh` | Short Chinese lab greeting | 3.26 s |
+| `echo_g_en` | Short English lab greeting | 3.53 s |
+
+Standing and full-body pairs use identical speech and timing. The standing versions preserve generated waist/arm gestures and use a fixed G1 leg/root reference. The full-body comparisons retain generated leg/root motion; compare their behavior in simulation. Neither mode locks the H2 to a world position.
+
+Each contains `motion.npz`, `speech.wav` and a `replay.json` manifest with relative paths and SHA256 hashes. The complete introductions also contain `script.txt` and paragraph subtitles in `subtitles.srt`. Their manifests record the seven source utterances and the silent motion transitions between them. All files needed for playback are included; ECHO-G models are not loaded during replay.
 
 Replay checks both files before sending, plays audio locally by default, and supports an independent Unitree speaker adapter. Use `--inspect` to validate without playback or `--mute` for motion only. Timing overrides and looping require muted playback. See [generation and audio setup](../docs/TEXT2MOTION.md).
 

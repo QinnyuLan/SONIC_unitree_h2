@@ -131,6 +131,7 @@ def generate(args):
     else:
         manifest = None
     if manifest:
+        source_record = json.loads(manifest.read_text(encoding="utf-8").strip())
         utterance = load_manifest(manifest)
         if utterance["audio_path"].resolve() != (output / "speech.wav").resolve():
             shutil.copyfile(utterance["audio_path"], output / "speech.wav")
@@ -177,8 +178,9 @@ def generate(args):
     metadata = {"generator": "ECHO-G", "source_revision": SOURCE_REVISION,
                 "checkpoint_sha256": CHECKPOINT_SHA256, "seed": args.seed,
                 "reference_type": "g1", "language": args.language, "transcript": transcript,
-                "tts_voice": (args.voice or VOICES[args.language]) if text is not None else None,
-                "input_text": text,
+                "tts_voice": ((args.voice or VOICES[args.language]) if text is not None
+                              else source_record.get("tts_voice") if manifest else None),
+                "input_text": text if text is not None else source_record.get("transcript") if manifest else None,
                 "audio_seconds": seconds, "motion_frames": len(motion.times), "motion_fps": motion.fps}
     ReplayBundle.write(output, metadata=metadata)
     print(f"Replay bundle: {output}", flush=True)
@@ -205,6 +207,18 @@ def main():
     generate_parser.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
     generate_parser.add_argument("--seed", type=int, default=0)
     generate_parser.add_argument("--threads", type=int, default=4)
+    script = commands.add_parser("generate-script", help="generate paragraphs and compose one complete replay bundle")
+    script.add_argument("--text-file", type=Path, required=True, help="UTF-8 script, one utterance per blank-line-separated paragraph")
+    script.add_argument("--models", type=Path, default=MODELS)
+    script.add_argument("--output", type=Path, required=True)
+    script.add_argument("--language", choices=VOICES, default="zh")
+    script.add_argument("--voice")
+    script.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
+    script.add_argument("--seed", type=int, default=0, help="first paragraph seed; incremented for each subsequent paragraph")
+    script.add_argument("--threads", type=int, default=4)
+    script.add_argument("--pause", type=float, default=1.0, help="silence and motion transition between paragraphs, seconds")
+    script.add_argument("--body-mode", choices=["full-body", "standing"], default="full-body",
+                        help="keep generated full-body motion, or preserve waist/arms with a fixed standing leg reference")
     args = parser.parse_args()
     try:
         if args.command == "download":
@@ -212,6 +226,10 @@ def main():
         else:
             if args.threads < 1 or args.seed < 0:
                 raise ValueError("threads must be positive and seed nonnegative")
+            if args.command == "generate-script":
+                from .sequence import generate_script
+                generate_script(args)
+                return
             if args.audio is not None and args.conditions is None:
                 raise ValueError("--audio is only used with --conditions; use --manifest for existing speech")
             generate(args)
