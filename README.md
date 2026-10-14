@@ -19,7 +19,7 @@ Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy)
 ## Getting Started
 
 ```bash
-git clone --depth 1 https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```

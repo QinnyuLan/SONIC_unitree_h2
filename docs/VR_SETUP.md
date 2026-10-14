@@ -18,7 +18,7 @@ Use a PICO 4/4 Pro headset, two controllers, and two ankle motion trackers. Conn
 .venv_teleop/bin/python -m interface.teleop.pico --help
 ```
 
-The installer builds the included XRoboToolkit binding for the local Python environment. The PC Service and PICO application remain separate device software.
+The installer initializes the pinned XRoboToolkit source submodule and builds a local copy with the bundled native SDK for the active Python environment. The PC Service and PICO application remain separate device software.
 
 ## H2 configuration
 

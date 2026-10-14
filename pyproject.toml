@@ -37,4 +37,4 @@ pythonpath = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-exclude = ["external_dependencies", "src/runtime/third_party"]
+exclude = ["third_party", "src/runtime/third_party"]

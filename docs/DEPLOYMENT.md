@@ -6,6 +6,8 @@ Run commands from the repository root. The H2 runtime starts in a standing pose;
 
 ## Installation
 
+For an existing checkout, run `git submodule update --init --recursive`. Upstream dependencies are pinned to the commits recorded by this repository; see [third-party setup](../third_party/README.md).
+
 Validated on Ubuntu x86_64 with Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9. Follow [native setup](NATIVE_SETUP.md) for CUDA and TensorRT installation.
 
 ```bash

@@ -19,7 +19,7 @@ policy runtime 启动后以默认姿态站立，接收独立 motion replay、pla
 ## 快速开始
 
 ```bash
-git clone --depth 1 https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```

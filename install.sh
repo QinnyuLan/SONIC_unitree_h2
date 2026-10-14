@@ -32,11 +32,14 @@ if [[ "$ENV_KIND" == planner ]]; then
   uv pip install --python "$ENV_DIR/bin/python" -c "$ROOT/requirements/planner.lock" "${TRT_WHEELS[0]}"
   "$ENV_DIR/bin/python" -c 'import tensorrt; from cuda.bindings import runtime; print("TensorRT", tensorrt.__version__)'
 elif [[ "$ENV_KIND" == sim2sim ]]; then
+  git -C "$ROOT" submodule update --init -- third_party/unitree_sdk2_python
   uv pip install --python "$ENV_DIR/bin/python" -c "$ROOT/requirements/sim.lock" \
-    -e "$ROOT/external_dependencies/unitree_sdk2_python"
+    -e "$ROOT/third_party/unitree_sdk2_python"
 elif [[ "$ENV_KIND" == teleop ]]; then
+  git -C "$ROOT" submodule update --init -- third_party/xrobotoolkit_pybind
+  "$ENV_DIR/bin/python" "$ROOT/tools/prepare_xrobotoolkit.py"
   uv pip install --python "$ENV_DIR/bin/python" 'cmake>=3.14,<4' 'pybind11==3.0.4' 'setuptools<82' wheel
-  uv pip install --python "$ENV_DIR/bin/python" --no-build-isolation -e "$ROOT/external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64"
+  uv pip install --python "$ENV_DIR/bin/python" --no-build-isolation -e "$ROOT/build/third_party/xrobotoolkit_pybind"
 fi
 uv pip check --python "$ENV_DIR/bin/python"
 echo "Installed $ENV_KIND in $ENV_DIR"

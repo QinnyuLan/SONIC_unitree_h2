@@ -1,0 +1,32 @@
+{
+  "description": "Existing XRoboToolkit native SDK artifacts retained unchanged from the deployment release",
+  "source_release_commit": "a2db18d301127e5b01e1a979e4793eadc81714a4",
+  "binding_commit": "c64ccf6acd577a333e03b66fafe8efeeceb511b1",
+  "files": [
+    {
+      "path": "lib/x86_64/libPXREARobotSDK.so",
+      "bytes": 23835456,
+      "sha256": "2348e1b0bf7f05cd13d95d628f04237b6b9fc50c6008b82f9bf4b046fc9373e6"
+    },
+    {
+      "path": "lib/aarch64/libPXREARobotSDK.so",
+      "bytes": 19599776,
+      "sha256": "e50fd4d5194e545414442da59f699266433c74ee56f00f2d4f91b1871718c1d4"
+    },
+    {
+      "path": "include/aarch64/PXREARobotSDK.h",
+      "bytes": 3399,
+      "sha256": "4665952f6505d721fadff1c442fbed7fb3d0cc97637f3f18bdb75dac838f3dae"
+    },
+    {
+      "path": "include/aarch64/nlohmann/json.hpp",
+      "bytes": 919975,
+      "sha256": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
+    },
+    {
+      "path": "include/aarch64/nlohmann/json_fwd.hpp",
+      "bytes": 6340,
+      "sha256": "5cefbba751baf5243033fd894c70be9b37103d64b3d3a959e4173197d71137b9"
+    }
+  ]
+}

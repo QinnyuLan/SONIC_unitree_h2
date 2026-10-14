@@ -8,4 +8,5 @@
 - [Reference motion format](../motions/README.md).
 - [Released models](../models/released/README.md) and [validation](../release/REPRODUCIBILITY.md).
 - [Repository layout](LAYOUT.md).
+- [Third-party dependencies](../third_party/README.md): pinned source submodules and native SDK artifacts.
 - [Acknowledgments](ACKNOWLEDGMENTS.md).

@@ -1,5 +1,5 @@
 {
-  "format": "sonic_h2_deployment_inventory_v2",
+  "format": "sonic_h2_deployment_inventory_v3",
   "release_date": "2026-10-15",
   "scope": [
     "sim2sim",
@@ -7,13 +7,13 @@
     "vr_teleoperation"
   ],
   "source_commit": "4716be4bcc5f8c61c5f26e946905036f78eee478",
-  "previous_release_commit": "213db5907d57d48028639fa069d02a342b20bf43",
-  "file_count": 1346,
-  "total_bytes": 316679234,
+  "previous_release_commit": "a2db18d301127e5b01e1a979e4793eadc81714a4",
+  "file_count": 1164,
+  "total_bytes": 315493418,
   "components": {
     "(root)": {
-      "files": 11,
-      "bytes": 26470
+      "files": 12,
+      "bytes": 26964
     },
     "assets": {
       "files": 95,
@@ -25,11 +25,7 @@
     },
     "docs": {
       "files": 11,
-      "bytes": 44689
-    },
-    "external_dependencies": {
-      "files": 195,
-      "bytes": 45565580
+      "bytes": 45426
     },
     "legal": {
       "files": 4,
@@ -44,28 +40,32 @@
       "bytes": 17363354
     },
     "release": {
-      "files": 9,
-      "bytes": 42146
+      "files": 10,
+      "bytes": 46622
     },
     "requirements": {
       "files": 8,
-      "bytes": 6691
+      "bytes": 6849
     },
     "scripts": {
       "files": 6,
       "bytes": 4744
     },
     "src": {
-      "files": 877,
-      "bytes": 83675864
+      "files": 878,
+      "bytes": 83676736
     },
     "tests": {
       "files": 11,
       "bytes": 55993
     },
+    "third_party": {
+      "files": 9,
+      "bytes": 44370229
+    },
     "tools": {
-      "files": 3,
-      "bytes": 20771
+      "files": 4,
+      "bytes": 23569
     }
   },
   "excludes": [
@@ -74,6 +74,18 @@
     "Python environments",
     "build products",
     "logs and recordings"
+  ],
+  "submodules": [
+    {
+      "path": "third_party/unitree_sdk2_python",
+      "commit": "892693efe035ae3db7a62ed429ebd0bc15f88ca7",
+      "url": "https://github.com/unitreerobotics/unitree_sdk2_python.git"
+    },
+    {
+      "path": "third_party/xrobotoolkit_pybind",
+      "commit": "c64ccf6acd577a333e03b66fafe8efeeceb511b1",
+      "url": "https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind.git"
+    }
   ],
   "published_model": {
     "path": "models/released",
@@ -95,6 +107,11 @@
       "sha256": "b99462a44932063a412ef067093c8fd5abdb1c5278742001f4c688804465d382"
     },
     {
+      "path": ".gitmodules",
+      "bytes": 287,
+      "sha256": "29b9d050ef770f1171efd9965bfb9b39a0424a65b7181e96e46b9489577b5655"
+    },
+    {
       "path": "CITATION.cff",
       "bytes": 1057,
       "sha256": "f72e35cf2530e56046c21ba3a610d9e646bae17282aedd245ea33c5e46540a30"
@@ -111,13 +128,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 3936,
-      "sha256": "92ecfe9c734335abdeb2b224a89f950a833183cb29fc1cbb38bffcc32da01b8b"
+      "bytes": 3957,
+      "sha256": "a2582d925e1a441fb4e4560bf8b083632a4b2470d6a38cb993a3043e61698e60"
     },
     {
       "path": "README_CN.md",
-      "bytes": 3655,
-      "sha256": "0f5eda6386b015707e650cdf8f3df0a2216c8d18f4fb965f2dfafa985055174e"
+      "bytes": 3676,
+      "sha256": "24157cd57b0edf20b2021d749801b3a1b125e5ecce85c94c5f4398c3d132a5dd"
     },
     {
       "path": "assets/README.md",
@@ -611,8 +628,8 @@
     },
     {
       "path": "docs/ACKNOWLEDGMENTS.md",
-      "bytes": 2360,
-      "sha256": "697a1f65cba348043020a8bd8479de4198186d76501de322212692edf177c551"
+      "bytes": 2511,
+      "sha256": "947b3c769c729c988a9be7c7ef216917b2f57c9583ad8ea27e05744d223ece7a"
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -626,18 +643,18 @@
     },
     {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 8124,
-      "sha256": "001c695324d7d7aec8ab0d3e4e8f5c573b100df7a105c1d4720100dcee8becb4"
+      "bytes": 8326,
+      "sha256": "bf74e2da66e3d6470ebe1380340b9b45a2babc42d2478fe19c848bb5373f39ef"
     },
     {
       "path": "docs/DEPLOYMENT_CN.md",
-      "bytes": 6926,
-      "sha256": "7c310c889e636cf6e77a0c69f5b2bec1d156472938850c08c2c3816ba56ee724"
+      "bytes": 7118,
+      "sha256": "10f96c78e7b30fc7e48091dc6a05760815c907feec8ad996b7b23d2b6b434f3a"
     },
     {
       "path": "docs/LAYOUT.md",
-      "bytes": 3263,
-      "sha256": "ba5ec193e60b82d38dce18ca8aee7094e8238103efa7c2e44be4bbfbce1bafec"
+      "bytes": 3283,
+      "sha256": "ae294ff05b0884c9b3cc4f8c5dcd6de4785e2c09269ebd3d542106b1c8fc4e40"
     },
     {
       "path": "docs/NATIVE_SETUP.md",
@@ -651,13 +668,13 @@
     },
     {
       "path": "docs/README.md",
-      "bytes": 729,
-      "sha256": "64587892445f3ac1dd88ef2c87daed11c4bc8291d893f6582ea52608303a4f2b"
+      "bytes": 836,
+      "sha256": "61cfa06dafe38bffe61e6a5ae2a6028942754cbb1ecfa8ea0c299db3cfce9130"
     },
     {
       "path": "docs/VR_SETUP.md",
-      "bytes": 2452,
-      "sha256": "35538e51e6807167c5bf4897337a003c7c8800d93a0edbf07d38edde07ac135d"
+      "bytes": 2517,
+      "sha256": "ec4aa9c8256e90d8982c5c6ccf144e5d567f4c4748a78cdf8ffe51727a59fa76"
     },
     {
       "path": "docs/references.bib",
@@ -670,984 +687,9 @@
       "sha256": "7fb7bb255d53c0d814b005819bcb7635e68f00a53e074bfac0589e581401e28b"
     },
     {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/CMakeLists.txt",
-      "bytes": 1968,
-      "sha256": "f1f43b88afde3d252a212702aa3b32ccf6029c247536467886c8139afd1e9abf"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/LICENSE",
-      "bytes": 1068,
-      "sha256": "d5f3ff3a0bfd3d623c27003f3b9280fab5516365d7347f648f8046847b768edb"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/README.md",
-      "bytes": 5027,
-      "sha256": "4fb5f15ea88ac2eec0f22d08bb6fcce62d19553413c16bad3f521e543f567187"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/bindings/py_bindings.cpp",
-      "bytes": 21951,
-      "sha256": "6ac9d11613ac0790c59abca6faa16c022d822ba167667a83de8481c2759ded95"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/include/PXREARobotSDK.h",
-      "bytes": 3399,
-      "sha256": "4665952f6505d721fadff1c442fbed7fb3d0cc97637f3f18bdb75dac838f3dae"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/include/aarch64/PXREARobotSDK.h",
-      "bytes": 3399,
-      "sha256": "4665952f6505d721fadff1c442fbed7fb3d0cc97637f3f18bdb75dac838f3dae"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/include/aarch64/nlohmann/json.hpp",
-      "bytes": 919975,
-      "sha256": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/include/aarch64/nlohmann/json_fwd.hpp",
-      "bytes": 6340,
-      "sha256": "5cefbba751baf5243033fd894c70be9b37103d64b3d3a959e4173197d71137b9"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/include/nlohmann/json.hpp",
-      "bytes": 919975,
-      "sha256": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/include/nlohmann/json_fwd.hpp",
-      "bytes": 6340,
-      "sha256": "5cefbba751baf5243033fd894c70be9b37103d64b3d3a959e4173197d71137b9"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/lib/aarch64/libPXREARobotSDK.so",
-      "bytes": 19599776,
-      "sha256": "e50fd4d5194e545414442da59f699266433c74ee56f00f2d4f91b1871718c1d4"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/lib/libPXREARobotSDK.so",
-      "bytes": 23835456,
-      "sha256": "2348e1b0bf7f05cd13d95d628f04237b6b9fc50c6008b82f9bf4b046fc9373e6"
-    },
-    {
-      "path": "external_dependencies/XRoboToolkit-PC-Service-Pybind_X86_and_ARM64/setup.py",
-      "bytes": 5105,
-      "sha256": "21143d81fe1fa4889810ab173431bdad6b7eee21689bca5c4faf60463e2a1f9d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/.gitignore",
-      "bytes": 296,
-      "sha256": "235006c2d8436f71a126ddfb1c32d10b17a901797429b5a2e09816aab95213b1"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/LICENSE",
-      "bytes": 1559,
-      "sha256": "a5d73fc4aca9074e3e6fe0b1a0ba763cf9514b2249b7390ed20fe8d53630bf25"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/README zh.md",
-      "bytes": 4747,
-      "sha256": "f84bc55b3d2582aca4e7611ce40a6a86d759944f8eb54cd41bd5112d6bc52733"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/README.md",
-      "bytes": 5622,
-      "sha256": "89a726b0a5c74f25e6fbbb6ff8e4defa7cfaa7f4adf8890e301738d16ed8617d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/pyproject.toml",
-      "bytes": 89,
-      "sha256": "c83da5db515857a120ce4f6afd13c08644ebee0ea5128ad7dc2109236a973075"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/setup.py",
-      "bytes": 796,
-      "sha256": "3123f7dc14461b81a1452019cbf44fe04167cafe98e8668024b37def6abe9f45"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/__init__.py",
-      "bytes": 126,
-      "sha256": "41dfb726774708c891bf8ab54450b4ef331d9a38ecfdfb31d2883921a3bc05ec"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/back_video/back_video_api.py",
-      "bytes": 209,
-      "sha256": "edfc3d350bd8ed9968c1f3a49b194920f8e53041024c51e427b1c692978fa52c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/back_video/back_video_client.py",
-      "bytes": 540,
-      "sha256": "a6afe9b130b8acb3b49c44e066b51045d68387b65112a3b9f874d73cdf30eba6"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/front_video/front_video_api.py",
-      "bytes": 213,
-      "sha256": "3c6998fc1f6bcdc832146b06571c676399d77a7cb987090250fb5f4d82df3d9c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/front_video/front_video_client.py",
-      "bytes": 546,
-      "sha256": "cdc093c1d2fa2dcf111db003bb2998822fea4766a79d97e8d4ccc1c2ee26736c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/robot_state/robot_state_api.py",
-      "bytes": 371,
-      "sha256": "9491fa44b00ceea1ddc3ee1cb9509577aef9f75124eb629204ac77d14577a639"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/robot_state/robot_state_client.py",
-      "bytes": 2113,
-      "sha256": "ab1c557509148a28bbd5704965d4d22b20c4227127eccd4de61d92e4eedfe933"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/sport/sport_api.py",
-      "bytes": 1598,
-      "sha256": "6cb6206ca27529ded0cfc6320cdfafcb3082a5f88d90399506ca4816e0522403"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/sport/sport_client.py",
-      "bytes": 6597,
-      "sha256": "ea68d913c8a159b848b65cff0ffc3582ea8e88e4bd38c3b24fc73761fef5679d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/vui/vui_api.py",
-      "bytes": 303,
-      "sha256": "8d3c45fe84c5ab5a9130e8536dd4df3290e80fef5849e540679e2a288c297c6d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/b2/vui/vui_client.py",
-      "bytes": 2137,
-      "sha256": "0a5b7b6ced82c139dc47da49bb83477090b69be234b576aaa6bd04f1693af12c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/comm/motion_switcher/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/comm/motion_switcher/motion_switcher_api.py",
-      "bytes": 538,
-      "sha256": "933210a39b46f9303de1991b5647b5780845886d94d491604de0444caaa9c60c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/comm/motion_switcher/motion_switcher_client.py",
-      "bytes": 1409,
-      "sha256": "133d78f6619f6e32d971b40020868618f10db0fd191731085a4b08615448b195"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/core/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/core/channel.py",
-      "bytes": 9315,
-      "sha256": "c91807f4660e559cbec4814cf123a4f5fb0dd45217e5e0ecfcbaf6ab14ef0286"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/core/channel_config.py",
-      "bytes": 723,
-      "sha256": "06ef68c750721090a6dd6ff6a3596fb001ae76bcb7a612a7461f41060dd61444"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/core/channel_name.py",
-      "bytes": 646,
-      "sha256": "a978ad0fe4e548a2b790cd83d4881191ef249018359b30e3cc710d9a1d0f9f0c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/g1/audio/g1_audio_api.py",
-      "bytes": 398,
-      "sha256": "7ccd417ef05637617a012606dc752709674a3c9984a3828b72c9f5c453db66a8"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/g1/audio/g1_audio_client.py",
-      "bytes": 1840,
-      "sha256": "cd2270fd6d6a4baacdd9ec5656db6420d975ef0926fc9060db97db85d1244c53"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/g1/loco/g1_loco_api.py",
-      "bytes": 638,
-      "sha256": "02ce650bb6d16b76f5b6fee17ce364c8df7360be6119829a2b5dd39e69e76dbc"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/g1/loco/g1_loco_client.py",
-      "bytes": 3780,
-      "sha256": "42ec688779719b4d7a7e88df5b400f12950f6ea8d81188e701c06c99df8d5873"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/obstacles_avoid/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/obstacles_avoid/obstacles_avoid_api.py",
-      "bytes": 337,
-      "sha256": "71b8f9dc4247558553187e36577ff631b0f615452464656b6b4edde40b4401d3"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/obstacles_avoid/obstacles_avoid_client.py",
-      "bytes": 1742,
-      "sha256": "4e5212447cd3eab684dbb5bc7576e9a98063706c09ab524708f500e23a76449b"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/robot_state/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/robot_state/robot_state_api.py",
-      "bytes": 371,
-      "sha256": "9491fa44b00ceea1ddc3ee1cb9509577aef9f75124eb629204ac77d14577a639"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/robot_state/robot_state_client.py",
-      "bytes": 2106,
-      "sha256": "3d659ce8ce866bf966d01157064aca42a675b26d29a1a03f5e6d913b1f96bc83"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/sport/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/sport/sport_api.py",
-      "bytes": 1949,
-      "sha256": "00c0b46ef6710211f6acd8eea09c08a6a86682834296af81b6457aec234ee508"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/sport/sport_client.py",
-      "bytes": 12453,
-      "sha256": "3d77f088d2239adf7c9c032100314cc5d0825a1037eb918fb80dd2080ce5cc66"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/video/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/video/video_api.py",
-      "bytes": 171,
-      "sha256": "8bb53f1840021558e955e292460d3f4d7f668787969e5730f1e91c2ebf805eba"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/video/video_client.py",
-      "bytes": 482,
-      "sha256": "90e5295dc1f706f1a224b6ab38a4c830189fe3aa77c0f8ce743768e426896f84"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/vui/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/vui/vui_api.py",
-      "bytes": 303,
-      "sha256": "8d3c45fe84c5ab5a9130e8536dd4df3290e80fef5849e540679e2a288c297c6d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/go2/vui/vui_client.py",
-      "bytes": 2137,
-      "sha256": "0a5b7b6ced82c139dc47da49bb83477090b69be234b576aaa6bd04f1693af12c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/h1/loco/h1_loco_api.py",
-      "bytes": 600,
-      "sha256": "46a17a2144eb0c97b1a1a99ead7162c091de5967196fcd981a7aa02fd992a9f8"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/h1/loco/h1_loco_client.py",
-      "bytes": 2439,
-      "sha256": "50f58f65e13aa09c73f998426c3164001503088ea93f4ddd6b3f2865d1f60884"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/__init__.py",
-      "bytes": 271,
-      "sha256": "32e41f377806fbd3e2a6d62dc4386d55a5e82fd1261a4a9d182a2cfbf86797ac"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/builtin_interfaces/__init__.py",
-      "bytes": 167,
-      "sha256": "ce7836c6b08eece21752d06270bdafc63a0faf0dc637a43ade3e2e9b8bba474f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/builtin_interfaces/msg/__init__.py",
-      "bytes": 173,
-      "sha256": "7c95109cdd2041cce0259b7108ee2845c9031262841d231cb8840cf41e2c18fe"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/builtin_interfaces/msg/dds_/_Time_.py",
-      "bytes": 625,
-      "sha256": "ea94f7622321d79df206441ead2eded0a0fed5863dd58d27005a26436d584e1f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/builtin_interfaces/msg/dds_/__init__.py",
-      "bytes": 186,
-      "sha256": "662d71714d12ee9920e998fd22bee426df6811db020b1ee951a4004ca7e091f3"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/default.py",
-      "bytes": 10728,
-      "sha256": "b75cee7278613bbd329f61db6b224a310f54be8df9e8f4184e04fd406bec4323"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/__init__.py",
-      "bytes": 162,
-      "sha256": "2aefbe7a2032d34cf076a1d8001011d8bfa3b81543b6a03183288b17df6978e7"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/__init__.py",
-      "bytes": 168,
-      "sha256": "0f374cde971de23eb9dbfde357a07e8594a1a8e0ec8d214fd1dc7b07b12f9483"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Point32_.py",
-      "bytes": 635,
-      "sha256": "fc8495ef8a777896fc65dab9300692d7bb0bd8607708ee35aa5c0452ee66335a"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_PointStamped_.py",
-      "bytes": 760,
-      "sha256": "c258986e8fbea38afd14fbefbf64ff5ea3ab4630e59dfd65bbf272109e593d9b"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Point_.py",
-      "bytes": 629,
-      "sha256": "f14a8983124895d5781f99ad8ba50919c6622909598e75bb8aea5407f4352e9b"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Pose2D_.py",
-      "bytes": 636,
-      "sha256": "11d331c77cac12846b626680919304a39c55bd63d667f673687399dd077c8054"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_PoseStamped_.py",
-      "bytes": 756,
-      "sha256": "7bcc9670d756755584bf9b123b98ef3a8c8c6ef906cef1c0898205d94bbb6422"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_PoseWithCovarianceStamped_.py",
-      "bytes": 812,
-      "sha256": "c8474d3663fdee4cfb120344ef03dce37faf124690d40edccf491dd151b42c79"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_PoseWithCovariance_.py",
-      "bytes": 712,
-      "sha256": "c3384acb00b2e42f9668cd00614c84b8d6e6b6c4fa9e3a731e79c219b8500067"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Pose_.py",
-      "bytes": 701,
-      "sha256": "a3402ffa46de1e2a5fde2bad696e136b2d9a741667836e713c7b31a9f58475bb"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_QuaternionStamped_.py",
-      "bytes": 786,
-      "sha256": "6f709a0c09b987eba4b44efeb724980f1c574d73d8e0bd7149260a2c3a1ebd83"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Quaternion_.py",
-      "bytes": 665,
-      "sha256": "b133ae3ffd24dc6190996d818a1385ab9f9319e2dda9aaa789177e70a19e4eb3"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_TwistStamped_.py",
-      "bytes": 761,
-      "sha256": "8be06afafe2c8f621f8c4cde5b2a4504c4e52ba0c4cc63da0804fa58a8401e97"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_TwistWithCovarianceStamped_.py",
-      "bytes": 817,
-      "sha256": "0c002a0157868ce50227d0370f48f5b942ada2a1d7e96eaf8b7622e50e28f1c9"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_TwistWithCovariance_.py",
-      "bytes": 717,
-      "sha256": "761ee8be8d35f84dcba8261143dcffc115337a533a95627772f5daeafeab08da"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Twist_.py",
-      "bytes": 697,
-      "sha256": "620fd0d1d477b97f77cdba351ec8e0782406036d551be2569b74b131f9b13e60"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/_Vector3_.py",
-      "bytes": 635,
-      "sha256": "82e4728bd2e99e311e8bae5216f1fb20ba53c075fabbdf2f155974c2174e95f0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/geometry_msgs/msg/dds_/__init__.py",
-      "bytes": 1043,
-      "sha256": "fcc8ac771fd2cc62294b2a16c0f9f4cda9831f109779df70670e1db8b492a647"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/nav_msgs/__init__.py",
-      "bytes": 157,
-      "sha256": "9caa80ac26be9642ec46bb6dead20273848e381d41fb4eb3edf6ed3431553bee"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/nav_msgs/msg/__init__.py",
-      "bytes": 163,
-      "sha256": "15229534f52deb21d1138d18fb39c6054e0c638093effbba81c2406cc1a56ab8"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/nav_msgs/msg/dds_/_MapMetaData_.py",
-      "bytes": 882,
-      "sha256": "1805a7b05517b94d640e4d39f14f572480e7311bd5ae85f876fd06f8fb17d35f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/nav_msgs/msg/dds_/_OccupancyGrid_.py",
-      "bytes": 788,
-      "sha256": "3edf9453724d9445ab1cf019a51fcef37ed50fa0e05fdbd0569f858144d69c27"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/nav_msgs/msg/dds_/_Odometry_.py",
-      "bytes": 882,
-      "sha256": "b00c39e39d9066ecd9b9fb4ad774f1cf2d9772e209b42a417634299eb7c44c77"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/nav_msgs/msg/dds_/__init__.py",
-      "bytes": 306,
-      "sha256": "cf8e9471ca0d304b7bc1ee329fef3b360dcc0076f448b3fa632bb87da8b9744b"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/__init__.py",
-      "bytes": 160,
-      "sha256": "e9d4c0450812b2e1f52a64232f9e6482e966a7a4be16d561f21abe1b8a3ffe93"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/msg/__init__.py",
-      "bytes": 166,
-      "sha256": "77f33f9fd7a371685a6c6a870047689a876bade2e6316f895a13041ae17b8dd0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/msg/dds_/PointField_Constants/_PointField_.py",
-      "bytes": 550,
-      "sha256": "bf818a64ae10aa98e86ea5a382474574de599a7248ba3982a9dbf32c2bbff2fb"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/msg/dds_/PointField_Constants/__init__.py",
-      "bytes": 344,
-      "sha256": "469e7fa152a1c7a778530e6ac5c3451efbb69389f569045b91b0d87d190b690a"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/msg/dds_/_PointCloud2_.py",
-      "bytes": 957,
-      "sha256": "91a9917ee12e6bc30598b9dd6c8e5284c6b96fe24aabe1831b65899fa2853849"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/msg/dds_/_PointField_.py",
-      "bytes": 664,
-      "sha256": "90f532023f9c0da4f999cf6d476347ca0e1febc6db08b61d19f0e7ca18d77a27"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/sensor_msgs/msg/dds_/__init__.py",
-      "bytes": 312,
-      "sha256": "ed73e0cfb4d0d94ea07c3e35160a73543de2ad07e76ab54cd1c9cf7ede2e9dbe"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/std_msgs/__init__.py",
-      "bytes": 157,
-      "sha256": "681bf5d378bf582a89ef5b79a71d4b743088191e1a300ec01a0a415946b22f70"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/std_msgs/msg/__init__.py",
-      "bytes": 163,
-      "sha256": "06c63955a5036a764946a1540b0fc4aa2e60cd9b20ec371120362608063c7b1c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/std_msgs/msg/dds_/_Header_.py",
-      "bytes": 701,
-      "sha256": "9dd04e5f3076dd7bada7a007a0a57a58af9f8d9eb0efcd64212ec6562c51414c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/std_msgs/msg/dds_/_String_.py",
-      "bytes": 568,
-      "sha256": "b11e1293c473c79e301607907489063e0d7b118395524709b810a03e4aa0a626"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/std_msgs/msg/dds_/__init__.py",
-      "bytes": 223,
-      "sha256": "d9d3b8c598d5387c28cb65e103b3e8af1071798c18560c27529d0f78de37f141"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/__init__.py",
-      "bytes": 160,
-      "sha256": "17d2a41f162443103f271261b375eadb7abdfe323906b3b3a98c09b4055a705c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/__init__.py",
-      "bytes": 166,
-      "sha256": "0b6a9c8eea1a48b9160c4af3bd1db920005093cfaecde00ae9312341fb1815e7"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_RequestHeader_.py",
-      "bytes": 793,
-      "sha256": "cedcd0fe5e2ea280e4d0fcf95ba3eb2a8a6087d7c99de1d4361aefc1c8bf36fa"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_RequestIdentity_.py",
-      "bytes": 634,
-      "sha256": "5956cf7260a4871a66d02867cd8bf7b4cff545de4e2bb67754edfced227d14f0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_RequestLease_.py",
-      "bytes": 601,
-      "sha256": "810f7237d44111f8a72323d97ddcefee9ebd1d1002db1c206c0b5fc133f30680"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_RequestPolicy_.py",
-      "bytes": 628,
-      "sha256": "e83b1b5ea4c0c366c37c66937be9aa04d362b3c8314db33bec035d8755f99dd1"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_Request_.py",
-      "bytes": 693,
-      "sha256": "5702725b61f3e5cb0fa373ab569c24934655b17391b3696bdf64f91c013660d7"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_ResponseHeader_.py",
-      "bytes": 730,
-      "sha256": "9a502cc7d83f552ae12ae29ebb8017b5dc99d050f36ec229d607b3bc99df68d0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_ResponseStatus_.py",
-      "bytes": 609,
-      "sha256": "6847677af6d5a0dbbc9f653b4dfffa5d22c45b7cde229b409cec4218a2d3e59e"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/_Response_.py",
-      "bytes": 692,
-      "sha256": "37c3cf084917a403abec30f59b246b7e8e20bf699e5f6c01a55de310160cacd6"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_api/msg/dds_/__init__.py",
-      "bytes": 616,
-      "sha256": "dceb760e1ac7e493ba852819f76cafebd3a10d5bf4864961154d051d7c6f6c91"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/__init__.py",
-      "bytes": 159,
-      "sha256": "2966ffd4d7d8971c555c45020b5fbd9bcd526a65527da44546e5e876df526f32"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/__init__.py",
-      "bytes": 165,
-      "sha256": "f023f6ba33cffd5a41e2e94c32ec352f21d36991a8f49abecfca32bd5faf6690"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_AudioData_.py",
-      "bytes": 636,
-      "sha256": "bb8b1af877d007d2eb30b5c5ee92d5dfd8c0993fe2fe2e16b3d74948d88d6166"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_BmsCmd_.py",
-      "bytes": 622,
-      "sha256": "75ade3d3cc52dca553db5edd41dc65a4ffe774b267939c2ef299846b2c536b16"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_BmsState_.py",
-      "bytes": 844,
-      "sha256": "abcc0497c43007b2648b19ac6538d264555fde90d23427ff9cda150320725e46"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_Error_.py",
-      "bytes": 606,
-      "sha256": "dedc8e7a45715b0bc82d7569c938afd14db66df7763c5ca869260af0650e9b11"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_Go2FrontVideoData_.py",
-      "bytes": 751,
-      "sha256": "f641c34591249cb1f4fd4977697e6440843ff8c8040ca13ac98374f03a6df34e"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_HeightMap_.py",
-      "bytes": 773,
-      "sha256": "147a5c0543d82b75e35cb820596b68317e4a1086dbf58ad19785b55c8c782b31"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_IMUState_.py",
-      "bytes": 774,
-      "sha256": "9465b3f1d8f2ddaafe449cf8d27969ec398d4b56d690c8ca5f9a8ea09f67d475"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_InterfaceConfig_.py",
-      "bytes": 673,
-      "sha256": "bf0fcfc627a7e0fdbc3f208102caf815b0b824ed59903d916d1899bbfe5abc4d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_LidarState_.py",
-      "bytes": 1141,
-      "sha256": "7a04fde6c354b85b87f661d2e56c373d715bfdefe7c4550dbd710e4ecd8f73eb"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_LowCmd_.py",
-      "bytes": 1104,
-      "sha256": "5d0098eef648cf017267d105bde5407b40496cc0df791f15ed7a3e5e77981fe8"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_LowState_.py",
-      "bytes": 1426,
-      "sha256": "0d370ae286a529f9f727519e1b6abfa9189595d78f2b29db3316886a5b1d51e4"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_MotorCmd_.py",
-      "bytes": 740,
-      "sha256": "0784882cf61368413ab4e4e9b428ca770eb4537cf3000d2388ebfb49971bb64c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_MotorCmds_.py",
-      "bytes": 626,
-      "sha256": "c3978e73801e3682ea65db99d74510121296e8b2059a5a99fe777b10414f2e40"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_MotorState_.py",
-      "bytes": 859,
-      "sha256": "193465a3b93aae23b1a685941fdaeaaff42ac9b2d24caa0e34aef3f32363bcab"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_MotorStates_.py",
-      "bytes": 636,
-      "sha256": "18651ed4e6f1ac8d0f0c7ed79c52386826fc7896d05267c9201800a8001259d2"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_PathPoint_.py",
-      "bytes": 734,
-      "sha256": "7d139390fb646af819e2fc2c594413bcf6dee3f1788ee3410dc0da4c77fcd7d3"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_Req_.py",
-      "bytes": 579,
-      "sha256": "d1fc29f3394f53f2157d1bc5da2c211013b281ae1871bfb01c4b35c2f57e6fea"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_Res_.py",
-      "bytes": 617,
-      "sha256": "d8ea5e0252d765121e56cdf4a947e3d8f9588504d5aa5fa80b28af346cc6ee05"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_SportModeState_.py",
-      "bytes": 1289,
-      "sha256": "8f05eea51a6822727a14572e656bb59a84a899ac264c96c8c7104d2acccf5909"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_TimeSpec_.py",
-      "bytes": 613,
-      "sha256": "b7d083cd135887e7810733c02fe1ebb9748dff1a6ee47d6c7dcb5775490ffbfb"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_UwbState_.py",
-      "bytes": 1084,
-      "sha256": "f05ab82976ec61eaeb2412eadeff4e50e39839b98840559fb347723ae01d468f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_UwbSwitch_.py",
-      "bytes": 594,
-      "sha256": "cc7f973666e4eb76d263b4124dd1a515bdf7190ddc64809de58eeb9ee22be5e3"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/_WirelessController_.py",
-      "bytes": 707,
-      "sha256": "f6e2bddf415ed8fabe56924a21579b014fcd599f092d91a0c37adcb02357b777"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_go/msg/dds_/__init__.py",
-      "bytes": 1307,
-      "sha256": "0759e89df1394e0076c13fbb872dcb89ba0b34fec1da781591295787af78ea01"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/.idlpy_manifest",
-      "bytes": 187,
-      "sha256": "a54ffe2d0a62516a33546624ebfe367332d6ed3a9b922df147c776b71e73c89d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/__init__.py",
-      "bytes": 159,
-      "sha256": "2be522ac4c24ddb2906f4725a2245e0cba8632b46a46a7ea1c186a71cc6a7fc4"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/.idlpy_manifest",
-      "bytes": 198,
-      "sha256": "2646b8e0cc2a35cf49b8d013dd1bfb9708eb8df78c03dd11da0734215e9f35fa"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/__init__.py",
-      "bytes": 165,
-      "sha256": "3702f3dac2b540a82dd0668ec0076d0dbb04019804c3e2ef4e3ef35428743f55"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/.idlpy_manifest",
-      "bytes": 265,
-      "sha256": "d49a80312add7dc4af8271c1897463a7002c240519aff85cd4129372261415b5"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_BmsCmd_.py",
-      "bytes": 623,
-      "sha256": "042984eba84a6082e7f08eabd078599aaf7645e51c4f1a95a1b78429d343c87b"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_BmsState_.py",
-      "bytes": 992,
-      "sha256": "115f2d1b43e993ccda8ad7572ec4e6213474fb4536a6a17a5413eb144ca52423"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_HandCmd_.py",
-      "bytes": 687,
-      "sha256": "c7b4fb827507d9d8028c3d6a1ae1706240c16cc8e05ec4e4f1193b58e6561f3f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_HandState_.py",
-      "bytes": 1012,
-      "sha256": "f9cd6aeb3e10f8c2c59f65c4c1cd39ba2d515b7d4e6d8138c0ba80f52812455c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_IMUState_.py",
-      "bytes": 774,
-      "sha256": "f41533674e588ed3c4613f95a553bb5ee99b6356084208d7d25ee90897871497"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_LowCmd_.py",
-      "bytes": 762,
-      "sha256": "a23cec88e4bf782263ac2bea29d3908c9d21a44a14361ffc0bf3424cd36597ae"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_LowState_.py",
-      "bytes": 1052,
-      "sha256": "fe45e19a90924fdaeb65e712db1f05d9ee3b0a3317c9bf9fd37d616c3c646188"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_MainBoardState_.py",
-      "bytes": 754,
-      "sha256": "6c181057c869c9bef8daa53ab2e396c2f48226e9a8be4e7e6da2b88747d122fd"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_MotorCmd_.py",
-      "bytes": 724,
-      "sha256": "710a8321be4d6731093b6f8328c70ab11606372561ed01a7af9a187143f54c4d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_MotorState_.py",
-      "bytes": 867,
-      "sha256": "cffb489830dbfb7091454279d031224f0968c066fad0b1204e309426a0d82910"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_OdoState_.py",
-      "bytes": 830,
-      "sha256": "7d6c2dbe91420a98f65a6aecc9c717516054a6661f5697b945f7dc7178980381"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/_PressSensorState_.py",
-      "bytes": 732,
-      "sha256": "1920e21f70df982a4b0cd1e3ae7ed7a80a8389541e52c43e815df2bf7147bddc"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/idl/unitree_hg/msg/dds_/__init__.py",
-      "bytes": 743,
-      "sha256": "f56635b6e547ec55e95ee83cc077fed82b4d85993996f62ee83b74c8ec9406fa"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/client.py",
-      "bytes": 2869,
-      "sha256": "fae65a8a950a0ec25a4fdea2bbeb66610e81544e11c74a11f3aa7da538bb748f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/client_base.py",
-      "bytes": 3562,
-      "sha256": "88eb34f6e3fa6b9d60294faca8c5100fdca548de31e0b58ae17a05e54581c5da"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/client_stub.py",
-      "bytes": 2363,
-      "sha256": "37c860bb4783c2f13b24bc369ebf99b2131a21dfb49f0f7a8b74e79960d879b0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/internal.py",
-      "bytes": 743,
-      "sha256": "38896942088a7b0d03e3d9e5fa06ef3aee81e8ec6d52e0a9a640e35aaf955343"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/lease_client.py",
-      "bytes": 2883,
-      "sha256": "dcfbcb7a91296fe3aa3743df8f1c3fed6527f48c957de0f749772da8069fd4c8"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/lease_server.py",
-      "bytes": 4163,
-      "sha256": "a16058e0d3f03188677e32b6662023b886f123c1b500e447a98bb0c1bd6edafc"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/request_future.py",
-      "bytes": 1149,
-      "sha256": "a82ed0f0f09cd531be9962af1b624d83447be1682afcb3319022600a9de4d072"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/server.py",
-      "bytes": 4070,
-      "sha256": "80e114fc190cd2394d48ce0f4e8187fcafc28339fe41ba0a38b4c5fb14ba2ff9"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/server_base.py",
-      "bytes": 991,
-      "sha256": "f2e5bd96960e12d6519aee602141770c2658b289eee554621d2eb9c9cdbe947a"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/rpc/server_stub.py",
-      "bytes": 2688,
-      "sha256": "8e62b3940f0122bdf7f390f505c41892cf0d56f6735c2ee5521825f7ea67fabd"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/client/obstacles_avoid_client_example.py",
-      "bytes": 2764,
-      "sha256": "22b6e2dccfeafaa283915c3762fa3781dc036e7024846275da4fe1f5055f6b83"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/client/robot_service_client_example.py",
-      "bytes": 1594,
-      "sha256": "8c9c6ef46d91c8d80128c0d0657a2f35f1077213fae325565ed10fe622d10792"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/client/sport_client_example.py",
-      "bytes": 3182,
-      "sha256": "4545d0ab56b0118b88c4f13cddd5057ae288af4aae8bd1f081411ed11dd00baa"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/client/video_client_example.py",
-      "bytes": 724,
-      "sha256": "98c5f35deea78ab886b97bc0032f42eaaf9585ae45a5689472283dd9507c62bf"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/client/vui_client_example.py",
-      "bytes": 1879,
-      "sha256": "5782453477459998752ded708346d062432c9fd4f5ffbec3c076ca6be90fde3b"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/crc/test_crc.py",
-      "bytes": 715,
-      "sha256": "17817cbac7789554e8d7b2a7e162a9b6c8fb7e0602ea528956ec026d9315ae3f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/helloworld/helloworld.py",
-      "bytes": 148,
-      "sha256": "64a1cc0ab1689ab9553e856cb1fcf0c8037ae58c47f449d13f5e6a96e00ebef2"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/helloworld/publisher.py",
-      "bytes": 500,
-      "sha256": "8c1d50616041bb088aaa669fb0dd08ec0278cb6faab08923b0b8825c6181447d"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/helloworld/subscriber.py",
-      "bytes": 373,
-      "sha256": "796b74f380624d513bab9bfff3ccbeb6f6e47697d02338303c8dfb3ed6b95795"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/lowlevel/lowlevel_control.py",
-      "bytes": 1966,
-      "sha256": "f2588eaef87c933cc6f2faaeb42450f67943a88af1c6dd9185e2d475e724064c"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/lowlevel/read_lowstate.py",
-      "bytes": 784,
-      "sha256": "bb056311e1d64c374399ecfd19567a1f6a8dddf6533f6f7295315325c4574737"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/lowlevel/sub_lowstate.py",
-      "bytes": 448,
-      "sha256": "c22d574370eff593f37119899382748de19e3686ff85937ace2543fd1c6476b0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/lowlevel/unitree_go2_const.py",
-      "bytes": 345,
-      "sha256": "7685d8c384f268ebfebd569dea5b6f1e40ba6ec3ae29e8535334193f257d1034"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/rpc/test_api.py",
-      "bytes": 143,
-      "sha256": "753290c91eb9961de53b0bc2f95da8f39dcdd85e362e01ba19b9b1513daef85e"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/rpc/test_client_example.py",
-      "bytes": 1496,
-      "sha256": "641a729fdbc07e68694a0e72cadbd0b7f17c131b18b6d57a6c9f06c1148bdcd0"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/test/rpc/test_server_example.py",
-      "bytes": 1017,
-      "sha256": "cef1c190b682ad548e3ecefe192a0252716790f0189c89ccc468c4ff71e90499"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/__init__.py",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/bqueue.py",
-      "bytes": 1603,
-      "sha256": "0ea1299b91f2d3c6f4ed8605064ebc3e079c1439cdf111bd30881d560166fc3f"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/clib_lookup.py",
-      "bytes": 386,
-      "sha256": "0c3a68c755ec3249b0f70b7fc42efbc072d2b71db123796af232a5e7ea4b45b3"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/crc.py",
-      "bytes": 8585,
-      "sha256": "b95a530423f72c5acc96811f75677699cb3a185b6327353e7c44b355a425a20e"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/future.py",
-      "bytes": 2960,
-      "sha256": "959880bb2cf32e5db47d2aac90034c623cb413dc5573fef13c01b3902273d8f6"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/hz_sample.py",
-      "bytes": 643,
-      "sha256": "ee63af36fda2b11475d16d06776c3aec69748bd8e1efb4cf394d802e0b0506db"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/joystick.py",
-      "bytes": 8216,
-      "sha256": "d021e6c5fcd0e6a740134ce9dc5f5f56f7542ec0e220117a3d175df86e7ab578"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/lib/crc_aarch64.so",
-      "bytes": 7928,
-      "sha256": "a4db103653db78540d141ff4dc55216b83e5298280e639b2ad54a84ac2fae9a5"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/lib/crc_amd64.so",
-      "bytes": 15136,
-      "sha256": "b136a91a7e99c5cf914f465e131f63c897a17107939184a6f85d1a57cf315ade"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/singleton.py",
-      "bytes": 247,
-      "sha256": "0559be3069ea2d4450f25c3153567cb641b8bf7ac55226edddb5f119223f9477"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/thread.py",
-      "bytes": 2688,
-      "sha256": "453166ef60d8eaa8008e1d18d8f9513e51582404522ef03ec23584aad351e726"
-    },
-    {
-      "path": "external_dependencies/unitree_sdk2_python/unitree_sdk2py/utils/timerfd.py",
-      "bytes": 1319,
-      "sha256": "5ca58f4d0661d62c773b883a1fb923bd6230935b1683d1449f05dc32ad6b7f0a"
-    },
-    {
       "path": "install.sh",
-      "bytes": 2280,
-      "sha256": "cf37506f3da88abc41c6b0c16a46ae71563fb0f63b0e2f27ca78f4b79d091980"
+      "bytes": 2455,
+      "sha256": "f23755824769b063ecda994d431471e2bbd88e2c4935b9ccbe1cc3d5d221ccbb"
     },
     {
       "path": "legal/Apache License - GEAR-SONIC.txt",
@@ -2236,13 +1278,13 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 1117,
-      "sha256": "bf693657929ed916d14a7341bed7a780c9f3a0f8b735cb51916a21a67493d97d"
+      "bytes": 1107,
+      "sha256": "38d5fdd88cae1065a534700be5ffb6b4d5cd81f6db0a62383ea35594d08d91ae"
     },
     {
       "path": "release/REPRODUCIBILITY.md",
-      "bytes": 6490,
-      "sha256": "85871da61ad37e3a893cf4fb9c5b0857719177feb55b43ad6818a8403bc8e1f1"
+      "bytes": 7721,
+      "sha256": "9c4a83414e5d871e50598dd4908b23376c42ef0c05198d3178b0be84d09b49fb"
     },
     {
       "path": "release/cpp_tests.json",
@@ -2285,9 +1327,14 @@
       "sha256": "f73433cfbef4e5a6d64f574e46b269480f74bf4428ebdc1c08cdd57dde8dd12d"
     },
     {
+      "path": "release/third_party_validation.json",
+      "bytes": 3245,
+      "sha256": "71c725bd565e6382fe2175c33bd57666bf0f6b714b49dc55066fbb2905ac2197"
+    },
+    {
       "path": "requirements/README.md",
-      "bytes": 1965,
-      "sha256": "f075786b3362d8c456e964b32f5c3a651618a156ba8b69aa28d3e6dbe51b9c38"
+      "bytes": 2153,
+      "sha256": "193f7f3bd128b03bcd9e30be17e415ba3c1b2ac6700d42fc76cd6cdfcf16a92a"
     },
     {
       "path": "requirements/download.txt",
@@ -2311,8 +1358,8 @@
     },
     {
       "path": "requirements/sim.lock",
-      "bytes": 1645,
-      "sha256": "28645b4324133876a378a0edd6c65dbbd1849a7cb1e8f8f082eb939424f34fd9"
+      "bytes": 1615,
+      "sha256": "6d05a5af2e9356fd7b7d7f37f9cce5c0af6bf10e099b88ee60f81577a5e1e837"
     },
     {
       "path": "requirements/teleop.lock",
@@ -6670,8 +5717,8 @@
     },
     {
       "path": "src/sim/dds.py",
-      "bytes": 27203,
-      "sha256": "c5630206d5d5faef90349c48be87f10379993e167e4e3a38bf4d0fc255282fd7"
+      "bytes": 27178,
+      "sha256": "a992ea5f81c1ff2c3032d339db2cb8b385b79d967fab3a1c98d66922763997fe"
     },
     {
       "path": "src/sim/diagnostics/__init__.py",
@@ -6707,6 +5754,11 @@
       "path": "src/sim/network.py",
       "bytes": 4409,
       "sha256": "23ec93b11e81f1e86f59303f18052ab5b4a3e1506d7255e93230c08d2d0fe911"
+    },
+    {
+      "path": "src/sim/odometry.py",
+      "bytes": 897,
+      "sha256": "e66db31093a854420e4e06f0563a4dc52ecdeaca507d1d98bbf0c853dd6dddb1"
     },
     {
       "path": "src/sim/physics.py",
@@ -6799,9 +5851,59 @@
       "sha256": "1ca6104cea705c5f68e732425d8795c240441550f337a72a4fb663471bf5e60a"
     },
     {
+      "path": "third_party/README.md",
+      "bytes": 2315,
+      "sha256": "ad9bded9ccf77dc20650d4f61a01708f77d45e6312447fdb49e5fb936dcf7988"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/LICENSE",
+      "bytes": 1068,
+      "sha256": "d5f3ff3a0bfd3d623c27003f3b9280fab5516365d7347f648f8046847b768edb"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/README.md",
+      "bytes": 788,
+      "sha256": "fc837cdd09e12bd0f150cc69e73f6e1345c86adb7f9c374535232cd1bd687ef3"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/include/aarch64/PXREARobotSDK.h",
+      "bytes": 3399,
+      "sha256": "4665952f6505d721fadff1c442fbed7fb3d0cc97637f3f18bdb75dac838f3dae"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/include/aarch64/nlohmann/json.hpp",
+      "bytes": 919975,
+      "sha256": "9bea4c8066ef4a1c206b2be5a36302f8926f7fdc6087af5d20b417d0cf103ea6"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/include/aarch64/nlohmann/json_fwd.hpp",
+      "bytes": 6340,
+      "sha256": "5cefbba751baf5243033fd894c70be9b37103d64b3d3a959e4173197d71137b9"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/lib/aarch64/libPXREARobotSDK.so",
+      "bytes": 19599776,
+      "sha256": "e50fd4d5194e545414442da59f699266433c74ee56f00f2d4f91b1871718c1d4"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/lib/x86_64/libPXREARobotSDK.so",
+      "bytes": 23835456,
+      "sha256": "2348e1b0bf7f05cd13d95d628f04237b6b9fc50c6008b82f9bf4b046fc9373e6"
+    },
+    {
+      "path": "third_party/xrobotoolkit_sdk/manifest.json",
+      "bytes": 1112,
+      "sha256": "8ee27dda3d90ef07a0371f17c98c521800753c6ffe2a85d1b386c131f98e2db9"
+    },
+    {
       "path": "tools/check_runtime.py",
       "bytes": 7810,
       "sha256": "80716699b2e23b1255975a1569edc7f29c2f76e2535e163dd64e7b741d11e97e"
+    },
+    {
+      "path": "tools/prepare_xrobotoolkit.py",
+      "bytes": 1984,
+      "sha256": "83b42a5cc51186092c2615f8f20c92eae3c492637c9d764df83f7c27a698a4b9"
     },
     {
       "path": "tools/validate_released_models.py",
@@ -6810,8 +5912,8 @@
     },
     {
       "path": "tools/verify_release.py",
-      "bytes": 6278,
-      "sha256": "2b0cb7ec307d633d9b71a6ecf9e650eecc70179153eb3ac2ac1278e622feaa55"
+      "bytes": 7092,
+      "sha256": "fddfbdbfb0520adfa8f76c9e0c523547e0a953f326b9ef3c2dcc932461e8e6a9"
     },
     {
       "path": "verify_deploy.sh",

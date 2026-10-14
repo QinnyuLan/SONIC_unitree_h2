@@ -1,0 +1,6 @@
+[submodule "unitree_sdk2_python"]
+	path = third_party/unitree_sdk2_python
+	url = https://github.com/unitreerobotics/unitree_sdk2_python.git
+[submodule "xrobotoolkit_pybind"]
+	path = third_party/xrobotoolkit_pybind
+	url = https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind.git

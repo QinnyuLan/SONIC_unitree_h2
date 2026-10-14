@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-15",
+  "platform": "Linux x86_64, Python 3.10.20",
+  "baseline_release_commit": "a2db18d301127e5b01e1a979e4793eadc81714a4",
+  "submodules": [
+    {
+      "path": "third_party/unitree_sdk2_python",
+      "url": "https://github.com/unitreerobotics/unitree_sdk2_python.git",
+      "commit": "892693efe035ae3db7a62ed429ebd0bc15f88ca7",
+      "working_tree_clean": true,
+      "previous_vendored_comparison": {
+        "revision": "892693efe035ae3db7a62ed429ebd0bc15f88ca7",
+        "equal": 175,
+        "changed": [
+          "setup.py",
+          "unitree_sdk2py/core/channel.py",
+          "unitree_sdk2py/core/channel_config.py",
+          "unitree_sdk2py/idl/default.py",
+          "unitree_sdk2py/idl/unitree_hg/msg/dds_/_LowState_.py",
+          "unitree_sdk2py/idl/unitree_hg/msg/dds_/__init__.py"
+        ],
+        "absent": [
+          "unitree_sdk2py/idl/unitree_hg/msg/dds_/_OdoState_.py"
+        ],
+        "upstream_files": 221
+      }
+    },
+    {
+      "path": "third_party/xrobotoolkit_pybind",
+      "url": "https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind.git",
+      "commit": "c64ccf6acd577a333e03b66fafe8efeeceb511b1",
+      "working_tree_clean": true,
+      "previous_vendored_comparison": {
+        "revision": "c64ccf6acd577a333e03b66fafe8efeeceb511b1",
+        "equal": 8,
+        "changed": [],
+        "absent": [
+          "include/aarch64/PXREARobotSDK.h",
+          "include/aarch64/nlohmann/json.hpp",
+          "include/aarch64/nlohmann/json_fwd.hpp",
+          "lib/aarch64/libPXREARobotSDK.so",
+          "lib/libPXREARobotSDK.so"
+        ],
+        "upstream_files": 19
+      }
+    }
+  ],
+  "odometry_compatibility": {
+    "type_identifier_equal": true,
+    "type_information_equal": true,
+    "serialized_sample_bytes_equal": true,
+    "new_location": "src/sim/odometry.py"
+  },
+  "native_xr_artifacts": {
+    "unchanged": true,
+    "checksums": "third_party/xrobotoolkit_sdk/manifest.json",
+    "linux_aarch64_execution_tested": false
+  },
+  "installation": {
+    "sim2sim": true,
+    "teleop": true,
+    "dependency_checks": true,
+    "preflight_sim": true,
+    "preflight_teleop": true,
+    "released_model_checksums": true,
+    "local_planner_checksum": true
+  },
+  "regression_tests": {
+    "simulator": 27,
+    "simulator_additional_subtests": 53,
+    "commands": 32,
+    "teleoperation": 34,
+    "failed": 0
+  },
+  "simulator_dds": {
+    "passed": true,
+    "dds_domain": 217,
+    "interface": "lo",
+    "hardware_connected": false,
+    "policy_started": false,
+    "message_counts": {
+      "lowstate": 120,
+      "odometry": 120
+    },
+    "errors": [],
+    "simulator_exit_before_cleanup": null
+  },
+  "fresh_clone": {
+    "completed": true,
+    "parent_source": "local Git clone of the release candidate",
+    "submodules_fetched_from_official_github_urls": true,
+    "sim2sim_empty_environment_install": true,
+    "teleop_empty_environment_install": true,
+    "dependency_checks": true,
+    "sim_preflight": true,
+    "teleop_preflight": true,
+    "imports_resolve_inside_new_checkout": true,
+    "parent_and_submodule_working_trees_clean_after_install": true,
+    "planner_not_downloaded": true
+  },
+  "hardware_connected": false,
+  "gpu_inference_rerun": false
+}

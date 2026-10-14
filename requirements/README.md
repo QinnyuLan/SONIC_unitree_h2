@@ -13,4 +13,4 @@ Direct dependencies are declared in the root [pyproject.toml](../pyproject.toml)
 
 The native runtime requires CUDA, TensorRT, ZeroMQ, Eigen, and JSON headers. GTest and zlib are needed only for the C++ regression tests; pytest is needed for the Python tests. The Unitree C++ SDK is included under `src/runtime/third_party/`. See the [deployment guide](../docs/DEPLOYMENT.md) for installation and build commands.
 
-The included Unitree SDK and XRoboToolkit binding supply DDS/device communication. The XRoboToolkit PC Service is installed separately on the workstation; see [VR setup](../docs/VR_SETUP.md).
+The pinned submodules under `third_party/` supply the Unitree Python SDK and XRoboToolkit binding. Installation initializes the required source submodule automatically; the XR binding is built under `build/third_party/`. See [dependency setup](../third_party/README.md). The XRoboToolkit PC Service is installed separately on the workstation; see [VR setup](../docs/VR_SETUP.md).

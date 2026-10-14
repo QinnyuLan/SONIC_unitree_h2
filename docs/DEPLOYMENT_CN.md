@@ -6,6 +6,8 @@
 
 ## 安装
 
+如果此前没有递归克隆，先运行 `git submodule update --init --recursive`。两个上游依赖固定在仓库记录的提交，详见[第三方依赖](../third_party/README.md)。
+
 验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6、TensorRT 10.13.3.9。CUDA 和 TensorRT 安装见 [原生依赖](NATIVE_SETUP.md)。
 
 ```bash

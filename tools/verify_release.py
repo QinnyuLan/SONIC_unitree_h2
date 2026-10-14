@@ -49,6 +49,9 @@ def main() -> int:
         "assets/robots/h2/H2_loop.urdf",
         "assets/robots/g1/g1_29dof_with_hand.urdf",
         "assets/human/human_joints_info.pkl",
+        "third_party/unitree_sdk2_python/setup.py",
+        "third_party/xrobotoolkit_pybind/CMakeLists.txt",
+        "third_party/xrobotoolkit_sdk/manifest.json",
         "src/sim/__main__.py",
         "src/interface/teleop/pico.py",
         "scripts/build_controller.sh",
@@ -73,6 +76,17 @@ def main() -> int:
         "src/interface/planner/engine.py",
     ]
     good = all([check_file(ROOT / path) for path in required])
+    if not (ROOT / "third_party/unitree_sdk2_python/setup.py").is_file() or not (
+        ROOT / "third_party/xrobotoolkit_pybind/CMakeLists.txt"
+    ).is_file():
+        print("Initialize dependencies: git submodule update --init --recursive")
+    sdk_manifest = ROOT / "third_party/xrobotoolkit_sdk/manifest.json"
+    if sdk_manifest.is_file():
+        for entry in json.loads(sdk_manifest.read_text())["files"]:
+            path = sdk_manifest.parent / entry["path"]
+            ok = path.is_file() and sha256(path) == entry["sha256"]
+            print(f"[{'OK' if ok else 'FAIL':7}] SHA256 XR SDK {entry['path']}")
+            good = good and ok
     # Use the same destination and pinned checksum as the download command.
     sys.path.insert(0, str(ROOT))
     from download_from_hf import PLANNER_FILE, PLANNER_SHA256

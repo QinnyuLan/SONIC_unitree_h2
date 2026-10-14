@@ -3,7 +3,7 @@ absl-py==2.5.1
 click==8.5.0
     # via rich-click
 cyclonedds==0.10.2
-    # via unitree-sdk2py (external_dependencies/unitree_sdk2_python/setup.py)
+    # via unitree-sdk2py (third_party/unitree_sdk2_python/setup.py)
 docstring-parser==0.18.0
     # via tyro
 etils==1.13.0
@@ -30,7 +30,7 @@ mujoco==3.10.0
     # via sonic-unitree-h2 (pyproject.toml)
 numpy==1.26.4
     # via
-    #   unitree-sdk2py (external_dependencies/unitree_sdk2_python/setup.py)
+    #   unitree-sdk2py (third_party/unitree_sdk2_python/setup.py)
     #   sonic-unitree-h2 (pyproject.toml)
     #   msgpack-numpy
     #   mujoco
@@ -38,7 +38,7 @@ numpy==1.26.4
     #   scipy
 opencv-python==4.11.0.86
     # via
-    #   unitree-sdk2py (external_dependencies/unitree_sdk2_python/setup.py)
+    #   unitree-sdk2py (third_party/unitree_sdk2_python/setup.py)
     #   sonic-unitree-h2 (pyproject.toml)
 pygments==2.21.0
     # via rich

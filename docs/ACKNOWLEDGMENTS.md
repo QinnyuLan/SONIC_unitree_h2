@@ -18,6 +18,7 @@ The project citation is provided in [references.bib](references.bib) and [CITATI
 | Unitree SDK2 and Python SDK | DDS communication with the robot and simulator | [C++ SDK](https://github.com/unitreerobotics/unitree_sdk2) · [Python SDK](https://github.com/unitreerobotics/unitree_sdk2_python) |
 | Unitree robot descriptions | Robot models and meshes | [MuJoCo assets](https://github.com/unitreerobotics/unitree_mujoco) · [ROS descriptions](https://github.com/unitreerobotics/unitree_ros) |
 | XRoboToolkit PC Service | PICO device communication and head/controller tracking | [Repository](https://github.com/XR-Robotics/XRoboToolkit-PC-Service) |
+| XRoboToolkit Python binding | Python interface to the PC Service SDK | [Repository](https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind) |
 | NVIDIA TensorRT | GPU inference for the exported ONNX models | [Project](https://developer.nvidia.com/tensorrt) |
 | NVIDIA CUDA Python | CUDA memory, streams and graphs for the Python planner | [Repository](https://github.com/NVIDIA/cuda-python) |
 | ONNX Runtime | Optional offline model validation | [Repository](https://github.com/microsoft/onnxruntime) |

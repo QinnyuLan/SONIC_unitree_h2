@@ -20,7 +20,8 @@ from unitree_sdk2py.idl.default import (
     unitree_hg_msg_dds__HandState_ as HandState_default,
 )
 from unitree_sdk2py.idl.unitree_go.msg.dds_ import WirelessController_
-from unitree_sdk2py.idl.unitree_hg.msg.dds_ import HandCmd_, HandState_, OdoState_
+from unitree_sdk2py.idl.unitree_hg.msg.dds_ import HandCmd_, HandState_
+from sim.odometry import OdoState_, default_odometry
 
 H2_JOINT_NAMES_LOCAL_MUJOCO = [
     "left_hip_pitch_joint",
@@ -205,7 +206,6 @@ class UnitreeSdk2Bridge:
                 unitree_hg_msg_dds__IMUState_ as IMUState_default,
                 unitree_hg_msg_dds__LowCmd_,
                 unitree_hg_msg_dds__LowState_ as LowState_default,
-                unitree_hg_msg_dds__OdoState_ as OdoState_default,
             )
             from unitree_sdk2py.idl.unitree_hg.msg.dds_ import IMUState_, LowCmd_, LowState_
 
@@ -290,7 +290,7 @@ class UnitreeSdk2Bridge:
 
         # Only create odo_state for supported robot types
         if "g1" in robot_type or "h1-2" in robot_type or "h2" in robot_type:
-            self.odo_state = OdoState_default()
+            self.odo_state = default_odometry()
             self.odo_state_puber = ChannelPublisher("rt/odostate", OdoState_)
             self.odo_state_puber.Init()
         else:
