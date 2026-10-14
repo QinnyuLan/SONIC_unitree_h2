@@ -44,7 +44,7 @@ inline void NormalizeQuaternions(Json& node, size_t count) {
   }
 }
 
-inline void ValidateG1(Json& data) {
+inline void ValidateJointReference(Json& data) {
   Shape(data.at("joint_pos"), {10, 29}, "joint_pos");
   Shape(data.at("joint_vel"), {10, 29}, "joint_vel");
   NormalizeQuaternions(data.at("root_quat"), 10);
@@ -82,8 +82,8 @@ inline Command ParseCommand(const Json& message) {
   c.takeover = message.value("takeover", false);
   c.data = message.at("data");
   Require(c.data.is_object(), "data must be an object");
-  if (c.kind == "g1") {
-    ValidateG1(c.data);
+  if (c.kind == "g1" || c.kind == "h2") {
+    ValidateJointReference(c.data);
   } else if (c.kind == "smpl") {
     Shape(c.data.at("joints"), {10, 24, 3}, "joints");
     Shape(c.data.at("wrist_joints"), {10, 6}, "wrist_joints");
@@ -91,7 +91,7 @@ inline Command ParseCommand(const Json& message) {
   } else if (c.kind == "vr") {
     Shape(c.data.at("positions"), {3, 3}, "positions");
     NormalizeQuaternions(c.data.at("orientations"), 3);
-    ValidateG1(c.data.at("lower_body"));
+    ValidateJointReference(c.data.at("lower_body"));
   } else if (c.kind == "planner") {
     Require(c.data.at("mode").is_number_integer(), "mode must be integer");
     Require(c.data.at("mode") >= 0 && c.data.at("mode") <= 26, "invalid locomotion mode");

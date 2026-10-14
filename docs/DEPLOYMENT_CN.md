@@ -51,30 +51,35 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 
 ```bash
 .venv_sim/bin/python -m interface.replay \
-  motions/example/walking_quip_360_R_002__A428
+  motions/example_g1_input/walking_quip_360_R_002__A428
 ```
 
 动作结束或发送端退出后回到站立。发送端的 `Ctrl+C` 释放其指令通道；runtime 的 `Ctrl+C` 结束控制并发送阻尼指令。
 
 ## 动作回放与离线 text2motion
 
-两者统一使用 `motion_replay`。支持单个 SONIC CSV 动作目录，或者包含以下字段的 NPZ：
+统一使用 `interface.replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ；离线 text2motion 结果也通过此入口发送。
 
-| 字段 | 形状 | 含义 |
-|---|---|---|
-| `joint_pos` | `[N,29]` | G1 semantic 顺序的绝对关节角，rad |
-| `joint_vel` | `[N,29]`，可选 | rad/s；省略则通过差分计算 |
-| `root_quat` | `[N,4]` | 世界坐标系根旋转，wxyz |
-| `fps` | 标量 | 原动作帧率 |
-
-CSV 读取 `joint_pos.csv`、可选的 `joint_vel.csv` 和 `body_quat.csv` 中的第一个四元数，默认 50 Hz，其他帧率用 `--fps` 指定。关节顺序见 [协议](ARCHITECTURE.md#joint-order)。
+| `motions/` 下的目录 | 输入类型 | 数量 |
+|---|---|---:|
+| `example_g1_input` | G1 基础动作 | 13 |
+| `example_g1_explore_input` | G1 探索动作 | 7 |
+| `example_h2_input` | H2 原生动作 | 8 |
+| `example_smpl_input` | SMPL 动作 | 8 |
 
 ```bash
+.venv_inputs/bin/python -m interface.replay \
+  motions/example_h2_input/walking_quip_360_R_002__A428 --inspect
+.venv_inputs/bin/python -m interface.replay \
+  motions/example_smpl_input/walking_quip_360_R_002__A428
 .venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
-.venv_inputs/bin/python -m interface.replay generated_motion.npz
 ```
 
-`--speed` 同时调整播放速度与关节速度。`--loop` 仅适用于首尾连续的动作。所有 G1 回放均发送未来 `0.0, 0.1, …, 0.9` 秒的稀疏 10 帧。离线 text2motion 结果需先导出为 G1 动作，本仓库不运行文本生成模型。
+`--inspect` 只检查数据，不连接 runtime。类型优先读取集合的 `manifest.json` 和动作元数据；未标注且存在歧义的外部数据使用 `--type g1|h2|smpl`，不能覆盖已有的不同类型声明。`--fps` 覆盖原始帧率；CSV 未记录帧率时默认 50 Hz。`--speed` 同时调整播放速度与关节速度，`--loop` 仅适用于首尾连续的动作。
+
+G1、H2 发送未来 `0.0, 0.1, …, 0.9` 秒的 10 帧；SMPL 发送 `0.00, 0.02, …, 0.18` 秒的 10 帧，以匹配模型输入。H2 读取原生 31 维文件，排除头部并重排为 29 维原生身体关节，不使用其附带的 G1 映射文件。SMPL 使用独立的 SMPL 根旋转、关节点及腕部角度。头部仍通过独立通道控制。
+
+CSV 文件、NPZ 字段与坐标约定见[动作格式说明](../motions/README.md)，发送协议见[架构文档](ARCHITECTURE_CN.md)。本仓库负责回放离线生成的动作，不运行文本生成模型。
 
 ## Sim2Real
 

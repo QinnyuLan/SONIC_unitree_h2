@@ -13,7 +13,7 @@ src/
 |---|---|
 | `src/runtime/` | Encoder/decoder inference, observations, command arbitration, head/hand output, native SDK and CMake build |
 | `src/interface/commands/` | Message schema, validation and Python command client |
-| `src/interface/replay.py` | Offline G1 motion and text-to-motion replay |
+| `src/interface/replay.py` | Offline G1/H2/SMPL motion and text-to-motion replay |
 | `src/interface/planner/` | Planner service, request client, TensorRT engine and trajectory processing |
 | `src/interface/teleop/` | PICO input, SMPL/VR adapter, calibration, tracking transport and visualization |
 | `src/interface/peripherals/` | Head/hand command client and optional Inspire serial tools |
@@ -25,7 +25,7 @@ src/
 | `assets/` | Shared G1/H2 URDF, MJCF, meshes and human joint data |
 | `models/sonic_h2_released/` | H2 ONNX models, interface manifest and checksums |
 | `models/motion_planner_g1/` | Optional local G1 planner weight and TensorRT cache |
-| `motions/` | G1 replay examples and format documentation |
+| `motions/` | G1, native H2 and SMPL replay examples with typed manifests |
 | `config/` | Hardware, teleoperation and simulator settings |
 | `scripts/` | Environment setup, native build and process launchers |
 | `tests/` | Python interface and simulator regression tests |

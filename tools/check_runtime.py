@@ -9,7 +9,7 @@ import sys
 import time
 import numpy as np
 import zmq
-from interface.commands import RuntimeClient, smpl_reference, vr_reference
+from interface.commands import RuntimeClient, h2_reference, smpl_reference, vr_reference
 from interface.commands.protocol import token_command
 from interface.teleop.bridge import standing_g1
 
@@ -64,6 +64,7 @@ def main():
                lambda: head.send('head', {'pitch': .3, 'yaw': -.2}))
         expect(lambda s: not s['head_active'] and not s['hands_active'] and abs(s['head_target'][0]) < .01)
         for kind, data in [
+            ('h2', h2_reference(**reference)),
             ('vr', vr_reference(np.zeros((3, 3)), np.tile([1, 0, 0, 0], (3, 1)), reference)),
             ('smpl', smpl_reference(np.zeros((10, 24, 3)), np.tile([1, 0, 0, 0], (10, 1)), np.zeros((10, 6)))),
             ('token', token_command(np.zeros(64))),

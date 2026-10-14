@@ -1,0 +1,12 @@
+Metadata for: dance_in_da_party_001__A464
+==============================
+
+Body part indexes:
+[0]
+
+Total timesteps: 498
+FPS: 50
+Deploy source: h2_lora
+Reference joint space: g1_semantic_29d_from_h2_physical_headless
+Source robot CSV: /mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464.csv
+Source SMPL: gear_sonic_deploy/reference/example_h2/smpl-x/uniform/231006/dance_in_da_party_001__A464.npz

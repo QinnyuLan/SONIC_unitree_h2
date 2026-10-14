@@ -33,6 +33,13 @@ def g1_reference(joint_pos, joint_vel, root_quat) -> dict:
             "root_quat": quaternions(root_quat, 10)}
 
 
+def h2_reference(joint_pos, joint_vel, root_quat) -> dict:
+    """Native H2 body policy order (29 joints, no head or G1 projection)."""
+    return {"joint_pos": array(joint_pos, (10, 29), "joint_pos"),
+            "joint_vel": array(joint_vel, (10, 29), "joint_vel"),
+            "root_quat": quaternions(root_quat, 10)}
+
+
 def smpl_reference(joints, root_quat, wrist_joints) -> dict:
     """Ten SMPL samples at 50 Hz; root-centered world-axis joints, wxyz root."""
     return {"joints": array(joints, (10, 24, 3), "joints"),
@@ -77,7 +84,7 @@ def hands_command(**hands) -> dict:
 
 def envelope(kind: str, data: dict, *, source: str, session: str, seq: int,
              ttl_ms: int = 250, takeover: bool = False) -> dict:
-    if kind not in {"g1", "smpl", "vr", "token", "stand", "stop", "head", "hands", "planner"}:
+    if kind not in {"g1", "h2", "smpl", "vr", "token", "stand", "stop", "head", "hands", "planner"}:
         raise ValueError(f"Unknown command kind: {kind}")
     if not source or not session or len(source) > 64 or len(session) > 64:
         raise ValueError("source and session must contain 1..64 characters")
@@ -85,7 +92,7 @@ def envelope(kind: str, data: dict, *, source: str, session: str, seq: int,
         raise ValueError("seq must be a nonnegative integer")
     if isinstance(ttl_ms, bool) or not isinstance(ttl_ms, int) or not 50 <= ttl_ms <= 1000:
         raise ValueError("ttl_ms must be between 50 and 1000")
-    validators = {"g1": g1_reference, "smpl": smpl_reference,
+    validators = {"g1": g1_reference, "h2": h2_reference, "smpl": smpl_reference,
                   "vr": vr_reference, "token": token_command,
                   "head": head_command, "hands": hands_command, "planner": planner_command}
     if kind in validators:

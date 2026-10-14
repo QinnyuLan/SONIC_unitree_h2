@@ -5,7 +5,7 @@ using namespace sonic_runtime;
 namespace {
 Json Message(std::string kind = "g1", std::string source = "a", int seq = 1) {
   Json data = Json::object();
-  if (kind == "g1") {
+  if (kind == "g1" || kind == "h2") {
     data["joint_pos"] = std::vector<std::array<double, 29>>(10);
     data["joint_vel"] = std::vector<std::array<double, 29>>(10);
     data["root_quat"] = std::vector<Quat>(10, {1, 0, 0, 0});
@@ -76,6 +76,32 @@ TEST(Observations, SparseG1UsesNativeOrderAndPhysicalTime) {
   EXPECT_NEAR(encoded[4 + 9 * 29], 9, 1e-6);
   EXPECT_EQ(encoded[294], 10);
   EXPECT_EQ(encoded[590], 1); EXPECT_EQ(encoded[593], 1);
+}
+TEST(Observations, NativeH2TracksBodyInsteadOfStandingWithoutG1Projection) {
+  Observations observations; RobotState state;
+  auto c = ParseCommand(Message("h2"));
+  const auto encoded = observations.Encoder(&c, state, .05);
+  EXPECT_EQ(encoded[0], 0); EXPECT_EQ(encoded[1], 1);
+  EXPECT_EQ(encoded[2], 0); EXPECT_EQ(encoded[3], 0);
+  for (int f = 0; f < 10; ++f)
+    for (int j = 0; j < 29; ++j) {
+      EXPECT_NEAR(encoded[4 + f * 29 + j], std::min(f + .5, 9.) + .01 * j, 1e-6);
+      EXPECT_FLOAT_EQ(encoded[294 + f * 29 + j], 10);
+    }
+  EXPECT_EQ(encoded[911], 0);
+  for (auto& root : c.data["root_quat"]) root = euler_z_to_quat_d(.6);
+  EXPECT_NEAR(observations.Encoder(&c, state)[590], std::cos(.6), 1e-6);
+  auto standing = observations.Encoder(nullptr, state);
+  EXPECT_FLOAT_EQ(standing[4], h2_native_default_angles_policy[0]);
+  EXPECT_EQ(standing[294], 0);
+}
+TEST(Command, H2WireAcceptsOnlyBodyPolicyJoints) {
+  auto m = Message("h2");
+  EXPECT_NO_THROW(ParseCommand(m));
+  m["data"]["joint_pos"] = std::vector<std::array<double, 31>>(10);
+  EXPECT_THROW(ParseCommand(m), std::invalid_argument);
+  m = Message("h2"); m["data"]["joint_vel"][2][5] = std::numeric_limits<double>::infinity();
+  EXPECT_THROW(ParseCommand(m), std::invalid_argument);
 }
 TEST(Observations, KeepsHeadingAcrossPacketsAndResetsOnStand) {
   Observations observations; RobotState state;

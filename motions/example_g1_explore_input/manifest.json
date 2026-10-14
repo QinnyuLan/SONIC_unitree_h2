@@ -1,0 +1,123 @@
+{
+  "schema": "sonic.motion_collection.v1",
+  "reference_type": "g1",
+  "fps": 50,
+  "source": {
+    "project": "SONIC-H2",
+    "collection": "gear_sonic_deploy/reference/example_g1_explore"
+  },
+  "motions": [
+    {
+      "motion_name": "prayer_R_001__A430",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 381,
+      "description": "单膝下跪祈祷后站起",
+      "sha256": {
+        "body_ang_vel.csv": "433bbd9ae5609c0b9e6e1844d84cd2fbab2e8467439d4e219b26d8a70d695998",
+        "body_lin_vel.csv": "d7e0a976038c10b5ee2428df03fe552b55b77e56fc2e77401e2fda403bf8b4b3",
+        "body_pos.csv": "cd9a5cfe5122ea0679f71c8a9957e37148ed83dbe9e55ad128f7bc80f39756e5",
+        "body_quat.csv": "d86bb0b6d4da5158aa5e2dd5230624032cd31ef1b38c127bd996c87ff265b7c3",
+        "joint_pos.csv": "16c1bc23eb243956a49bf27c6e82e6640e6b45b3e1cd8d892f7f98207f9a2b5b",
+        "joint_vel.csv": "b8a48bdc7e4679ad210560bef6f3ecffc5c6fdf30148fa285d29d91ca4bb8ea4",
+        "metadata.txt": "ebf99e2756bebd196006a32e350096bb4fdbc3fdbc68241a617a8fd98c0248ac"
+      }
+    },
+    {
+      "motion_name": "dejection_R_001__A430",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 764,
+      "description": "双膝跪地后站起",
+      "sha256": {
+        "body_ang_vel.csv": "9ff32cada0fdf53f450fad54334c734caa7f5099009445d7d41febdf8716b7a0",
+        "body_lin_vel.csv": "c36ffab91e6156489e12e732fb9328f35333ed388276cc20f2264965d0fbd4f6",
+        "body_pos.csv": "1fa03405f75ae356243eed5b81c6dc8eaa485e55eeaefa36bc67dada41a81f1f",
+        "body_quat.csv": "68552e8e68bb9f30d50e626dd18ea90a9f0c4efd974a95039e896368bffc0258",
+        "joint_pos.csv": "6c8d19ed1c2b00db936a0105ea60db34d6f51e9dc53cc6db18f615705314142f",
+        "joint_vel.csv": "fd4e05f49ce6dc37d4f6db3661293d31c9330af24af14d96176846ef7949ceb1",
+        "metadata.txt": "d53ed341666b1c2b4b830048e8e20a6630451f55d03c32d39dc63a3723996c7e"
+      }
+    },
+    {
+      "motion_name": "show_bicep_R_on_all_fours_360_start_R_idle_right_R_002__A474",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 780,
+      "description": "站立、四足向后爬行、恢复站立（A474 采集者）",
+      "sha256": {
+        "body_ang_vel.csv": "ab7ed5d796d258de04b829a6b159d8e779a7f3bfe79192ba3be64e658841f5d4",
+        "body_lin_vel.csv": "c9c46974fd763b3ccef1c18c49daf4df26347f42193c11a8e740ceeeeb8e81b3",
+        "body_pos.csv": "f65bd85a807d2ef6f6b555bc70eed52f69acb16ab82fe20dc971c784c8469550",
+        "body_quat.csv": "0b5b7f1c020dd1f42f1b064928e3122e1f4e7c17154fe3f61ae1b471f7b5db23",
+        "joint_pos.csv": "5fa0c50434cf0b9a9c1bde3b7a0c24f43b79b5a0a0c0b72d82323e7eff665910",
+        "joint_vel.csv": "c51dd9c8e6ba16c063e3eed91c8ebb0cee6e768b6376d9c5ba82f4bbbbba5a99",
+        "metadata.txt": "e85b84a8b7dc0a25a8309cbd6a2bf446a9ca5b6ed0b5e3b53d1c464d07068154"
+      }
+    },
+    {
+      "motion_name": "jump_and_land_light_002__A001",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 439,
+      "description": "站立、原地轻跳、落地站立",
+      "sha256": {
+        "body_ang_vel.csv": "2c5c84875f62316092a4386a589b178a5336491088552a1344445d70e5a01b88",
+        "body_lin_vel.csv": "a5902c0cbd895d25fffdfac42f6c33943b7a838d9b0d00a1e1d3421340c426f6",
+        "body_pos.csv": "9d6cbaefd09852342f41ae78b630840deae987c96558d399f9cc5848cac4c04f",
+        "body_quat.csv": "588a76812c7ddcb9b40a0e1cdfc680ed03acea8c73904cad833b4ceb64514125",
+        "joint_pos.csv": "38c94feeb385ce664b3187999fe6c78df7c1d5b6db45adfc0946aa489de83258",
+        "joint_vel.csv": "b23e842cce421d405ea08bcad5d7e6d383715d4a4eb9977a9f8934c8f2dd5115",
+        "metadata.txt": "afa877c2bf8e50114b061959e6b1a629c401f8892a0dbfa31dbf1f24ad796524"
+      }
+    },
+    {
+      "motion_name": "broad_jump_002__A359",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 264,
+      "description": "站立、立定跳远、落地站立",
+      "sha256": {
+        "body_ang_vel.csv": "7a518309ca1ad7b1da8fd2e30597a9ee2c65286b1a435550355375a2b78b2cfc",
+        "body_lin_vel.csv": "64fa90f5053570a9e5a19835c64b1c8f144676d58292d85990316d07268372b2",
+        "body_pos.csv": "07c45a81ce170af893671e366cdc2941f5ae7a45aedf680126a6d7bf2244c975",
+        "body_quat.csv": "ebfb0fc76901ae7e8236c7aeb7f177acb517c2cac4fb2ba014a1e5143224d69a",
+        "joint_pos.csv": "d0bd4ffca2d85ddb59f2f4d4b84e9c38cede6a42e81bbc6e2bd9b3afeb285c47",
+        "joint_vel.csv": "ac6007dd588a6032c1de581bf934eed68195bbaeabe9582ccef71c15a66c781c",
+        "metadata.txt": "3afdc3c4ee16e13404b88e177f262a72782e016891fd7dff44875299b2c00660"
+      }
+    },
+    {
+      "motion_name": "jump_twice_R_002__A533",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 165,
+      "description": "站立、连续向前两跳、站稳",
+      "sha256": {
+        "body_ang_vel.csv": "84b30c59d81da01df4d2c6d83bd1228a78bbafaf70d899b24e2def2c3a5ccfd6",
+        "body_lin_vel.csv": "e1b548a4eaf79d016ff0ddb3f858599740679c5357bd71cd7e0cec122fac6810",
+        "body_pos.csv": "51a4e0a5486201813825da021aaadbfcc66b9c57935a7df072d6c84c0eeb0e8d",
+        "body_quat.csv": "e6ccbb0ed625ebcb76fc68c21339e3167a47bcb095d2cacedba0f412a7a59cce",
+        "joint_pos.csv": "30f82a501cf7a9769169c71a277a550ec40ff4811f09b912c554718d9deceb55",
+        "joint_vel.csv": "b437696a2ec2352c9359ccc2e5b01e57d8b4112b528d5117230108182d6c66f9",
+        "metadata.txt": "a35f8c92a0d5558731681d823302f17124257c27c31a9c56d4ff5ec60045ba14"
+      }
+    },
+    {
+      "motion_name": "high_jump_R_opt_2_001__A477",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 157,
+      "description": "站立、原地高跳、落地站立",
+      "sha256": {
+        "body_ang_vel.csv": "c07b5024796279312c17acb3c4ef4e67a8adc0f02b319f3b88a3c1a5fb49ccbe",
+        "body_lin_vel.csv": "24c28083fb1c810925e959f1c5b021253e433946257485dc8291c0bf5676c9d8",
+        "body_pos.csv": "623d764bb83e5e35c493c51b8fd57aeff81217915a62141ed8fb8644ea5ef033",
+        "body_quat.csv": "c5d42b9cd000f04592ca8c7988bf43d6f0fa586213195d117fc75d3c66d4609c",
+        "joint_pos.csv": "2d9cd1c6b5dbfd323d9a33e78bf4d2794554836ca5cfc3138805deb8c12b76ff",
+        "joint_vel.csv": "aab00150f05bbb14a8440bae18c0494ef415e01f45fe9f64c9b8e1fb49d0c0a3",
+        "metadata.txt": "87f8b88c00864f864f9cee1801d0111bd9b504c7c852586800687d413999aef9"
+      }
+    }
+  ]
+}

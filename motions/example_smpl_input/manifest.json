@@ -1,0 +1,179 @@
+{
+  "schema": "sonic.motion_collection.v1",
+  "reference_type": "smpl",
+  "fps": 50,
+  "source": {
+    "project": "SONIC-H2",
+    "collection": "gear_sonic_deploy/reference/example_smpl_h2/deploy"
+  },
+  "motions": [
+    {
+      "motion_name": "forward_lunge_R_001__A359_M",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 399,
+      "sha256": {
+        "body_ang_vel.csv": "8d55a8505e78a4bb0055b11c81d62f2899ba573f318e0dd0cdb4d51166dfb43c",
+        "body_lin_vel.csv": "c3594aab07c444f0ef66e612e95ecb9b7ec5df739c1e880c9174d46067c16ca9",
+        "body_pos.csv": "7ac27188a22277dd2b59b82539077814145a281db3046ec55aa1d11749a8879b",
+        "body_quat.csv": "d56511c7a22365094419e8f9a077862a2d1b2905c67dc4dad12045b7e2d31eba",
+        "h2_joint_pos.csv": "1852013372541c859acc18bb2fd5a731f673301426ab8db0c773bc84244596b5",
+        "h2_joint_vel.csv": "2a50597c9340edd179657a0aec977bad041be9af69512e91b2597dc2099c67eb",
+        "joint_pos.csv": "b96d4fc5c827df65f5e038fc2b52b9afd2d568cb8b30eb73cdca5e024a798a86",
+        "joint_vel.csv": "f099d840d40b5c990864745478e44a8cae53bd45a569f863957519f0fa19673f",
+        "metadata.txt": "90c25478866c0fcae011c03fa222b45c3c3c0fba6af37e2e9cfed6dc52c929da",
+        "reference.json": "97680d88378f66b47af1078e0093240ab12d28fb6dc4875deb8bb90dc10faa2f",
+        "smpl_joint.csv": "eac8f7ec3a72d466de9001b0cd99abfa694b9a82e5613e803f037970ade0bd67",
+        "smpl_pose.csv": "9f890d09f8d97eb0a202ca2d4f85d2bc189b1b69c8d5430cc497f4de0371bf37",
+        "smpl_root_quat.csv": "c7f140b48d3212b8c1bec11c361286d5c6ccbe4bf2eb5664ff257e3e69e91800"
+      }
+    },
+    {
+      "motion_name": "squat_001__A359",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 425,
+      "sha256": {
+        "body_ang_vel.csv": "a088ade73bca4c949a268e63af22e6e517cdb5f38fc107f00ea7763b2a280d16",
+        "body_lin_vel.csv": "b87f043c6111c7f586a79fcd047c3884202f9f2e350e1d2a2d44be7d6e70bce7",
+        "body_pos.csv": "2ca476acc519a100182fa824175e7879f66b24f71acc9ffaa7cbc3635b7d6b8f",
+        "body_quat.csv": "b31f6f76629b9beb3c6d13c97b0c8110d4acbba1f4bfc411cfdb0112baaae832",
+        "h2_joint_pos.csv": "7d3c1690b8c4f7a6a0da8baf996d16f8d79c7c3b4393c8c9790da7c6c25369ac",
+        "h2_joint_vel.csv": "6114b36c3092cabba9642a91cc2a0c55430f334ce9ae987448d8e4f01d630c11",
+        "joint_pos.csv": "a1cf8ce39127e77c63c070632780f87e771c8117f8d6f7749f79abdce01930e3",
+        "joint_vel.csv": "5f62ab78ee6746490516ff2510936c9e65d21bb2b3fb2979d7635c094e7ed57a",
+        "metadata.txt": "0fcf295f4ed0b342f78ff126426fa96ee132c49ab2258ef18478607a791290ed",
+        "reference.json": "0f920e3e289f1b47e370d0551647cbab574746ec60f0ebea088daaccd5e435d5",
+        "smpl_joint.csv": "02d0fb8a158e68df9d931b99ae02594f901ffeb2fdf3ac01e46493376a8536d7",
+        "smpl_pose.csv": "6f4d9631e83bfcbfaa2f116bec02715da8ee7a6f5a55a5eec36e32b2b5c1d5a4",
+        "smpl_root_quat.csv": "b1e2008e8e8f13b193a2d63df354b2fd34ad6c4d45ef9b884d58dc6cd830863b"
+      }
+    },
+    {
+      "motion_name": "walking_quip_360_R_002__A428",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 456,
+      "sha256": {
+        "body_ang_vel.csv": "61c9e2ebf257caf0f51ca09a0ab11da98daf3dd3403d95c8e8fea40530366017",
+        "body_lin_vel.csv": "0ebe87858b802011734ec033482a11eb616fdde4926677e652a538f914a1d6f2",
+        "body_pos.csv": "a2ca9f6e207c89e397d383b24f42b023fc1bedd585fdec59a66b0490aff40e97",
+        "body_quat.csv": "659d834ad12dd3b2c53022313be452482f04dbc7525c54c3f7123c4e413183a6",
+        "h2_joint_pos.csv": "06671b2ed5fbc9ac8ae567924a3d4688f6562fe922ca7553db6ad1d097a5a982",
+        "h2_joint_vel.csv": "f0724fe359bd22186abfb9db410e4efa63c7c84caf181ff04da5a0dbb23d60de",
+        "joint_pos.csv": "1f11cf3b296d304ced566ba605f2d48987e18ff14d220b61bd2c5cf4e3ff2b41",
+        "joint_vel.csv": "7fd96480cd0e5fd585cbc2baf38449ac46e507f27be97ac71213ef2a8e357260",
+        "metadata.txt": "ee8ae24e305001af7858e8f91fbe14391adb1223e0652f7cd0fbb8842704711b",
+        "reference.json": "b7d090b0e92ea4160450ca3ac9a736d5e57e1373029755ffe970c85ccd572f81",
+        "smpl_joint.csv": "2fa2a1e48d4ff7ff60deda67715f082014fcb7cdf1ddf670f3283dd96c2035b2",
+        "smpl_pose.csv": "dc9d16c5c2ba2a44ff08b3cd7fb08f191c1afd04c106a7d457dd56e3aa0c3bbe",
+        "smpl_root_quat.csv": "a6d972c30da7732b87bfc8d221cdf0182d26b820ee017b4ba6064a221d0169d3"
+      }
+    },
+    {
+      "motion_name": "walking_quip_360_R_002__A428_M",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 456,
+      "sha256": {
+        "body_ang_vel.csv": "e0df58ce6cb8990cbbc8fe6b1261029c48e46e4d450d3b929faf9cccda56196b",
+        "body_lin_vel.csv": "ea07de3543c9c48ee8453bdb4ab223e879c11c2d8ed6514635d813685c9a3bb8",
+        "body_pos.csv": "050240db115a1106524142b1cb4e09344b82c372a9ff0b50321bc41a240a99a1",
+        "body_quat.csv": "39380c579e68d7239e35e5b301e9205e085c474bee85b8a5a86ecdc1e89e1626",
+        "h2_joint_pos.csv": "72675279358763d7dbaa64d00fe0388bec44da9534681f8abdc3d33e35a642c3",
+        "h2_joint_vel.csv": "799dbfef630e3c4b9fa959e71cbf63a899a2147fb61773fe7e2c02a95f40c26f",
+        "joint_pos.csv": "7cb2031ba125dacd9d39a0ae31b424b698c2fbe5a416c7799ed81125b1722e8e",
+        "joint_vel.csv": "1502cf741458b1506cf419c30d577d621a95b5bb3e2d2df9490db069b3a92690",
+        "metadata.txt": "e9db0aa01812b9d20a73bf985cbc09c7ba0728c1e7e93912f4ed24fca7800e18",
+        "reference.json": "49cbe169acf3143c73043f422e0542a9d97e6d6d781d59d12842a66447f1ff98",
+        "smpl_joint.csv": "c108c3329f23e70c8c9452061962176b78462006377413f38dc92d16734b5081",
+        "smpl_pose.csv": "bb58c994a7881aa87ba6d0aa843867549a5b99df319c497cfde8d39beb5b45b3",
+        "smpl_root_quat.csv": "c54dc2b335ea2293bd3cde1f04dea17cb518296b9d19df051cc17cda7e67e97b"
+      }
+    },
+    {
+      "motion_name": "dance_in_da_party_001__A464",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 498,
+      "sha256": {
+        "body_ang_vel.csv": "f343f2613bbc1fa7685a8a3f031354d3169407a8f12e58b54063879a982ffce0",
+        "body_lin_vel.csv": "9e39ce4efc762e16dfdc213e73b3a58e9a2d8fc399fdfe54739467d0c8ddbcfd",
+        "body_pos.csv": "282485cebed94c9470259f01934a4440887ba22d2e3bc0b2696623c7e48ec45a",
+        "body_quat.csv": "3931201b1d6e4bff3e04c9d5e25407667d1187b548fa6daa6f3cac8705e3095e",
+        "h2_joint_pos.csv": "911bac7f9b274080d0114a0e91c17e2b53f3dae7d9fe411d7cc88b20fc69ee4e",
+        "h2_joint_vel.csv": "6c5bc4842bb8fb94ad48a3ec31aebe1a4446b146b6ec00e6d7f34a0a6f3cb5ea",
+        "joint_pos.csv": "0d9cb9883a71770d39382a058e6792932fe5f6a80e1b3ea703af0b9d76926716",
+        "joint_vel.csv": "a77c1c9e405b11b634426290c03be3afc2c968e71dbe4e4d7fe5d5f5a3b6a9b0",
+        "metadata.txt": "cd184025a7f20efe6d8e5ef028af13fa0e1a7dc010d22adabbab93688ea3f495",
+        "reference.json": "ffdb1ebad07a5f9d5c32beafae153689d07c8cec410c7dab7455ffe69a14b3d5",
+        "smpl_joint.csv": "1d61d13ed8eb7bacbe3a81c518e29f1c5b5d50467971b88c522b98c3280a3bfb",
+        "smpl_pose.csv": "11e134d2a708f295c4444e98a2b1f80b00fb5924bab5c15c513cee377807643d",
+        "smpl_root_quat.csv": "68163d360e6ba395e7774a2734a6a0a178a33d07e0aa9ddb1a4bfe485440a070"
+      }
+    },
+    {
+      "motion_name": "dance_in_da_party_001__A464_M",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 498,
+      "sha256": {
+        "body_ang_vel.csv": "f84b8c50706950a4ee7d48b656db2c8c022fe56677ca8c3de764ab00199a3e5d",
+        "body_lin_vel.csv": "5fb673c103647e56dfe27640f2872a1d5547d9dd5d87c2c821b93c26a59740b2",
+        "body_pos.csv": "891bb15307df1f692aecf6941d1728dd681d54ba9d012f2f592ca2c226a751ab",
+        "body_quat.csv": "8f796341a99b1adc17d2a216b49ad100977a8fb84d2acdca0168012fbb6d4f4a",
+        "h2_joint_pos.csv": "4835df6e233db68a01e56a46120834579bced8b3b09761bc6c7819b74b0719a4",
+        "h2_joint_vel.csv": "3908cb6a64ecbb3e0da229740baf85bd1f3b8da04599312ab39a59a4298c14a8",
+        "joint_pos.csv": "029e7794c833e0b5318368459332778ab4e84e1902626f9767cc15487ed535f8",
+        "joint_vel.csv": "042bdbd7bd4b6250ad55c6cd6d0e58a493f87668769535d1fda29ba2beb6b8ab",
+        "metadata.txt": "e07a7ba6c38c663103d3ec8cea47c7cf29bef459b86739df68193ce110220e36",
+        "reference.json": "d81de158df1d28f2c1580f075206ed96c15de29d7bc4a1ff1fa14829b2c35594",
+        "smpl_joint.csv": "6f6917a8195880e4c4fd3c429e9b75d92f74935aee8e2c36d63002841505c5e5",
+        "smpl_pose.csv": "39baa5d8f5dd4f33dda80ad63367dec6727b2594145b3c4d39ffcb9aa6919b5c",
+        "smpl_root_quat.csv": "68e920affa0c64be1c83573855a9092c205e00248a6b1f898b52d9ef5166632d"
+      }
+    },
+    {
+      "motion_name": "macarena_001__A545",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 1376,
+      "sha256": {
+        "body_ang_vel.csv": "7b45db257f2410be6e78e5c42851d53da29856dae05808bb8848b8ef95a9eb91",
+        "body_lin_vel.csv": "d4c5004e4e650dda3d17c4903de02cd4a63e1f10b5660d5adacc2c74cd468e61",
+        "body_pos.csv": "f29aec896543464ef2ccb8c592e2192a6331b60e373a6eada7299ed9d94e1166",
+        "body_quat.csv": "20f1bf0d4781e99950c982e6f12ffdb336c28f74528b5d203eeff64976680da5",
+        "h2_joint_pos.csv": "013dd890ca78794ca702af33d75165be0e2e8dfe480762124a3d152800343e13",
+        "h2_joint_vel.csv": "0f91b34a7e879404a6a22aaaee679cb08731e3e1322ddeb8a80868fc445f5936",
+        "joint_pos.csv": "8eac631afd09967221353f477d7ae6a44849524459020e8b9f5282cdb1541b34",
+        "joint_vel.csv": "5ca8d6a417d383de1bb46e33337e13b82c7fa4a72ac0e65ed128839ce8ef4bf2",
+        "metadata.txt": "aa7c1d7afd67ef4823773538a6de53744afd8d676b59c51a71f1f124d01f5852",
+        "reference.json": "dfe085f9b9c1eb4e1d93fe2862f57f21cbeb338b0e10a0872c1d893bab2a05ce",
+        "smpl_joint.csv": "2a5bbf2f1e2f29e1e954061d2a6d27be66d686e79e2fa62011f27523ad445d4c",
+        "smpl_pose.csv": "20275da3d0c904cb59c9f591ce56c0bcfb3e251aa6a72e063abd01e0a5d85b16",
+        "smpl_root_quat.csv": "cb0c0bb59f6500c4a89bbe4bc80fc915088cffe6b6089387240bf62ede11ce4b"
+      }
+    },
+    {
+      "motion_name": "macarena_001__A545_M",
+      "reference_type": "smpl",
+      "fps": 50,
+      "frames": 1376,
+      "sha256": {
+        "body_ang_vel.csv": "25699701e33bd3bb17b28215aa6dd6b2188e7e19047247bd9505319a9e0359df",
+        "body_lin_vel.csv": "dcd578fc740e368c741ddc4b506752c9597612640b1b3a44e37b32b72a7f9cd8",
+        "body_pos.csv": "2ac42940b9b310169c5a9bfd443db1a65bfe76704376cff2204ffcb57ef90faa",
+        "body_quat.csv": "5d1f31751c208aae1839597d31ba6e80dde70973baa9d31a10690aade316e5ed",
+        "h2_joint_pos.csv": "10571a7facc81d86b8dc324d85dfc4870ce3087c36c431e8fc50e9acfd81d04e",
+        "h2_joint_vel.csv": "d89a360a11550f595d10122ddfd966fdd9c027e7167c8182be8d8fbb5926fce0",
+        "joint_pos.csv": "5700c53d1e160c80982bcfb0acb54af51395162ebbb5f9c4dcebdfb43e136b7f",
+        "joint_vel.csv": "fcefad8a4a88ccbb223a049371d142c680480318901408b1196bd0cb128a7153",
+        "metadata.txt": "201be0ec9e15135b7da74d2730b49e0b729d65b33ac6b4d7d24dda370e6a03bd",
+        "reference.json": "71b4069980ac5fd0310c8591537d25b279e20ddafdcb46b4ff8a03d70502fbe3",
+        "smpl_joint.csv": "79a1516bca38fccfada47d059b7e382fae4fbdf1a34f44cbd3fc678e70c46c9e",
+        "smpl_pose.csv": "6db19904fe190426d25f79e43be8abb82d558191db822cabfcbad6b726d2acd4",
+        "smpl_root_quat.csv": "1a7572d4593081dfec97740c77309472f7a7c444b856392b78a23ecfdd6efc64"
+      }
+    }
+  ]
+}

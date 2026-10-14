@@ -51,30 +51,35 @@ Terminal 3 — choose a G1 motion clip:
 
 ```bash
 .venv_sim/bin/python -m interface.replay \
-  motions/example/walking_quip_360_R_002__A428
+  motions/example_g1_input/walking_quip_360_R_002__A428
 ```
 
 Replay finishes by releasing the body channel. The runtime returns to standing. `Ctrl+C` in a producer releases its channel; `Ctrl+C` in the runtime ends control with damping.
 
 ## Motion replay and offline text-to-motion
 
-Both use the same replay executable. Input is either one SONIC CSV clip directory or an NPZ containing:
+Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files, including offline text-to-motion output. Input type is detected from the collection manifest and clip metadata. The bundled collections are:
 
-| Key | Shape | Convention |
-|---|---|---|
-| `joint_pos` | `[N, 29]` | Absolute native G1 semantic joint positions, radians |
-| `joint_vel` | `[N, 29]`, optional | rad/s; computed by finite differences if omitted |
-| `root_quat` | `[N, 4]` | World-frame quaternion, wxyz |
-| `fps` | scalar | Source sampling frequency |
-
-CSV input uses `joint_pos.csv`, optional `joint_vel.csv`, and the first quaternion in `body_quat.csv`. CSV defaults to 50 Hz; specify `--fps` for other rates. Joint names and ordering are in [the protocol](ARCHITECTURE.md#joint-order).
+| Directory under `motions/` | Type | Clips |
+|---|---|---:|
+| `example_g1_input` | G1 basic | 13 |
+| `example_g1_explore_input` | G1 exploration | 7 |
+| `example_h2_input` | Native H2 | 8 |
+| `example_smpl_input` | SMPL | 8 |
 
 ```bash
+.venv_inputs/bin/python -m interface.replay \
+  motions/example_h2_input/walking_quip_360_R_002__A428 --inspect
+.venv_inputs/bin/python -m interface.replay \
+  motions/example_smpl_input/walking_quip_360_R_002__A428
 .venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
-.venv_inputs/bin/python -m interface.replay generated_motion.npz
 ```
 
-`--speed` changes playback speed and scales velocity consistently. `--loop` requires a clip with a continuous boundary. All replay sources send ten samples at offsets `0.0, 0.1, …, 0.9` seconds. Offline text-to-motion output must be exported as a G1 motion before replay; this repository does not run a text-generation model.
+`--inspect` validates the clip without connecting. `--type g1|h2|smpl` labels otherwise ambiguous external data and must agree with declared metadata. `--fps` overrides the recorded frame rate; CSV defaults to 50 Hz if unspecified. `--speed` adjusts playback and velocity together; `--loop` requires a continuous loop boundary.
+
+G1 and H2 use ten samples at offsets `0.0, 0.1, …, 0.9` seconds. SMPL uses ten samples at `0.00, 0.02, …, 0.18` seconds. H2 reads the native 31D files, excludes head joints and sends native body policy angles. SMPL reads its own joints/root and semantic wrist angles. Head control remains independent.
+
+See [motion formats and NPZ fields](../motions/README.md) for export conventions, and [the protocol](ARCHITECTURE.md#body-data) for transmitted fields. This repository replays offline text-to-motion results; it does not run a text-generation model.
 
 ## Sim2Real
 

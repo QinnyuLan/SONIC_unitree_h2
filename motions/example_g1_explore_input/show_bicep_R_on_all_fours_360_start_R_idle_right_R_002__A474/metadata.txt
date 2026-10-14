@@ -1,0 +1,17 @@
+Metadata for: show_bicep_R_on_all_fours_360_start_R_idle_right_R_002__A474
+==============================
+
+Body part indexes:
+[0 4 10 18 5 11 19 9 16 22 28 17 23 29]
+
+Total timesteps: 780
+FPS: 50
+Reference type: g1
+Encoder mode: 3
+Joint order: G1_ISAACLab_ORDER (29 native G1 joints)
+Quaternion order: wxyz
+Units: m, rad, m/s, rad/s
+Source CSV: /home/qingyul/Datasets/bones_seed/g1/csv/231010/show_bicep_R_on_all_fours_360_start_R_idle_right_R_002__A474.csv
+Source SHA256: d65c4dacda102d9be825e94e5d68a0974e892cdaa2e79bf2071ed425b9a761a3
+Source sample rate: 120 Hz
+Endpoint standing check: passed (13 frames at each end)

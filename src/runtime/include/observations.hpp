@@ -33,8 +33,8 @@ inline void PutRotation(Buffer& buffer, size_t offset, const Quat& q) {
 }
 
 // Fixed release contract: full encoder 1751 -> 64, decoder 994 -> 29.
-// The network carries native G1 semantic joints; H2 standing uses native H2
-// policy order. There is no motion library or trajectory generator here.
+// Joint references carry either native G1 semantic joints or native H2 body
+// policy joints. There is no motion library or trajectory generator here.
 class Observations {
  public:
   void ResetReference() { heading_valid_ = false; }
@@ -57,6 +57,7 @@ class Observations {
       heading_valid_ = true;
     }
     const int mode = kind == "g1" ? 3 : kind == "vr" ? 1 : kind == "smpl" ? 2 : 0;
+    const bool standing = kind == "stand";
     std::array<float, 1751> out{};
     out[0] = mode;
     if (mode < 3) out[1 + mode] = 1;
@@ -66,12 +67,12 @@ class Observations {
     if (mode == 0 || mode == 3) {
       for (size_t f = 0; f < 10; ++f) {
         for (size_t j = 0; j < 29; ++j) {
-          out[4 + f * 29 + j] = mode == 0 ? h2_native_default_angles_policy[j]
+          out[4 + f * 29 + j] = standing ? h2_native_default_angles_policy[j]
               : Sample(reference->at("joint_pos"), cursor + f, j);
-          out[294 + f * 29 + j] = mode == 0 ? 0
+          out[294 + f * 29 + j] = standing ? 0
               : Sample(reference->at("joint_vel"), cursor + f, j);
         }
-        PutRotation(out, 590 + f * 6, relative(mode == 0 ? Quat{1, 0, 0, 0}
+        PutRotation(out, 590 + f * 6, relative(standing ? Quat{1, 0, 0, 0}
             : SampleQuat(reference->at("root_quat"), cursor + f)));
       }
     } else if (mode == 1) {

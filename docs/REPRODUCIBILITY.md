@@ -70,6 +70,16 @@ source scripts/setup_env.sh
 .venv_planner/bin/python tools/check_runtime.py --planner
 ```
 
+## Typed motion replay validation
+
+The four published motion collections contain 36 clips: 13 G1 basic, 7 G1 exploration, 8 native H2 and 8 SMPL. All 361 clip files match the original SONIC-H2 data byte for byte; collection manifests were replaced with portable typed manifests, and per-clip provenance JSON files were renamed to `reference.json`. The extreme H2 set is excluded.
+
+After adding G1/H2/SMPL replay, 46 Python command/planner/replay/adapter tests and 59 C++ tests passed. The C++ runtime was rebuilt and release preflight passed. Tests cover type detection, conflicting metadata, H2 native joint permutation and head exclusion, SMPL root/wrist selection, velocity scaling, sample timing, malformed input, and all collection file hashes. Run the command suite and CTest using the instructions above.
+
+An additional CPU-only comparison sent Python replay envelopes through the actual C++ command parser and observation builder for all 36 clips. Five cases per clip covered startup, intermediate frames, playback speed, packet ageing and the endpoint. All 180 comparisons against an independent reference calculated from the source CSVs passed; the maximum absolute observation difference was below `7.3e-7`. The report is saved locally under `outputs/validation/replay_observations.json`.
+
+This change was not tested with GPU inference, closed-loop simulation or hardware. The existing closed-loop limitation above remains applicable; these checks establish data and observation consistency only.
+
 ## Third-party dependency validation
 
 On 2026-10-15, the Unitree Python SDK and XRoboToolkit binding were replaced with pinned, unmodified upstream submodules under `third_party/`. The simulator's odometry extension moved to `src/sim/odometry.py`; its DDS type identifier, type information and serialized sample bytes match the previous implementation. The native XR SDK artifacts retain their previous SHA256 hashes.

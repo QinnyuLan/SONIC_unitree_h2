@@ -6,9 +6,9 @@
 
 ```mermaid
 flowchart LR
-  R[Offline G1 motion / text-to-motion] --> M[Motion replay]
+  R[Offline G1 / H2 / SMPL motion] --> M[Motion replay]
   J[Locomotion requests] --> P[G1 planner]
-  M -->|10 sparse G1 frames| B[H2 policy runtime]
+  M -->|typed 10-frame references| B[H2 policy runtime]
   P -->|10 sparse G1 frames| B
   V[PICO / SMPL / VR] --> T[Teleoperation adapter]
   P -->|optional lower-body reference| T
@@ -43,7 +43,7 @@ All new messages are single-frame UTF-8 JSON over ZeroMQ. The runtime binds inpu
 
 | Endpoint | Socket at service | Purpose |
 |---|---|---|
-| `tcp://127.0.0.1:5558` | Runtime PULL | Body: `g1`, `smpl`, `vr`, `token`, `stand`, `stop` |
+| `tcp://127.0.0.1:5558` | Runtime PULL | Body: `g1`, `h2`, `smpl`, `vr`, `token`, `stand`, `stop` |
 | `tcp://127.0.0.1:5559` | Runtime PUB | State, schema `sonic.h2.state.v1` |
 | `tcp://127.0.0.1:5560` | Planner PULL | Locomotion requests: `planner`, `stand` |
 | `tcp://127.0.0.1:5561` | Planner PUB | Sparse G1 reference envelopes |
@@ -76,16 +76,17 @@ The first producer owns its channel until expiry or `stand`. Another producer ne
 | Kind | Fields | Timing / frame |
 |---|---|---|
 | `g1` | `joint_pos[10,29]`, `joint_vel[10,29]`, `root_quat[10,4]` | Future offsets 0.0–0.9 s at 0.1 s intervals |
+| `h2` | `joint_pos[10,29]`, `joint_vel[10,29]`, `root_quat[10,4]` | Native H2 body policy order; same timing as G1 |
 | `vr` | `positions[3,3]`, `orientations[3,4]`, `lower_body` with the G1 fields above | Left wrist, right wrist, head; calibrated robot-local coordinates |
 | `smpl` | `joints[10,24,3]`, `root_quat[10,4]`, `wrist_joints[10,6]` | Future offsets 0.00–0.18 s at 0.02 s intervals |
 | `token` | `tokens[64]` | Direct decoder latent input; encoder bypassed while fresh |
 | `stand`, `stop` | Empty object | Release to standing / end control with damping |
 
-Angles are radians; velocities rad/s; positions meters; all quaternions **wxyz**. G1 angles are absolute, with no H2 projection applied by the runtime. SMPL joints are root-centered vectors expressed in world axes; the runtime rotates them into the SMPL root frame. SMPL wrists follow `[left_roll, right_roll, left_pitch, right_pitch, left_yaw, right_yaw]`.
+Angles are radians; velocities rad/s; positions meters; all quaternions **wxyz**. G1 and H2 angles are absolute. Their message kinds select different model branches; neither applies a joint-space projection. H2 replay reorders the native 31D MuJoCo source into 29D body policy order and drops the head columns before sending. SMPL joints are root-centered vectors expressed in world axes; the runtime rotates them into the SMPL root frame. SMPL wrists follow `[left_roll, right_roll, left_pitch, right_pitch, left_yaw, right_yaw]`.
 
 References advance according to packet time. Position/velocity interpolation is linear; quaternion interpolation uses SLERP. Sampling beyond a packet's reference horizon holds its final sample until expiry. Replay sets terminal velocities to zero. Heading is aligned once when the source/session or body kind changes, then remains fixed across packets so turns are preserved.
 
-The full encoder layout remains 1751 → 64: selector 0 for native H2 standing, 1 for VR, 2 for SMPL, 3 for native G1. The decoder remains 994 → 29 and receives ten history frames in oldest-to-newest order. The interface reserves direct token input; no VLA model, GR00T integration or associated dependencies are included.
+The full encoder layout remains 1751 → 64: selector 0 for native H2 trajectories and default standing, 1 for VR, 2 for SMPL, 3 for native G1. The decoder remains 994 → 29 and receives ten history frames in oldest-to-newest order. The interface reserves direct token input; no VLA model, GR00T integration or associated dependencies are included.
 
 ## Head and hands
 
@@ -119,5 +120,7 @@ Native G1 semantic order, matching SONIC CSV `joint_pos` and sparse planner outp
 24 right_wrist_roll   25 left_wrist_pitch     26 right_wrist_pitch
 27 left_wrist_yaw     28 right_wrist_yaw
 ```
+
+H2 body references use the same semantic joint-name sequence above, but contain native H2 physical angles. In particular, H2 hip axes differ from G1. The type must remain `h2` even though both messages have 29 columns. H2 source CSV uses MuJoCo order (head before arms); see [motion formats](../motions/README.md#csv-inputs).
 
 Runtime feedback `joint_pos[31]` and `joint_vel[31]` use H2 DDS order: left leg (6), right leg (6), waist yaw/roll/pitch (3), left arm (7), right arm (7), head pitch/yaw (2). H2 leg order is hip pitch/roll/yaw, knee, ankle roll/pitch. This differs from G1 MuJoCo order. Native mappings are defined in `policy_parameters.hpp` and tested with the released model contract.

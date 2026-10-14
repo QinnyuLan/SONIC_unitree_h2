@@ -89,7 +89,7 @@ Options Parse(int argc, char** argv) {
 class Runtime {
  public:
   explicit Runtime(Options options) : options_(std::move(options)), context_(1),
-      body_(context_, options_.body, {"g1", "smpl", "vr", "token", "stand", "stop"}),
+      body_(context_, options_.body, {"g1", "h2", "smpl", "vr", "token", "stand", "stop"}),
       head_(context_, options_.head, {"head", "stand"}),
       hands_(context_, options_.hands, {"hands", "stand"}),
       state_socket_(context_, zmq::socket_type::pub) {

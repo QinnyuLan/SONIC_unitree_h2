@@ -1,0 +1,219 @@
+{
+  "schema": "sonic.motion_collection.v1",
+  "reference_type": "g1",
+  "fps": 50,
+  "source": {
+    "project": "SONIC-H2",
+    "collection": "gear_sonic_deploy/reference/example"
+  },
+  "motions": [
+    {
+      "motion_name": "dance_in_da_party_001__A464",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 497,
+      "sha256": {
+        "body_ang_vel.csv": "68b2bcc5a3021a7daeb4983c74d024916550c7f09678f3d7d5fe42ade262eb24",
+        "body_lin_vel.csv": "615bb8eaedfdc3b7318a22cd2a82511713b70358d0641ce076350b9c45661f1c",
+        "body_pos.csv": "e0031119fcce358bbaf7ad7134ab2ab7299e621c6f95e1099a9e29ab13e23335",
+        "body_quat.csv": "ee91908150c8f4391ba35a25995e8a0b6c6f00212ce425a33cb1ff9e05d5b2da",
+        "info.txt": "15c2a58e95ea38d10ff7025fdc82e5527bed805a407d6009efc1c6bb12505c28",
+        "joint_pos.csv": "17027b288d550a06701c4e1ca3759f76accdfdc78d7aceb5325579a4cb2567b6",
+        "joint_vel.csv": "9fcb9531a144c5a39573fd765d251e733ec372c5499ea03cc9c450d203f5b451",
+        "metadata.txt": "6e909b50d495d025ea6ed5e750dd5c4a9e5d96852d41e46887a018e2a79b935c"
+      }
+    },
+    {
+      "motion_name": "dance_in_da_party_001__A464_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 497,
+      "sha256": {
+        "body_ang_vel.csv": "5e61c39c296484ed2e432c4d0c39985fc456bc30e80642f3a6a6ffbc384a72c4",
+        "body_lin_vel.csv": "f484a5cc5837d26173fb1217935867ec4b41b111e99633c73f371273571da380",
+        "body_pos.csv": "c6e3ed409ede2e3cb65408993c1ec26028e3b6642c77fc8d4fbc9f4352ab3ad1",
+        "body_quat.csv": "d59594991ba416def87330c64b85adc3edff815fadb4d4bccbf9df2a2a0d56b7",
+        "info.txt": "7d2c78844bcad4d2a132e5a20c430c7cffd26f33e47ac4ade14d22f2a75ebf2a",
+        "joint_pos.csv": "05f62f9bf79fa78ef777a528b07e376f8bf32a35a45135617fe1000f4076cdc4",
+        "joint_vel.csv": "78c7af2ecc94998d3e2077384673cf4c232af8fb4d9327b9ee826f1748f0487b",
+        "metadata.txt": "899c4c20fe565a38a922c1c39990195176c9f1f355074f6cc619517637cb797a"
+      }
+    },
+    {
+      "motion_name": "forward_lunge_R_001__A359_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 399,
+      "sha256": {
+        "body_ang_vel.csv": "396694f19db6c173ee78e1dfe3071911f33bc187a1db95fa6083041ad35337df",
+        "body_lin_vel.csv": "dfb2246510395ea656e3cdddad47fc8834292a0b14d277036b3a48cba7ecc5bf",
+        "body_pos.csv": "8b81bfbd03fddadc5c7858200fc7635169f86b355b00566a3786da58766ca794",
+        "body_quat.csv": "65e322f25dc5b493d184dfc8dc420907385c255ee79ba839cc5544f9bb93ab4a",
+        "info.txt": "b6dd1aa2388b78b2940180a6e145a22fad72043ad79ed3c1914e35b2c619f3a0",
+        "joint_pos.csv": "ba1d5f70ef05ed9cd8abf5bb3dc94f3fab404069c6613eb6164926cf792b7929",
+        "joint_vel.csv": "5a279b94233fc70c7cc14294db5549b94401a63d1dfec23b96bd42298207eff2",
+        "metadata.txt": "4e0f92ccd182f7b8b65155276c5e69a8ade9d46d3c2e4ad3a3664d823a6d3548"
+      }
+    },
+    {
+      "motion_name": "macarena_001__A545",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 1375,
+      "sha256": {
+        "body_ang_vel.csv": "365ff87303477c486c48e686c784d3d34916412a773df4a4e99c2cd4c6c19668",
+        "body_lin_vel.csv": "a49b30041cdf177a9f280388e17b281fbd9b8ea6c7cff0e598df7b6a58e472cb",
+        "body_pos.csv": "9c3b3d37759a6d647ece48fb2ee83a672804aace61a465be1ecffda9dc0a9ec7",
+        "body_quat.csv": "b8b12818a64405764dee8035f84948a5d9db55332576065f79cd79962a99375d",
+        "info.txt": "e503ce33651f079fd184b0046b3b51741025e7a690e53d28ded6c8d94e720adc",
+        "joint_pos.csv": "c5d3346b84d18f654d41119f77b3c22158222a0ed8e0cfdd5d1e365cd2f928bc",
+        "joint_vel.csv": "a253beca302630400e4f94d92e2af7fb0d8492b13dc202f9f23941b35dfbde66",
+        "metadata.txt": "18ab95c70b1ec9ac221b387e2508999cc81c2572ca5f537d273884ad6454c357"
+      }
+    },
+    {
+      "motion_name": "macarena_001__A545_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 1375,
+      "sha256": {
+        "body_ang_vel.csv": "d5b037db38a0f0fe2faa29dfb76ced57447a8d32031591db0a3f45463b6afbaf",
+        "body_lin_vel.csv": "94b7eb7d8cf15a555ee350eedef98cd1741e0a7275413893c27b2b72ba71ccc2",
+        "body_pos.csv": "1a531e5b2fdea77ee263b012496917c818c3e884942516003c07de65f3e78cd6",
+        "body_quat.csv": "1075cccb999d7257d60b65d35085793d6f2bb642f2b91cf1564a5e5b89b1373b",
+        "info.txt": "c53246713212f4a1c8f27b1e5a5ebb508b5ed6f904a889c0ab31e57893200d1e",
+        "joint_pos.csv": "900c8ab465f6657d6eb126dd415f7573577fa9ae5457aebe5a842eeccb4600a0",
+        "joint_vel.csv": "7e6bc7a2f5c1ae24e6899973e01dd22329a4feb70fb0ff05e5c71c62001e6aa8",
+        "metadata.txt": "11f9bac14ccf93e8ce28e92a5e028ee07fa52b18e3a0c33c017cb2d1b63b7828"
+      }
+    },
+    {
+      "motion_name": "neutral_kick_R_001__A543",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 165,
+      "sha256": {
+        "body_ang_vel.csv": "6af68c82e8ad931922be4bfbd60782b011c3f4ba6a831a658efd4c85720817aa",
+        "body_lin_vel.csv": "0a4120efff6f569e3a59c8e903d319b4f4c739367b85683f1b2d50df32e776d3",
+        "body_pos.csv": "5005f2babd28afb97707e78f67fff561350e1fa0664f799de6ca32046524170a",
+        "body_quat.csv": "90803a0726495abea7af897e52f3324b8083e0b7c81cad1d1289dc742b3ece61",
+        "info.txt": "dd64990a06bab09df236bedc68feda872f926cf66c8d220fd43e7a826b192327",
+        "joint_pos.csv": "8b4f673ad056dc7b2e3f2623d39d345b951bd7b9c0c50abc6eb50eb70d952654",
+        "joint_vel.csv": "0e8dbc5c76804001bd6f0bae1e3614f4918cf9fff79c5c3f11202a98ed1a1e4b",
+        "metadata.txt": "c69ef7fbda42adad3c399964c886a5eb554ce8948b8d34c227e66000fb3777de"
+      }
+    },
+    {
+      "motion_name": "neutral_kick_R_001__A543_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 165,
+      "sha256": {
+        "body_ang_vel.csv": "60f4681551f76622136dc3f43442d5f0331bcb7bb69d9c290e576457a982f7ca",
+        "body_lin_vel.csv": "0fa5c07076f1ec6f121e51450c9820e3ea64954508476bc00b9b92485a9d5941",
+        "body_pos.csv": "ae74b8625a72b0b5bfcb8d1bef0cf7b7ed1bf7ef1964a63da6065a991b364e29",
+        "body_quat.csv": "d11a5a0519614c5bb9e0040c80f0ad3c019b7a568ec3eeaa66e2c3bc7eebb470",
+        "info.txt": "658dc4f308c57bca0e447ea124484180720c83f9b6fb5887e7bb62c0b5d5b0e7",
+        "joint_pos.csv": "b879921ad2f2701572deefee2b581f68879b7903e41e280e4d1a54acfb04dacf",
+        "joint_vel.csv": "d8fc7f97da478c7c41d54c15364ab4929169833ec813cca756d61cbde0b60e90",
+        "metadata.txt": "4c24167feee919686314504d423176ede569cb2696a609390d10d93ce91665ec"
+      }
+    },
+    {
+      "motion_name": "squat_001__A359",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 424,
+      "sha256": {
+        "body_ang_vel.csv": "9de87460d6dedc06cc36214912abd998aed6645658b7340c170b1e4d0f68c08d",
+        "body_lin_vel.csv": "5908f9da9d5767326386ada07311596a6ffff63080c700fb1fc1ce8ef1222d2b",
+        "body_pos.csv": "ad98ccf42203c2246f2cdf43a64806642a2930bf525a3fef77956f6d727a7a09",
+        "body_quat.csv": "b1e6ab7b81de682fed07720ee6d21ba99f02812631f262bfcf77f6c39e0c164b",
+        "info.txt": "8c79c05b3dcf9e486fd9f76637e8da6253d548268505b8404a5905b78e21b4e8",
+        "joint_pos.csv": "fd6b07ac5d66a3ffb78999eefc12f6934402b3103853e71d4667858dab088e8d",
+        "joint_vel.csv": "246e8225dcdf410339bbaa6700375e92b217166de6e497c5168c4c4eb34dd38c",
+        "metadata.txt": "eb85b850b1be3de857c39a714f793313c36acce33ebce7a858aa3da968581cc6"
+      }
+    },
+    {
+      "motion_name": "tired_forward_lunge_R_001__A359_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 810,
+      "sha256": {
+        "body_ang_vel.csv": "db0ffcb53da3325bbd34122e20386c228c87936162431bf8be29d3d81e56e90a",
+        "body_lin_vel.csv": "9f655b0f341af2b413fde4e89e09649f56ffad2e7602990fec7acc73819d561e",
+        "body_pos.csv": "734cbedaa32642901e1c3c534584b689d1530748a586678c5c8c7cab359d2b93",
+        "body_quat.csv": "a6432b76702d3c3e68582620a75119ee2b34dd420c611a406e804fd059e92e3f",
+        "info.txt": "56d7f1da589e55dbe8e98b3f54475bfd44a330a15230746c64b3e7113a579665",
+        "joint_pos.csv": "0fdeda9a95cac3ed98b5d3593fe4b5df8f1f806e8c8dd25aab956cd63eb4569e",
+        "joint_vel.csv": "f4c0c7294edddb3f4c4a5fd23077a32c0a38e657c93cc6c902b1af1e3a671b89",
+        "metadata.txt": "0577c021653222ef05723aef79a3d4814e9c8db8f86a4d02af66aac427997881"
+      }
+    },
+    {
+      "motion_name": "tired_one_leg_jumping_R_001__A359",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 500,
+      "sha256": {
+        "body_ang_vel.csv": "d3b975f22d6141dda92bf47a850c1abe7a5a78f7e9f3eb7c911425139289f35a",
+        "body_lin_vel.csv": "ba88a49beeb09eb2197fccacf461c790c820164328e4737bf4056358eee8c590",
+        "body_pos.csv": "3050a1956804ab1d77bbd35d8c62c531dc085a603ad71808cf19ebc1af668902",
+        "body_quat.csv": "461928b2fc6fa9f5a87253614421a2fe80bfb0811f30090b67247ffe81ec8a49",
+        "info.txt": "f8210d217f3f04c0b8fe47eb97cd3dbb610a6a5cdb607f3f9a98cbf5f96e7d70",
+        "joint_pos.csv": "3d4aa3b8fd5af3d42d9003706f24707453ce564191da355b9835a57527153b00",
+        "joint_vel.csv": "636f2a952c138f7af42a332530a334fdb0aed05a0ec9c481fc1803aa31b44cd5",
+        "metadata.txt": "001a6cd0d1c3e8f0aa28348a0ff2fc4f1b0e66ab0b3f4c57e19e8df5c2b4bcb5"
+      }
+    },
+    {
+      "motion_name": "tired_one_leg_jumping_R_001__A359_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 500,
+      "sha256": {
+        "body_ang_vel.csv": "6cfa7e5fe56d63aeba2b07153606cbf800e861eca2fc62026574d8d8b070a73d",
+        "body_lin_vel.csv": "3ada6d2426c7bfae89b40b031ed7290a98828f5e4df957f0e86a6326e45dcb1c",
+        "body_pos.csv": "e2bcae3df38ce24fe4a12f12f09ef4dd51cd096a54a61d3978ea881ce9af826d",
+        "body_quat.csv": "170208770667c8e2a8909e0bc2363a76e191eb29f470b33aaab420b61addc7a1",
+        "info.txt": "9fae5e64616b00a7906ba98e27e66d6c06893a58be09c61f144919a4ff10a23a",
+        "joint_pos.csv": "f94627ec643420221518fe7a3021e5d8bd159a3f6b535d8a72a2dfeecb752352",
+        "joint_vel.csv": "749c1291d548759e8fc55e66f6796dac82b06fcd114060f4a487a21fac28a938",
+        "metadata.txt": "edde134191ba96f568b3f8882ae00d9ad65ae0283ab823c753748c0f0dafae3d"
+      }
+    },
+    {
+      "motion_name": "walking_quip_360_R_002__A428",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 455,
+      "sha256": {
+        "body_ang_vel.csv": "df7e5fa6819cd52420c281dbe93635c16714bf30101f7b0b4c679c4412820e41",
+        "body_lin_vel.csv": "d6a3a422928e04d13259b3c00c4d12baea0b94cee9892d8b50811d6487005254",
+        "body_pos.csv": "711ba143ef134e70c277b594a4f2206a227daf58c25c36b1b4f64f10e6954377",
+        "body_quat.csv": "ac868ecb5abfab8251563bec2e0eb3c46ff9200874c914cc2f6f981220da0d62",
+        "info.txt": "d5a86572fa584da236f80e20886e74cf4ec55d2dd61e186f05857f121dd1d956",
+        "joint_pos.csv": "49aa248f12d69304a928191e9942ad3236991dc82bbf001e0ced9442d409a42f",
+        "joint_vel.csv": "ad103e8e4bacbb057461305ccd6cfb6aecbe86179b4077afd7ffdce1ad659b1a",
+        "metadata.txt": "fd89792ca764b2f704df122015c1d7cf43d7667f9d7545cc680585a45df1c859"
+      }
+    },
+    {
+      "motion_name": "walking_quip_360_R_002__A428_M",
+      "reference_type": "g1",
+      "fps": 50,
+      "frames": 455,
+      "sha256": {
+        "body_ang_vel.csv": "68d3d7ec97711351a3b7b96c4612d4478da9c543bb695412d284ee52842b940f",
+        "body_lin_vel.csv": "aa3289cc27752fdbf802cec59d252d16fa661964ccab2bc1768acb31c4b99a20",
+        "body_pos.csv": "6dd9bd45cb37ade9923994f04fa1bd74e49c688b7655ba5ad8c1a7c8967b47c2",
+        "body_quat.csv": "28012cab8d4e08f214cdc22e88aa1422da96b4730683d8b3e6fe2617270cb238",
+        "info.txt": "cb4fecf29c3b7b4c39675ff73ab345b09783c0d134f2a2ce38d9fbe767ca2768",
+        "joint_pos.csv": "3c6b44f81b193243d9c1a85a596fefa2e9f928d455df498675341e90925674f0",
+        "joint_vel.csv": "3a9d6d35b492a38ded99ef8cf86cfbee22e62da79354cf25df6e88ed4175f82a",
+        "metadata.txt": "bebddfa8e7b084bc3dd9ab79f4e67a0fe3e62fb5cd8f9b8fbd287b6a9f06cc04"
+      }
+    }
+  ]
+}

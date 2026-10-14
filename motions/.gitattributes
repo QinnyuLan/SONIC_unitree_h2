@@ -1,0 +1,2 @@
+# Keep exported CSV bytes stable for the hashes in each collection manifest.
+*.csv -text whitespace=cr-at-eol
