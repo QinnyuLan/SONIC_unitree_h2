@@ -68,6 +68,20 @@ bash scripts/run_planner.sh --keyboard
 
 两个输入面板均等待 runtime 的新鲜状态后才发送动作。状态中断后，回放会暂停且不会自动恢复，planner 会清除键盘指令。退出输入端后，仿真器和 runtime 继续运行。planner 需要单独安装环境、下载权重，首次构建引擎可能需要数分钟。安装与测试范围见 [planner 配置](PLANNER.md)和[验证记录](REPRODUCIBILITY.md)。
 
+### Runtime 启动故障排查
+
+启动日志会分别显示 CUDA 设备初始化、TensorRT 缓存复用或引擎构建，以及 CUDA graph 捕获。缓存缺失或不兼容时，构建引擎可能需要数分钟；兼容的缓存会直接复用。两个模型全部就绪后才启动 DDS 控制。模型初始化阶段按 **Ctrl+C** 直接终止进程；初始化完成后则通过控制循环执行正常退出。
+
+如果长期停在 `Initializing CUDA device ...`，可在另一终端查看进程，不需要再次发起 GPU 查询：
+
+```bash
+ps -C sonic_h2_runtime,nvidia-smi -o pid,stat,etime,wchan:40,args
+```
+
+如果进程持续处于 `D` 状态，等待位置为 `uvm_gpu_retain_by_uuid`、`uvm_va_space_destroy` 等，说明正在 NVIDIA 驱动内部等待。信号可能要等内核调用返回后才能处理；不可中断等待中的进程，即使执行 `kill -9` 也无法立即结束。这种情况并非 TensorRT 引擎编译，不要反复启动 runtime 或 `nvidia-smi`。
+
+如果驱动持续阻塞，先保存其他工作，再安排重启主机。GPU reset 要求设备没有活跃客户端，且不保证能恢复已卡住的 GPU，参见 [NVIDIA 的恢复条件](https://docs.nvidia.com/deploy/nvidia-smi/index.html#r-gpu-reset)。恢复后，先确认 `nvidia-smi` 能正常返回，再重新启动三个终端。删除模型缓存不能解决驱动等待问题。
+
 ## 动作回放与离线 text2motion
 
 需要语音与配套手势时，参见 [ECHO-G text2motion 指南](TEXT2MOTION_CN.md)：包含中英文示例、离线生成，以及通过 `interface.motion_replay` 同时播放动作与本机或 Unitree 扬声器音频。仓库内的语音动作示例只需安装 inputs 环境即可回放。

@@ -101,10 +101,22 @@ class Runtime {
     const auto decoder_path = (dir / "model_decoder.onnx").string();
     h2_native_contract::ValidateDeploymentModels(encoder_path, decoder_path,
                                                 "sonic_full_root_relative_v0");
-    Require(encoder_.Initialize(encoder_path, false) && encoder_.CaptureGraph(), "encoder initialization failed");
-    Require(policy_.Initialize(decoder_path, false) && policy_.CaptureGraph(), "decoder initialization failed");
+    const auto model_start = Clock::now();
+    std::cout << "Initializing policy models; DDS control has not started. Ctrl+C cancels startup." << std::endl;
+    Require(encoder_.Initialize(encoder_path, false), "encoder initialization failed");
+    std::cout << "Capturing encoder CUDA graph..." << std::endl;
+    Require(encoder_.CaptureGraph(), "encoder graph capture failed");
+    Require(policy_.Initialize(decoder_path, false), "decoder initialization failed");
+    std::cout << "Capturing decoder CUDA graph..." << std::endl;
+    Require(policy_.CaptureGraph(), "decoder graph capture failed");
     Require(encoder_.GetInputDimension() == 1751 && encoder_.GetTokenDimension() == 64 &&
             policy_.GetInputDimension() == 994, "model shape mismatch");
+    std::cout << "Policy models ready in "
+              << std::chrono::duration<double>(Clock::now() - model_start).count() << " s." << std::endl;
+    // Before DDS can send commands, switch from immediate startup cancellation
+    // to the control loop's orderly shutdown (including damping commands).
+    std::signal(SIGINT, Signal); std::signal(SIGTERM, Signal);
+    if (interrupted) return;
     if (!options_.dry_run) InitializeDDS();
   }
   ~Runtime() { Shutdown(); }
@@ -307,7 +319,9 @@ class Runtime {
 };
 }  // namespace
 int main(int argc, char** argv) {
-  std::signal(SIGINT, Signal); std::signal(SIGTERM, Signal);
+  // Model initialization can block inside CUDA/TensorRT. A flag-only handler
+  // cannot cancel it because the control loop has not started yet.
+  std::signal(SIGINT, SIG_DFL); std::signal(SIGTERM, SIG_DFL);
   try { Runtime runtime(Parse(argc, argv)); runtime.Run(); }
   catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
 }

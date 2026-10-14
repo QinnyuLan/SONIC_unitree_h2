@@ -68,6 +68,20 @@ This terminal runs the TensorRT planner worker and its keyboard panel. **1 / 2 /
 
 Both input panels wait for fresh runtime state before sending motion. Replay does not automatically resume after a state interruption, and planner keyboard commands are cleared. Closing an input panel leaves the simulator and policy runtime running. The planner environment/model must be installed separately; first engine construction may take several minutes. See [planner setup](PLANNER.md) and [validation records](REPRODUCIBILITY.md).
 
+### Runtime startup troubleshooting
+
+Startup logs distinguish CUDA device initialization, TensorRT cache reuse or engine construction, and CUDA graph capture. Engine construction can take several minutes when a cache is missing or incompatible; compatible caches are reused. DDS control starts only after both policy models are ready. During model initialization, **Ctrl+C** terminates the process directly; after initialization it requests an orderly control shutdown.
+
+If startup remains at `Initializing CUDA device ...`, inspect the process from another terminal without starting another GPU query:
+
+```bash
+ps -C sonic_h2_runtime,nvidia-smi -o pid,stat,etime,wchan:40,args
+```
+
+A persistent `D` state with a wait location such as `uvm_gpu_retain_by_uuid` or `uvm_va_space_destroy` indicates a wait inside the NVIDIA driver. Signals may remain pending until the kernel call returns; even `kill -9` cannot force immediate termination in an uninterruptible wait. This is not TensorRT engine construction. Avoid repeatedly launching runtimes or `nvidia-smi` while this condition persists.
+
+Save other work and arrange a host reboot if the driver remains blocked. GPU reset requires the GPU to have no active clients and is not guaranteed to recover a hung GPU; see [NVIDIA's recovery requirements](https://docs.nvidia.com/deploy/nvidia-smi/index.html#r-gpu-reset). After recovery, verify that `nvidia-smi` returns normally, then restart the three terminals. Clearing model caches does not resolve a driver wait.
+
 ## Motion replay and offline text-to-motion
 
 For speech and accompanying gestures, use the [ECHO-G text-to-motion guide](TEXT2MOTION.md). It includes Chinese/English examples, offline generation, and local or Unitree speaker playback through `interface.motion_replay`. The included speech/gesture bundles need only the input environment.

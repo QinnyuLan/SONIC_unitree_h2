@@ -64,4 +64,14 @@ if(BUILD_TESTING)
   add_test(NAME runtime_tests COMMAND runtime_tests)
   set_tests_properties(controller_tests runtime_tests PROPERTIES
     WORKING_DIRECTORY "${SONIC_ROOT}")
+
+  # Exercise cancellation in the actual executable without accessing a GPU.
+  find_package(Python3 REQUIRED COMPONENTS Interpreter)
+  add_library(runtime_cuda_stub SHARED tests/stub_cuda.cpp)
+  target_include_directories(runtime_cuda_stub PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+  add_test(NAME runtime_startup_tests COMMAND "${Python3_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_startup.py"
+    "$<TARGET_FILE:sonic_h2_runtime>" "$<TARGET_FILE:runtime_cuda_stub>"
+    "${SONIC_ROOT}/models/sonic_h2_released")
+  set_tests_properties(runtime_startup_tests PROPERTIES TIMEOUT 30)
 endif()

@@ -184,14 +184,28 @@ namespace
 
     std::string GetCudaDeviceName( int deviceID )
     {
+        LOG_INFO( "Initializing CUDA device " + std::to_string( deviceID ) + " before checking TensorRT cache..." );
         int deviceCount = 0;
-        cudaGetDeviceCount( &deviceCount );
+        auto status = cudaGetDeviceCount( &deviceCount );
+        if ( status != cudaSuccess )
+        {
+            s_logger.log( status );
+            return {};
+        }
+        if ( deviceID < 0 || deviceID >= deviceCount )
+        {
+            LOG_ERROR( "CUDA device index is unavailable: " + std::to_string( deviceID ) );
+            return {};
+        }
 
-        if ( deviceID >= deviceCount )
-            return std::string();
-
-        cudaDeviceProp prop;
-        cudaGetDeviceProperties( &prop, deviceID );
+        cudaDeviceProp prop{};
+        status = cudaGetDeviceProperties( &prop, deviceID );
+        if ( status != cudaSuccess )
+        {
+            s_logger.log( status );
+            return {};
+        }
+        LOG_INFO( "CUDA device ready: " + std::string( prop.name ) );
         return std::string( prop.name );
     }
 
@@ -251,7 +265,10 @@ bool ConvertONNXToTRT(
     );
 
     // Hash in all compatibility-sensitive build/runtime properties.
-    trtHash = picosha2::hash256_hex_string(trtHash + GetCudaDeviceName( options.deviceID ));
+    const auto deviceName = GetCudaDeviceName( options.deviceID );
+    if ( deviceName.empty() )
+        return false;
+    trtHash = picosha2::hash256_hex_string(trtHash + deviceName);
     trtHash = picosha2::hash256_hex_string(trtHash + std::to_string(int(options.precision)));
     const std::string tensorRTVersion = std::to_string( getInferLibVersion() ) + "."
         + std::to_string( NV_TENSORRT_BUILD );
@@ -273,18 +290,20 @@ bool ConvertONNXToTRT(
 
         file.read(hashInFile.data(), TRT_CACHE_HASH_SIZE);
 
-        std::cerr << "hash value in file " <<  hashInFile << std::endl;
-        std::cerr << "hash of onnx/gpu type " << trtHash << std::endl;
-
         if(hashInFile == trtHash)
         {
+            LOG_INFO( "Using cached TensorRT engine: " + trtFile );
             return true;
         }
-        LOG_INFO( "TRT file " + trtFile + " is out of date and needs to be regenerated. This could take a while..." );
+        LOG_INFO( "TensorRT cache is incompatible; rebuilding engine (this may take several minutes): " + trtFile );
+    }
+    else if ( forceConvert )
+    {
+        LOG_INFO( "Rebuilding TensorRT engine (this may take several minutes): " + trtFile );
     }
     else
     {
-        LOG_INFO( "TRT file " + trtFile + " not found. This could take a while to generate..." );
+        LOG_INFO( "TensorRT cache is missing; building engine (this may take several minutes): " + trtFile );
     }
 
 
@@ -528,6 +547,7 @@ public:
         }
 
         // Create runtime to deserialize the engine file.
+        LOG_INFO( "Loading TensorRT engine: " + trtPath );
         m_runtime = std::unique_ptr<nvinfer1::IRuntime>( nvinfer1::createInferRuntime( s_logger ) );
         if ( !m_runtime )
         {

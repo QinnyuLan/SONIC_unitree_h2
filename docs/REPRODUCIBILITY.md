@@ -171,6 +171,12 @@ Twelve keyboard checks passed, alongside the existing simulation/command/replay 
 
 Minimal input and planner environment imports, direct clip inspection, launcher help and release preflight passed. The previously recorded GPU closed-loop limitation still applies.
 
+## Runtime startup cancellation (2026-10-15)
+
+The runtime was rebuilt and the existing 59 C++ tests passed. Three additional startup checks run the actual executable with its first CUDA call replaced by a test library: SIGINT and SIGTERM terminate blocked model initialization, and zero available CUDA devices produce a failure without attempting engine construction. These checks use private IPC sockets and `--dry-run`, access no GPU, and initialize no DDS. They are included in CTest when building with `-DBUILD_TESTING=ON`. Release preflight also passed.
+
+The host GPU remained blocked during this check: the live runtime was waiting in `uvm_gpu_retain_by_uuid`, and an earlier GPU query was waiting in `uvm_va_space_destroy`. Termination signals remained pending. The startup signal fix does not unblock an uninterruptible kernel wait; actual TensorRT startup and simulation tracking must be retested after driver recovery. See [startup troubleshooting](DEPLOYMENT.md#runtime-startup-troubleshooting).
+
 ## Saving validation reports
 
 Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:
