@@ -1,4 +1,4 @@
-# Shared SONIC numerical code, with independent policy-runtime and planner executables.
+# Native policy runtime and numerical regression tests.
 find_package(Eigen3 REQUIRED)
 find_path(ZMQ_INCLUDE_DIR zmq.hpp REQUIRED)
 find_library(ZMQ_LIBRARY zmq REQUIRED)
@@ -9,25 +9,18 @@ set(COMMON_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}
 add_library(sonic_motion STATIC EXCLUDE_FROM_ALL src/cnpy.cpp src/fk.cpp)
 target_include_directories(sonic_motion PUBLIC ${COMMON_INCLUDES})
 target_link_libraries(sonic_motion PUBLIC ZLIB::ZLIB)
-set(INFERENCE_LIBS onnxruntime::onnxruntime TRTInference CUDA::cudart
+set(INFERENCE_LIBS TRTInference CUDA::cudart
     ${TensorRT_nvinfer_LIBRARY} ${TensorRT_nvonnxparser_LIBRARY})
 add_executable(sonic_h2_runtime "${SONIC_ROOT}/runtime/src/main.cpp")
 target_include_directories(sonic_h2_runtime PRIVATE ${COMMON_INCLUDES})
 target_link_libraries(sonic_h2_runtime PRIVATE ${PROJECT_NAME} ${INFERENCE_LIBS} ${ZMQ_LIBRARY})
-option(BUILD_PLANNER "Build the independent G1 planner service" ON)
-if(BUILD_PLANNER)
-  add_executable(sonic_g1_planner "${SONIC_ROOT}/sources/planner/main.cpp")
-  target_include_directories(sonic_g1_planner PRIVATE ${COMMON_INCLUDES})
-  target_link_libraries(sonic_g1_planner PRIVATE sonic_motion ${INFERENCE_LIBS} ${ZMQ_LIBRARY})
-  set_target_properties(sonic_g1_planner PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release")
-endif()
 set_target_properties(sonic_h2_runtime PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release")
 if(BUILD_TESTING)
   find_package(GTest REQUIRED)
   file(GLOB TEST_SRCS CONFIGURE_DEPENDS unit_tests/*.cpp)
   add_executable(run_tests ${TEST_SRCS})
   target_include_directories(run_tests PRIVATE ${COMMON_INCLUDES})
-  target_link_libraries(run_tests PRIVATE GTest::GTest GTest::Main sonic_motion ${PROJECT_NAME} onnxruntime::onnxruntime)
+  target_link_libraries(run_tests PRIVATE GTest::GTest GTest::Main sonic_motion ${PROJECT_NAME})
   set_target_properties(run_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release")
   add_test(NAME controller_tests COMMAND run_tests)
   set_tests_properties(controller_tests PROPERTIES WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}")

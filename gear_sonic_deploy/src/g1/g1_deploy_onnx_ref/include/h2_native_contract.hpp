@@ -9,7 +9,10 @@
 #include <string>
 #include <vector>
 
-#include <onnxruntime_cxx_api.h>
+#include <filesystem>
+#include <fstream>
+#include <nlohmann/json.hpp>
+#include <TRTInference/picosha2.h>
 
 namespace h2_native_contract {
 
@@ -44,56 +47,51 @@ inline void ValidateShape(
   }
 }
 
-inline std::string ReadMetadata(
-    const Ort::Session& session,
-    Ort::AllocatorWithDefaultOptions& allocator,
-    const char* key) {
-  const auto metadata = session.GetModelMetadata();
-  const auto value = metadata.LookupCustomMetadataMapAllocated(key, allocator);
-  return value ? std::string(value.get()) : std::string();
+// The release manifest records ONNX interfaces and selected metadata. Verify the
+// model digest before trusting those records; TensorRT validates the executable
+// tensor names, types and dimensions when loading the engine.
+struct ModelInfo {
+  std::string path;
+  nlohmann::json record;
+};
+
+inline ModelInfo ReadModel(const std::string& model_path) {
+  const std::filesystem::path path(model_path);
+  std::ifstream manifest(path.parent_path() / "deployment_manifest.json");
+  if (!manifest) throw std::runtime_error("Missing deployment_manifest.json beside " + model_path);
+  const auto data = nlohmann::json::parse(manifest);
+  std::ifstream model(path, std::ios::binary);
+  if (!model) throw std::runtime_error("Cannot read model " + model_path);
+  const auto expected = data.at("model_sha256").at(path.stem().string()).get<std::string>();
+  const auto actual = picosha2::hash256_hex_string(
+      std::istreambuf_iterator<char>(model), std::istreambuf_iterator<char>());
+  if (actual != expected) throw std::runtime_error("Model SHA256 mismatch: " + model_path);
+  return {model_path, data.at("onnx_check").at(path.filename().string())};
 }
 
-inline void ValidateMetadata(
-    const Ort::Session& session,
-    Ort::AllocatorWithDefaultOptions& allocator,
-    const std::string& model_path,
-    const std::vector<std::pair<const char*, const char*>>& required) {
-  for (const auto& [key, expected] : required) {
-    const std::string actual = ReadMetadata(session, allocator, key);
-    if (actual != expected) {
-      std::ostringstream oss;
-      oss << "H2-native ONNX metadata mismatch for " << model_path << ": "
-          << key << "='" << (actual.empty() ? "<missing>" : actual)
-          << "', expected '" << expected << "'";
-      throw std::runtime_error(oss.str());
-    }
-  }
+inline std::string ReadMetadata(const ModelInfo& model, const char* key) {
+  return model.record.at("metadata").value(key, std::string());
+}
+
+inline std::vector<int64_t> TensorShape(const ModelInfo& model, const char* kind) {
+  const auto& tensors = model.record.at(kind);
+  if (tensors.size() != 1 || !tensors.at(0).is_array() || tensors.at(0).size() != 3)
+    throw std::runtime_error("Expected one rank-two tensor: " + model.path);
+  return {tensors.at(0).at(1).get<int64_t>(), tensors.at(0).at(2).get<int64_t>()};
 }
 
 inline void ValidateModel(
-    Ort::Env& env,
-    Ort::AllocatorWithDefaultOptions& allocator,
-    const std::string& model_path,
+    const ModelInfo& model,
     const ModelShape& expected,
     const std::vector<std::pair<const char*, const char*>>& required_metadata) {
-  Ort::SessionOptions options;
-  options.SetIntraOpNumThreads(1);
-  options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_DISABLE_ALL);
-  const Ort::Session session(env, model_path.c_str(), options);
-  if (session.GetInputCount() != 1 || session.GetOutputCount() != 1) {
-    std::ostringstream oss;
-    oss << "H2-native ONNX must have exactly one input and one output: "
-        << model_path << " has " << session.GetInputCount() << " input(s), "
-        << session.GetOutputCount() << " output(s)";
-    throw std::runtime_error(oss.str());
+  ValidateShape(TensorShape(model, "inputs"), expected.input, model.path, "input");
+  ValidateShape(TensorShape(model, "outputs"), expected.output, model.path, "output");
+  if (model.record.at("input_dtype") != "float32" || model.record.at("output_dtype") != "float32")
+    throw std::runtime_error("Expected float32 model tensors: " + model.path);
+  for (const auto& [key, expected_value] : required_metadata) {
+    if (ReadMetadata(model, key) != expected_value)
+      throw std::runtime_error("Model contract mismatch for " + model.path + ": " + key);
   }
-  ValidateShape(
-      session.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape(),
-      expected.input, model_path, "input");
-  ValidateShape(
-      session.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape(),
-      expected.output, model_path, "output");
-  ValidateMetadata(session, allocator, model_path, required_metadata);
 }
 
 inline void ValidateDeploymentModels(
@@ -103,15 +101,9 @@ inline void ValidateDeploymentModels(
   if (encoder_path.empty()) {
     throw std::runtime_error("H2-native profile requires an encoder ONNX file");
   }
-  Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "h2_native_contract");
-  Ort::AllocatorWithDefaultOptions allocator;
-  Ort::SessionOptions options;
-  options.SetIntraOpNumThreads(1);
-  options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_DISABLE_ALL);
-  const Ort::Session encoder_session(env, encoder_path.c_str(), options);
-  const auto encoder_input_shape = encoder_session.GetInputTypeInfo(0)
-                                       .GetTensorTypeAndShapeInfo()
-                                       .GetShape();
+  const auto encoder = ReadModel(encoder_path);
+  const auto decoder = ReadModel(decoder_path);
+  const auto encoder_input_shape = TensorShape(encoder, "inputs");
   const bool h2_only_encoder =
       encoder_input_shape == std::vector<int64_t>({1, 640});
   const bool universal_encoder =
@@ -132,9 +124,9 @@ inline void ValidateDeploymentModels(
   // fine-tuned model needs no LoRA merge or input/output adapter folding.
   if (universal_encoder) {
     const std::string selector_contract =
-        ReadMetadata(encoder_session, allocator, "selector_contract");
+        ReadMetadata(encoder, "selector_contract");
     const std::string selector_names =
-        ReadMetadata(encoder_session, allocator, "selector_encoder_names");
+        ReadMetadata(encoder, "selector_encoder_names");
     const bool full_selector =
         selector_contract == "sonic_h2_native_full_v1" &&
         selector_names == "[\"h2\", \"teleop\", \"smpl\", \"g1\"]";
@@ -169,17 +161,13 @@ inline void ValidateDeploymentModels(
         reference_orientation_contract.c_str());
   }
   ValidateModel(
-      env,
-      allocator,
-      encoder_path,
+      encoder,
       {h2_only_encoder ? std::array<int64_t, 2>{1, 640}
                        : std::array<int64_t, 2>{1, 1751},
        {1, 64}},
       encoder_metadata);
   ValidateModel(
-      env,
-      allocator,
-      decoder_path,
+      decoder,
       {{1, 994}, {1, 29}},
       decoder_metadata);
 }

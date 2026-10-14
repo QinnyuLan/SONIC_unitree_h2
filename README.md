@@ -6,7 +6,7 @@ Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Lea
 
 ## Overview
 
-The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels.
+The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. All model inference uses TensorRT.
 
 | Workflow | Description | Guide |
 |---|---|---|

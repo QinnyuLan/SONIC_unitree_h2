@@ -62,7 +62,9 @@ def main() -> int:
         "runtime/include/observations.hpp",
         "gear_sonic/sources/motion_replay.py",
         "gear_sonic/sources/teleop.py",
-        "sources/planner/main.cpp",
+        "gear_sonic/sources/planner.py",
+        "gear_sonic/planner/motion.py",
+        "gear_sonic/inference/tensorrt.py",
     ]
     good = all([check_file(ROOT / path) for path in required])
     # Use the same destination and pinned checksum as the download command.

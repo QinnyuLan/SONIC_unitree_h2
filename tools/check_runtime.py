@@ -110,7 +110,7 @@ def main():
         expect(lambda s: s['body_kind'] == 'stand' and not s['head_active'] and not s['hands_active'])
         if args.planner:
             planner_log = stack.enter_context((temp / 'planner.log').open('w+'))
-            planner = subprocess.Popen([str(ROOT / 'gear_sonic_deploy/target/release/sonic_g1_planner'),
+            planner = subprocess.Popen([str(ROOT / '.venv_planner/bin/python'), '-m', 'gear_sonic.sources.planner',
                 '--model', str(ROOT / 'gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx'),
                 '--input-bind', endpoints['planner'], '--output-bind', endpoints['planned'],
                 '--runtime', endpoints['body'], '--state', endpoints['state']], cwd=temp, stdout=planner_log, stderr=planner_log)

@@ -1,10 +1,10 @@
 {
-  "tests": 44,
+  "tests": 45,
   "failures": 0,
   "disabled": 0,
   "errors": 0,
-  "timestamp": "2026-10-14T20:55:15Z",
-  "time": "0.471s",
+  "timestamp": "2026-10-14T23:17:21Z",
+  "time": "1.843s",
   "name": "AllTests",
   "testsuites": [
     {
@@ -13,7 +13,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0.003s",
       "testsuite": [
         {
@@ -22,7 +22,7 @@
           "line": 9,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0.003s",
           "classname": "FK"
         }
@@ -34,7 +34,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0s",
       "testsuite": [
         {
@@ -43,7 +43,7 @@
           "line": 5,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2HeadControl"
         },
@@ -53,7 +53,7 @@
           "line": 11,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2HeadControl"
         },
@@ -63,7 +63,7 @@
           "line": 17,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2HeadControl"
         },
@@ -73,7 +73,7 @@
           "line": 23,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2HeadControl"
         }
@@ -85,7 +85,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0s",
       "testsuite": [
         {
@@ -94,7 +94,7 @@
           "line": 33,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2LoraObservation"
         },
@@ -104,7 +104,7 @@
           "line": 68,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2LoraObservation"
         },
@@ -114,7 +114,7 @@
           "line": 78,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2LoraObservation"
         },
@@ -124,7 +124,7 @@
           "line": 88,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2LoraObservation"
         },
@@ -134,7 +134,7 @@
           "line": 106,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2LoraObservation"
         },
@@ -144,7 +144,7 @@
           "line": 122,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2LoraObservation"
         }
@@ -156,7 +156,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0s",
       "testsuite": [
         {
@@ -165,7 +165,7 @@
           "line": 7,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeConfig"
         },
@@ -175,7 +175,7 @@
           "line": 32,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeConfig"
         }
@@ -187,7 +187,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0s",
       "testsuite": [
         {
@@ -196,7 +196,7 @@
           "line": 5,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativePolicy"
         },
@@ -206,7 +206,7 @@
           "line": 17,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativePolicy"
         },
@@ -216,7 +216,7 @@
           "line": 29,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativePolicy"
         },
@@ -226,7 +226,7 @@
           "line": 207,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativePolicy"
         },
@@ -236,7 +236,7 @@
           "line": 229,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativePolicy"
         }
@@ -248,7 +248,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0s",
       "testsuite": [
         {
@@ -257,7 +257,7 @@
           "line": 43,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeKpScales"
         },
@@ -267,7 +267,7 @@
           "line": 55,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeKpScales"
         },
@@ -277,7 +277,7 @@
           "line": 106,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeKpScales"
         },
@@ -287,7 +287,7 @@
           "line": 132,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeKpScales"
         },
@@ -297,7 +297,7 @@
           "line": 149,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeKpScales"
         },
@@ -307,7 +307,7 @@
           "line": 179,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeKpScales"
         }
@@ -319,7 +319,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
+      "timestamp": "2026-10-14T23:17:21Z",
       "time": "0s",
       "testsuite": [
         {
@@ -328,7 +328,7 @@
           "line": 82,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
+          "timestamp": "2026-10-14T23:17:21Z",
           "time": "0s",
           "classname": "H2NativeGainScales"
         }
@@ -336,12 +336,12 @@
     },
     {
       "name": "H2ReleasedContract",
-      "tests": 5,
+      "tests": 6,
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:15Z",
-      "time": "0.467s",
+      "timestamp": "2026-10-14T23:17:21Z",
+      "time": "1.838s",
       "testsuite": [
         {
           "name": "AcceptsDirectFullEncoderAndDecoder",
@@ -349,8 +349,8 @@
           "line": 12,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:15Z",
-          "time": "0.239s",
+          "timestamp": "2026-10-14T23:17:21Z",
+          "time": "0.485s",
           "classname": "H2ReleasedContract"
         },
         {
@@ -359,8 +359,8 @@
           "line": 16,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
-          "time": "0.044s",
+          "timestamp": "2026-10-14T23:17:22Z",
+          "time": "0.245s",
           "classname": "H2ReleasedContract"
         },
         {
@@ -369,8 +369,8 @@
           "line": 20,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
-          "time": "0.017s",
+          "timestamp": "2026-10-14T23:17:22Z",
+          "time": "0.48s",
           "classname": "H2ReleasedContract"
         },
         {
@@ -379,8 +379,8 @@
           "line": 25,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
-          "time": "0.141s",
+          "timestamp": "2026-10-14T23:17:23Z",
+          "time": "0.454s",
           "classname": "H2ReleasedContract"
         },
         {
@@ -389,8 +389,18 @@
           "line": 30,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
-          "time": "0.023s",
+          "timestamp": "2026-10-14T23:17:23Z",
+          "time": "0.171s",
+          "classname": "H2ReleasedContract"
+        },
+        {
+          "name": "RejectsModelBytesThatDoNotMatchManifest",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_released_contract.cpp",
+          "line": 36,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T23:17:23Z",
+          "time": "0s",
           "classname": "H2ReleasedContract"
         }
       ]
@@ -401,7 +411,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:16Z",
+      "timestamp": "2026-10-14T23:17:23Z",
       "time": "0s",
       "testsuite": [
         {
@@ -410,7 +420,7 @@
           "line": 5,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "H2LoraPlannerAdapter"
         },
@@ -420,7 +430,7 @@
           "line": 16,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "H2LoraPlannerAdapter"
         },
@@ -430,7 +440,7 @@
           "line": 32,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "H2LoraPlannerAdapter"
         },
@@ -440,7 +450,7 @@
           "line": 48,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "H2LoraPlannerAdapter"
         },
@@ -450,7 +460,7 @@
           "line": 61,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "H2LoraPlannerAdapter"
         },
@@ -460,7 +470,7 @@
           "line": 76,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "H2LoraPlannerAdapter"
         }
@@ -472,7 +482,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:16Z",
+      "timestamp": "2026-10-14T23:17:23Z",
       "time": "0s",
       "testsuite": [
         {
@@ -481,7 +491,7 @@
           "line": 13,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "HandBackend"
         }
@@ -493,7 +503,7 @@
       "failures": 0,
       "disabled": 0,
       "errors": 0,
-      "timestamp": "2026-10-14T20:55:16Z",
+      "timestamp": "2026-10-14T23:17:23Z",
       "time": "0s",
       "testsuite": [
         {
@@ -502,7 +512,7 @@
           "line": 23,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         },
@@ -512,7 +522,7 @@
           "line": 47,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         },
@@ -522,7 +532,7 @@
           "line": 58,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         },
@@ -532,7 +542,7 @@
           "line": 82,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         },
@@ -542,7 +552,7 @@
           "line": 100,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         },
@@ -552,7 +562,7 @@
           "line": 122,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         },
@@ -562,7 +572,7 @@
           "line": 141,
           "status": "RUN",
           "result": "COMPLETED",
-          "timestamp": "2026-10-14T20:55:16Z",
+          "timestamp": "2026-10-14T23:17:23Z",
           "time": "0s",
           "classname": "InspireHands"
         }

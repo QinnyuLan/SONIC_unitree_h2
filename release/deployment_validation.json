@@ -1,21 +1,21 @@
 {
   "date": "2026-10-14",
-  "scope": "independent H2 deployment runtime and command producers",
+  "scope": "Python input services and planner, TensorRT inference, C++ policy runtime",
   "environment": {
     "python": "3.10.20",
     "cuda": "12.6",
     "tensorrt": "10.13.3.9",
-    "onnxruntime_cpp": "1.16.3"
+    "cuda_bindings": "12.9.4"
   },
   "cpp": {
-    "shared_tests": 44,
+    "shared_tests": 45,
     "runtime_tests": 12,
     "failures": 0
   },
   "python": {
     "sim_tests": 27,
     "sim_subtests": 53,
-    "command_tests": 12,
+    "command_tests": 32,
     "teleop_tests": 34,
     "failures": 0
   },
@@ -28,14 +28,18 @@
     "source_ownership": true,
     "head_hands_independent": true,
     "synthetic_pico_adapter": true,
-    "private_ipc_no_dds": true
+    "private_ipc_no_dds": true,
+    "planner_language": "Python",
+    "planner_inference": "TensorRT Python API",
+    "native_runtime_links_onnxruntime": false
   },
   "installation": {
     "minimal_inputs_environment": "passed",
     "sim_preflight": "passed",
     "teleop_preflight": "passed",
     "model_checksums": "passed",
-    "planner_checksum": "passed"
+    "planner_checksum": "passed",
+    "planner_environment": "passed"
   },
   "launch_previews": [
     "sim",

@@ -28,9 +28,18 @@ TEST(H2ReleasedContract, RejectsIncompatibleOrientation) {
 }
 
 TEST(H2ReleasedContract, RejectsIncorrectRoleEvenWhenDimensionsMatch) {
-  Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "released_contract_test");
-  Ort::AllocatorWithDefaultOptions allocator;
   EXPECT_THROW(h2_native_contract::ValidateModel(
-      env, allocator, kDecoder, {{1, 994}, {1, 29}}, {{"model_role", "encoder"}}),
+      h2_native_contract::ReadModel(kDecoder), {{1, 994}, {1, 29}}, {{"model_role", "encoder"}}),
       std::runtime_error);
+}
+
+TEST(H2ReleasedContract, RejectsModelBytesThatDoNotMatchManifest) {
+  const auto dir = std::filesystem::temp_directory_path() / "sonic-contract-digest-test";
+  std::filesystem::create_directories(dir);
+  const auto model = dir / "model.onnx";
+  std::ofstream(model) << "changed model bytes";
+  nlohmann::json manifest = {{"model_sha256", {{"model", std::string(64, '0')}}}};
+  std::ofstream(dir / "deployment_manifest.json") << manifest.dump();
+  EXPECT_THROW(h2_native_contract::ReadModel(model.string()), std::runtime_error);
+  std::filesystem::remove_all(dir);
 }

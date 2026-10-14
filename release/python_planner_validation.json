@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-14",
+  "status": "passed",
+  "scope": "Python planner using the TensorRT Python API; TensorRT-only deployment",
+  "baseline_commit": "6fe3c992191df27bc42478de51f64cd56bb05449",
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "tensorrt": "10.13.3.9",
+    "cuda_bindings": "12.9.4",
+    "python": "3.10.20"
+  },
+  "same_engine_cpp_vs_python_max_abs": {
+    "initial": {
+      "q": 2.220446049250313e-16,
+      "dq": 1.1102230246251565e-14,
+      "root": 4.368419775219179e-11,
+      "position": 1.1102230246251565e-16
+    },
+    "walk": {
+      "q": 5.551115123125783e-16,
+      "dq": 2.7977620220553945e-14,
+      "root": 9.206802681349657e-11,
+      "position": 1.1102230246251565e-16
+    }
+  },
+  "fresh_python_engine": {
+    "fresh_build_passed": true,
+    "build_seconds": 37.90185712699895,
+    "vs_existing_engine_max_abs": {
+      "q": 0.0002485141158103943,
+      "dq": 0.0035162921994922325,
+      "root": 2.780777308238492e-05,
+      "position": 1.1496938532218359e-05
+    },
+    "cuda_graph_repeat_runs": 50,
+    "inference_ms_median": 2.858264999304083,
+    "inference_ms_p95": 2.8692050498648314,
+    "comparison_tolerances": {
+      "q": 0.001,
+      "dq": 0.01,
+      "root": 0.001,
+      "position": 0.001
+    }
+  },
+  "native_runtime_links_onnxruntime": false,
+  "manifest_matches_onnx": true,
+  "integration": "actual encoder/decoder/planner, synthetic robot state, private IPC; passed",
+  "hardware_connected": false,
+  "notes": [
+    "Same-engine comparison covers initialization and one walking replan using identical inputs.",
+    "Fresh TensorRT builds may select different tactics; recorded tolerance applies to this initialization case.",
+    "Inference timing covers planner engine calls on this GPU, not the complete control loop."
+  ]
+}

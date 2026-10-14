@@ -7,29 +7,29 @@
     "vr_teleoperation"
   ],
   "source_commit": "4716be4bcc5f8c61c5f26e946905036f78eee478",
-  "previous_release_commit": "aa4b9a4d5e515c79b229c7aa88b70b8403f09423",
-  "file_count": 1344,
-  "total_bytes": 316709753,
+  "previous_release_commit": "6fe3c992191df27bc42478de51f64cd56bb05449",
+  "file_count": 1349,
+  "total_bytes": 316684842,
   "components": {
     "(root)": {
       "files": 11,
-      "bytes": 24218
+      "bytes": 25067
     },
     "docs": {
       "files": 11,
-      "bytes": 39495
+      "bytes": 43162
     },
     "external_dependencies": {
       "files": 195,
       "bytes": 45565580
     },
     "gear_sonic": {
-      "files": 165,
-      "bytes": 46549535
+      "files": 172,
+      "bytes": 46580872
     },
     "gear_sonic_deploy": {
-      "files": 924,
-      "bytes": 100408861
+      "files": 921,
+      "bytes": 100350184
     },
     "legal": {
       "files": 4,
@@ -37,15 +37,15 @@
     },
     "models": {
       "files": 6,
-      "bytes": 123998105
+      "bytes": 123999298
     },
     "release": {
-      "files": 8,
-      "bytes": 37269
+      "files": 9,
+      "bytes": 40956
     },
     "requirements": {
-      "files": 7,
-      "bytes": 6159
+      "files": 8,
+      "bytes": 6559
     },
     "runtime": {
       "files": 5,
@@ -53,15 +53,11 @@
     },
     "scripts": {
       "files": 4,
-      "bytes": 3446
-    },
-    "sources": {
-      "files": 1,
-      "bytes": 8306
+      "bytes": 3587
     },
     "tools": {
       "files": 3,
-      "bytes": 20090
+      "bytes": 20888
     }
   },
   "excludes": [
@@ -87,8 +83,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 729,
-      "sha256": "90fcd5e1c01e19ac79bb9cf45b2fd1f7a26178dcc5232770e06a34adc873fedb"
+      "bytes": 736,
+      "sha256": "435c0148afc7792f6db2736fb1ae8e36e70a5bd1eee9c977b98f0bf12494d357"
     },
     {
       "path": "CITATION.cff",
@@ -107,58 +103,58 @@
     },
     {
       "path": "README.md",
-      "bytes": 3511,
-      "sha256": "bfa45281cc5abfdb55ae3c43c38cca2fcd6e6cb818bba7321134030bea1656ec"
+      "bytes": 3628,
+      "sha256": "041143d03c183e6508fe80da13ba768672e2c4aa5aaa08848afc58967c1a54ba"
     },
     {
       "path": "README_CN.md",
-      "bytes": 3234,
-      "sha256": "b68ada7c017b3a538767193492cb178bb56d103ae56fad05ce475a0f52bdfa24"
+      "bytes": 3348,
+      "sha256": "8bab8b304cfe8677f8137dd6ffdf7bad8796ce8200dd78893abe4b66ba69e908"
     },
     {
       "path": "docs/ACKNOWLEDGMENTS.md",
-      "bytes": 2228,
-      "sha256": "0d5c219b8e54d4327459b025f481a4b635edda288df9e3d73eaa9d9a6f534526"
+      "bytes": 2360,
+      "sha256": "697a1f65cba348043020a8bd8479de4198186d76501de322212692edf177c551"
     },
     {
       "path": "docs/ARCHITECTURE.md",
-      "bytes": 7352,
-      "sha256": "591a957f97657351cb6706cea8668d8dab7ab1c40ba490e8d34fef63ea6fcd8f"
+      "bytes": 8312,
+      "sha256": "0d25c02db561bbba7905ab68680ff5635eede5e3f12c2fb229df6cab1bac329e"
     },
     {
       "path": "docs/ARCHITECTURE_CN.md",
-      "bytes": 4225,
-      "sha256": "3598b0a12e2e08ad329b3cde638f2d2fbcd48f19745c68d8eba2a2247133e0cc"
+      "bytes": 4815,
+      "sha256": "49ffb44844a6d968e2b0b3893078c69752075720fa01bfeb41a58275fa48dcc1"
     },
     {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 8091,
-      "sha256": "a34f26dc27e8a1c6eaba50119142ed61cf30eb724571a478504e48a07a9fe40f"
+      "bytes": 8356,
+      "sha256": "af3e64b1d74e427760e62bcb8cc5c0c3c14f00f556751359f07d53a1ac106953"
     },
     {
       "path": "docs/DEPLOYMENT_CN.md",
-      "bytes": 6942,
-      "sha256": "3c553f3d5eba4d16c3b9862ca92b1adaaf8d3085fbec898b6b5f0228908a287c"
+      "bytes": 7169,
+      "sha256": "f896a8402bd86681d45d64b3852b8a0098c5b61a912f944dc3254b3bcc669b1c"
     },
     {
       "path": "docs/LAYOUT.md",
-      "bytes": 2004,
-      "sha256": "efbdc80e763a4e2ec589f96f4c34e036c4315cafaabf4d2df5f9faa7b8fed910"
+      "bytes": 2151,
+      "sha256": "2515e2ed84e925a818f66e0c3670b4ed70bf15e710f025e54df1632b018d9845"
     },
     {
       "path": "docs/NATIVE_SETUP.md",
-      "bytes": 2069,
-      "sha256": "cc30a88e8501f3c9338923ec5c9ef2529c689deb70e87e3ae953cd715a4d6e31"
+      "bytes": 2335,
+      "sha256": "df610f32ce662d9417afbc1cf03f266248b5279fa96fd65c511b411e9a592593"
     },
     {
       "path": "docs/PLANNER.md",
-      "bytes": 2970,
-      "sha256": "cb70c71a3df3b6986e696fe6c261d1f056ab217968f675d48578bdeecbfe26fb"
+      "bytes": 4039,
+      "sha256": "049b692dab6ee6fb5934dc476e70816beecef5e5eabf52c0f07b0b6cf4d17f85"
     },
     {
       "path": "docs/README.md",
-      "bytes": 754,
-      "sha256": "435baf4d0dde1ab8be9fdd6b1fe68c00bca819b2d1ef96ecb48755a95daf700e"
+      "bytes": 765,
+      "sha256": "4d1d0dda3f1a75c10ff0e2dd1158eb0b822e2da226564666771f9b786af64e05"
     },
     {
       "path": "docs/VR_SETUP.md",
@@ -1171,6 +1167,11 @@
       "sha256": "2221b015e096643ffe9283a5fc3db86845bc57778a269bdadf02eaa799f45070"
     },
     {
+      "path": "gear_sonic/commands/receiver.py",
+      "bytes": 3769,
+      "sha256": "838566a2705e9cb17b4aba30c1d7ddde2c2f8e31df5b7499dc5d8d9ed53f8962"
+    },
+    {
       "path": "gear_sonic/data/assets/robot_description/unitree_mujoco/LICENSE",
       "bytes": 1559,
       "sha256": "a5d73fc4aca9074e3e6fe0b1a0ba763cf9514b2249b7390ed20fe8d53630bf25"
@@ -1686,9 +1687,29 @@
       "sha256": "57e15f85d92b6fd8fd0b978aadb5e24e9a1c53910024eda25d78fc07da932c41"
     },
     {
+      "path": "gear_sonic/inference/__init__.py",
+      "bytes": 67,
+      "sha256": "c38b9fc594a3e09b60ecfe31d803e125b0c0e8ceb4e867ce486385ba5f78a0fc"
+    },
+    {
+      "path": "gear_sonic/inference/tensorrt.py",
+      "bytes": 8301,
+      "sha256": "0d9a6bdc7b3d11951f6c4a0bc437dcb035cc4391c7692373f90932578ace5e79"
+    },
+    {
+      "path": "gear_sonic/planner/__init__.py",
+      "bytes": 81,
+      "sha256": "801ada2a34023e5205d8583d44f58747ad458743734b35538a0a2b7a3c7329b8"
+    },
+    {
+      "path": "gear_sonic/planner/motion.py",
+      "bytes": 8089,
+      "sha256": "4ed06b7754f3c3595956360d7f38970ed8d0e0f9b6a5a28f973428784d446e60"
+    },
+    {
       "path": "gear_sonic/pyproject.toml",
-      "bytes": 1083,
-      "sha256": "89b1342ee3baedd01dabff9a5b1d9449d351756c8052e46a223a128a8d96d2ac"
+      "bytes": 1136,
+      "sha256": "2b780a35cf09e1fd3699ce7d76a52736934e5a4eb8c43b73537776b2d8e3e7db"
     },
     {
       "path": "gear_sonic/scripts/pico_manager_thread_server.py",
@@ -1716,6 +1737,11 @@
       "sha256": "5681103700ce48d85e4cae0968fbe955fd5b0fe001f2e5d23a676e4cf61c4277"
     },
     {
+      "path": "gear_sonic/sources/planner.py",
+      "bytes": 5764,
+      "sha256": "59b67851de37a28db5992d199ed04617ab068a6eb6f503aa2728ef64b4148822"
+    },
+    {
       "path": "gear_sonic/sources/planner_command.py",
       "bytes": 1149,
       "sha256": "b0db9818f79b9a359e8b43ef50009f6824117d72643bf5592c9d005b4d045c25"
@@ -1724,6 +1750,11 @@
       "path": "gear_sonic/sources/teleop.py",
       "bytes": 8301,
       "sha256": "a166912115bf525141cd9f70aa5ef096b7aecfc058887f3194a75579cc181c52"
+    },
+    {
+      "path": "gear_sonic/tests/commands/test_planner.py",
+      "bytes": 5213,
+      "sha256": "bb50a14c1533b41abd4f479ecd28f95dbe9488070d0e49e9ebaedfa084596d81"
     },
     {
       "path": "gear_sonic/tests/commands/test_sources.py",
@@ -1997,18 +2028,13 @@
     },
     {
       "path": "gear_sonic_deploy/CMakeLists.txt",
-      "bytes": 10515,
-      "sha256": "e7469a0ba29201b7eab17d2d7e1f63107326d03b415cacd844aa20c3b46d535f"
+      "bytes": 10480,
+      "sha256": "e01efe4e289abbbebace642279f2ca5188d214fba18e01be36ef88a84bd55af2"
     },
     {
       "path": "gear_sonic_deploy/cmake/FindTensorRT.cmake",
       "bytes": 5595,
       "sha256": "93263aafe228c0fb0861c1b2df682d0c622e7fbb0baa94c8d328846a1f1f05c1"
-    },
-    {
-      "path": "gear_sonic_deploy/cmake/Findonnxruntime.cmake",
-      "bytes": 1590,
-      "sha256": "eb4fb3b0b9ddb12a29c5aea23519e2b3d0b32eff7517fe3df366e63a8dcab206"
     },
     {
       "path": "gear_sonic_deploy/config/h2_deploy.env",
@@ -2632,8 +2658,8 @@
     },
     {
       "path": "gear_sonic_deploy/scripts/setup_env.sh",
-      "bytes": 325,
-      "sha256": "f9fd8100a900f8883a1d3935fc8c9ed71449655219a3547a4230598ca4d78bdf"
+      "bytes": 304,
+      "sha256": "542861f04309bdde10ac4845b316e20cb798d1cd8d86b51f85f2efcfe8cd2e71"
     },
     {
       "path": "gear_sonic_deploy/src/CMakeLists.txt",
@@ -2682,8 +2708,8 @@
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/CMakeLists.txt",
-      "bytes": 2516,
-      "sha256": "ab770d30a6db0e84fa2037f5bb1acef655ecbf3758004452f069b19bf5f6957d"
+      "bytes": 1977,
+      "sha256": "d2bd96079dff3b68bc0db86b8d6c271abb27c22b6f8a806eba047b594d4f2162"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/config/fastrtps_profile.xml",
@@ -2727,8 +2753,8 @@
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/h2_native_contract.hpp",
-      "bytes": 6965,
-      "sha256": "c6bdfeeead329935f518616da065b2b7b15c57191c47c642e3c28978f8f16c5c"
+      "bytes": 6851,
+      "sha256": "ac38d6ff4a148d07c4d67311adc0f571879f4154fecf9ad3c89fe135d239db6a"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/hand_backend.hpp",
@@ -2739,16 +2765,6 @@
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/inspire_hands.hpp",
       "bytes": 10714,
       "sha256": "48854c1f23d65089490407a5203dca27660eaf069b05bbfcbb51a5d4efc99b31"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/localmotion_kplanner.hpp",
-      "bytes": 29833,
-      "sha256": "fd8d5ca6a11aa6be0a7802f3f131d23a61e777975265bcfc042a2cb8206727ca"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/localmotion_kplanner_tensorrt.hpp",
-      "bytes": 27012,
-      "sha256": "969439193b8db5c352cd13efaba4cf6478fac69dc1305f93d22f1beb41d25c1a"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/math_utils.hpp",
@@ -2827,8 +2843,8 @@
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/unit_tests/test_h2_released_contract.cpp",
-      "bytes": 1423,
-      "sha256": "4f7f33baed4fe053074872245dae6506afcbc8b0b008ff51fd522430a076df67"
+      "bytes": 1890,
+      "sha256": "2e603cdc3d72d1b48ebd81431860a82330683278fec5efd77c74e1867f991468"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/unit_tests/test_h2lora_planner_adapter.cpp",
@@ -6601,8 +6617,8 @@
     },
     {
       "path": "install.sh",
-      "bytes": 1432,
-      "sha256": "6a0e54d236d809a25dce49a6b2cc1be9e878da5f750e2fd80417f2164cffdaae"
+      "bytes": 2309,
+      "sha256": "6c0bad824ea667f60ff35cd2bab56c51e02fd8f7f1b7ad587241f9c7874fb21d"
     },
     {
       "path": "legal/Apache License - GEAR-SONIC.txt",
@@ -6626,8 +6642,8 @@
     },
     {
       "path": "models/released/README.md",
-      "bytes": 1283,
-      "sha256": "f457126bb871812a3042a51663b172f5ccee7b217a3b8454dfe2fedf4e71babb"
+      "bytes": 1454,
+      "sha256": "2ae6f0bf2b6fb419775d49bf9866bffbabf1f632a54ba1962a32215eaa87eec5"
     },
     {
       "path": "models/released/SHA256SUMS",
@@ -6636,8 +6652,8 @@
     },
     {
       "path": "models/released/deployment_manifest.json",
-      "bytes": 1394,
-      "sha256": "0da02012c812ec8ce76fb8a185e2cad7d33ff63fcc48cfe7ef355605ed434331"
+      "bytes": 2416,
+      "sha256": "d11bcc3ffbebd5738a8e5352f44edb543834cd5f7e68301099a6ab5619c01d8f"
     },
     {
       "path": "models/released/model_decoder.onnx",
@@ -6661,18 +6677,18 @@
     },
     {
       "path": "release/REPRODUCIBILITY.md",
-      "bytes": 4502,
-      "sha256": "3d5a74b411ac3cb17c100c374b3d79b84059628b8c7a372a490a2dcdcd6db0e5"
+      "bytes": 5765,
+      "sha256": "a019ea416269492cc30fc31fa604c667d7b1f57c457ef447caa652b1239dcefb"
     },
     {
       "path": "release/cpp_tests.json",
-      "bytes": 21383,
-      "sha256": "a5bd9b42fa929445698b7a4e707405859e449dd845c42912251bbdc01b802219"
+      "bytes": 21818,
+      "sha256": "e8fbc100ad6c98526ed4ba74f7266c693d66414463e4647741f709f9409f25bb"
     },
     {
       "path": "release/deployment_validation.json",
-      "bytes": 1215,
-      "sha256": "9ac4e75fc6413fbcc51841f6713287248cb11a1aee40a6a7c4b238a473d953c6"
+      "bytes": 1397,
+      "sha256": "542f98f5de064ade3d8bbf52871db986e3653b20fe8228183660d250d0fdec4b"
     },
     {
       "path": "release/gpu_model_validation.json",
@@ -6690,19 +6706,24 @@
       "sha256": "89edda3a8d4e6d3b9010899499fb53d0b920d7d5ff6522f3da821f71af9d4c98"
     },
     {
+      "path": "release/python_planner_validation.json",
+      "bytes": 1807,
+      "sha256": "26180c0666ca9286e664206bb875553b8d31b7925636cadadb0d9c45a551e9b6"
+    },
+    {
       "path": "release/runtime_sim_validation.json",
       "bytes": 172,
-      "sha256": "85913b825d2e4fc5899404c9a389d8b6ae9029d0d81cc4ce6bae717cb0a57aaa"
+      "sha256": "699f8ee5136497f863d9178275fd3fb8e20d52f90bc8d7c7d6f532fa39d20929"
     },
     {
       "path": "release/runtime_tests.json",
       "bytes": 5448,
-      "sha256": "5cb22519386b3ce317cc0291d68b0250114abe7dfb7b8a65abeefcd666a2aacc"
+      "sha256": "971cc5b7bab51842bfb1168a59e83a84146a4dbda461fbfaa703ea5be8b3c8ae"
     },
     {
       "path": "requirements/README.md",
-      "bytes": 1511,
-      "sha256": "058fb2d87404883d9e0227564b399894c4f5591d10071093790cefa57917fc1a"
+      "bytes": 1738,
+      "sha256": "cb637e8c5d4b78fe5512225583449ec3ee9037064d0353b6ae70920b2ec2c274"
     },
     {
       "path": "requirements/download.txt",
@@ -6718,6 +6739,11 @@
       "path": "requirements/model_validation.txt",
       "bytes": 47,
       "sha256": "2477aa8fcb0a08bf30cedbe8c7ce5309e680e309c2bbf918eac4a5dbdbe5583e"
+    },
+    {
+      "path": "requirements/planner.lock",
+      "bytes": 173,
+      "sha256": "b07c5fdc71d17100287658f188990d5635306b55dcfdaf6506bc54a77062cf46"
     },
     {
       "path": "requirements/sim.lock",
@@ -6771,8 +6797,8 @@
     },
     {
       "path": "scripts/run_planner.sh",
-      "bytes": 233,
-      "sha256": "a6f55c5b4264acc3cb2e57f2b7586cb5c668810f655fb7407c98448020aa1eb5"
+      "bytes": 374,
+      "sha256": "6149979cc3c16ffd9ec20e77b9f000eb1f3fe17aa6b6b33141126ce24a7927e1"
     },
     {
       "path": "scripts/run_runtime.sh",
@@ -6780,29 +6806,24 @@
       "sha256": "e77c1a3ab9fc55e22c20eee0a180299e02e40709169bdf4fa0a66e096f111d3e"
     },
     {
-      "path": "sources/planner/main.cpp",
-      "bytes": 8306,
-      "sha256": "d3e265707b4fbc8413ff63c8a8d93d794a29704060868f6ef068c3a6d97c0d69"
-    },
-    {
       "path": "tools/check_runtime.py",
-      "bytes": 7858,
-      "sha256": "782ae74f488be326b628b980ea3b7e99d2e139e109cb8a4ec4920d919cc70ffa"
+      "bytes": 7869,
+      "sha256": "196f9949df698e36d66abc7efeb1ba7052b9e98a2af1f10f1b7f443460756a9a"
     },
     {
       "path": "tools/validate_released_models.py",
-      "bytes": 5985,
-      "sha256": "49abb8e0d809b0f4453cf1f147e7bede76d289e67b5b4c75e3a6d715c520e862"
+      "bytes": 6683,
+      "sha256": "b8e9a1a0e08f3c5d0a09679bc82637e87dd5b7a790ccec8ab636ffdf00bfbbaf"
     },
     {
       "path": "tools/verify_release.py",
-      "bytes": 6247,
-      "sha256": "2fb29a795c8769abf03829a5edf996d03265706bd6e424a74f2bfaa383d99873"
+      "bytes": 6336,
+      "sha256": "5966e1bd313d26f22e2c01ca0a227a584cab688fbdc5ad5ce3e16032c037855c"
     },
     {
       "path": "verify_deploy.sh",
-      "bytes": 1008,
-      "sha256": "08a4daf00933addc397eb091197e10f7f52bf317911c70740998b7bb409509d0"
+      "bytes": 742,
+      "sha256": "9df4e7b47fca6d474a12228d68269a8d3ef2b8d8d3de13e41339edb25629cc96"
     }
   ]
 }

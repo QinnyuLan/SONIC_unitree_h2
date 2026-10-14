@@ -2,7 +2,7 @@
 
 [Deployment guide](DEPLOYMENT.md) · [中文部署指南](DEPLOYMENT_CN.md)
 
-The validated workstation uses Ubuntu x86_64, CUDA 12.6, TensorRT 10.13.3.9, and ONNX Runtime 1.16.3. The Python simulator and the C++ controller run in separate processes.
+The validated workstation uses Ubuntu x86_64, CUDA 12.6, TensorRT 10.13.3.9. The Python simulator and the C++ controller run in separate processes.
 
 ## System packages
 
@@ -24,28 +24,29 @@ export TensorRT_ROOT="$HOME/TensorRT"
 
 `TensorRT_ROOT` must contain `include/NvInfer.h` and `lib/libnvinfer.so`. TensorRT engines are generated locally and are not portable between arbitrary TensorRT/GPU combinations.
 
-## ONNX Runtime C++
+## TensorRT Python planner
 
-For the validated x86_64 setup:
+Install the planner environment after extracting the native SDK:
 
 ```bash
-curl -fLO https://github.com/microsoft/onnxruntime/releases/download/v1.16.3/onnxruntime-linux-x64-1.16.3.tgz
-tar -xzf onnxruntime-linux-x64-1.16.3.tgz
-sudo mkdir -p /opt/onnxruntime
-sudo cp -a onnxruntime-linux-x64-1.16.3/include onnxruntime-linux-x64-1.16.3/lib /opt/onnxruntime/
+./install.sh planner
+bash scripts/run_planner.sh --help
 ```
 
-The C++ runtime uses this library for model metadata and inference support. Installing the Python `onnxruntime` wheel does not provide these C++ development files.
+The installer uses the Python 3.10 wheel under `$TensorRT_ROOT/python` and pins CUDA Python bindings in `requirements/planner.lock`. For a separately stored wheel, set `TENSORRT_WHEEL=/absolute/path/to/tensorrt-10.13.3.9-cp310-none-linux_x86_64.whl`. Keep the Python and C++ TensorRT libraries at the same version.
+
+The planner uses the [TensorRT Python API](https://docs.nvidia.com/deeplearning/tensorrt/10.x.x/inference-library/python-api-docs.html), persistent pinned buffers and CUDA graphs. Neither the planner nor the native runtime requires ONNX Runtime. The optional offline model-validation environment uses it to compare model outputs.
 
 ## Build
 
 From the repository root:
 
 ```bash
+source gear_sonic_deploy/scripts/setup_env.sh
 ./verify_deploy.sh
 bash scripts/build_controller.sh
 ```
 
-The build produces `gear_sonic_deploy/target/release/sonic_h2_runtime` and `sonic_g1_planner`. Use `-DBUILD_PLANNER=OFF` to build only the policy runtime. Build and launch scripts do not install system packages or edit shell startup files.
+The build produces `gear_sonic_deploy/target/release/sonic_h2_runtime`; the planner is a Python module. Build and launch scripts do not install system packages or edit shell startup files.
 
 For offline C++ tests, additionally install `libgtest-dev`, build with `-DBUILD_TESTING=ON`, then run `ctest --test-dir gear_sonic_deploy/build --output-on-failure`.

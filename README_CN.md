@@ -6,7 +6,7 @@
 
 ## 项目概览
 
-policy runtime 启动后以默认姿态站立，接收独立 motion replay、planner 和遥操作进程的指令。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。
+policy runtime 启动后以默认姿态站立，接收独立 motion replay、planner 和遥操作进程的指令。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。输入端与 planner 统一使用 Python，实时 policy runtime 使用 C++，模型推理统一采用 TensorRT。
 
 | 工作流 | 功能 | 使用指南 |
 |---|---|---|

@@ -21,7 +21,17 @@ flowchart LR
   F --> K[Dex3 / Inspire DDS]
 ```
 
-`runtime/` owns standing, reference sampling, encoder/decoder inference, command arbitration and H2 output. It contains no planner, motion-file reader, PICO device code or text-generation model. `gear_sonic/sources/` contains Python producers. `sources/planner/` owns planner inference and trajectory blending. Shared SONIC inference/math and robot constants remain under `gear_sonic_deploy/src/`.
+`runtime/` owns standing, reference sampling, encoder/decoder inference, command arbitration and H2 output. It contains no planner, motion-file reader, PICO device code or text-generation model. `gear_sonic/sources/` contains Python producers and the planner service. `gear_sonic/planner/` implements context preparation, resampling and trajectory blending in NumPy. `gear_sonic/inference/tensorrt.py` calls the TensorRT Python API directly. Shared native inference/math and robot constants remain under `gear_sonic_deploy/src/`.
+
+| Component | Language | Model execution |
+|---|---|---|
+| Replay, planner requests, teleoperation, head/hands | Python | None |
+| G1 planner service | Python | TensorRT Python API + CUDA bindings |
+| H2 policy runtime | C++ | TensorRT C++ API + CUDA graphs |
+
+Deployment uses TensorRT exclusively. The release manifest binds recorded model interfaces and metadata to ONNX SHA256 hashes; the runtime verifies those hashes before loading models. TensorRT checks the actual tensor interfaces. ONNX Runtime is used only by the optional offline model-comparison tool.
+
+Python and C++ use the same engine-cache format and FP32 build policy (TensorRT's default TF32 allowance, no FP16). Cache compatibility includes model SHA256, GPU name, precision and TensorRT version. A missing or incompatible cache is rebuilt on the local GPU.
 
 Startup interpolates from measured joints to the default pose over three seconds. The body policy then runs at 50 Hz; DDS targets publish at 500 Hz. A missing or expired body command selects the standing reference. Robot-state loss, invalid model output, explicit stop or control-thread timeout ends control with damping. The head and hands have their own command ownership and expiry. Stop is latched until the runtime restarts.
 

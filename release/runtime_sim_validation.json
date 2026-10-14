@@ -2,7 +2,7 @@
   "passed": true,
   "dds_domain": 211,
   "interface": "lo",
-  "running_frames": 318,
+  "running_frames": 333,
   "duration_seconds": 10,
   "elastic_support": true,
   "hardware_connected": false

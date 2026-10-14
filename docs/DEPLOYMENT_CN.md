@@ -6,7 +6,7 @@
 
 ## 安装
 
-验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6、TensorRT 10.13.3.9、ONNX Runtime C++ 1.16.3。CUDA、TensorRT 和 ONNX Runtime 安装见 [原生依赖](NATIVE_SETUP.md)。
+验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6、TensorRT 10.13.3.9。CUDA 和 TensorRT 安装见 [原生依赖](NATIVE_SETUP.md)。
 
 ```bash
 sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
@@ -16,12 +16,13 @@ bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-生成 `gear_sonic_deploy/target/release/sonic_h2_runtime` 和 `sonic_g1_planner`。仅构建 runtime 时加 `-DBUILD_PLANNER=OFF`。runtime 启动只读取发布的 encoder / decoder，不读取动作库或 planner 模型。首次运行会在本机生成 TensorRT 缓存。
+编译生成 `gear_sonic_deploy/target/release/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
 
 安装 [uv](https://docs.astral.sh/uv/getting-started/installation/) 后，按需选择 Python 环境：
 
 ```bash
 ./install.sh inputs    # .venv_inputs：回放及指令发送
+./install.sh planner   # .venv_planner：TensorRT Python planner
 ./install.sh sim2sim   # .venv_sim：MuJoCo + DDS，也可执行回放
 ./install.sh teleop    # .venv_teleop：PICO、姿态转换与运动学
 ```
@@ -96,6 +97,8 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 
 模型路径保持 `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
 
+执行 `./install.sh planner` 安装 planner 环境。安装脚本使用 `$TensorRT_ROOT/python` 中与 C++ SDK 配套的 TensorRT Python wheel；文件位于其他位置时设置 `TENSORRT_WHEEL`。
+
 在 runtime 运行时，另开终端启动服务：
 
 ```bash
@@ -109,7 +112,7 @@ bash scripts/run_planner.sh
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
-planner 独立完成推理、轨迹混合及稀疏参考输出；runtime 只接收结果。请求停止后回到站立。`--publish-only` 只在 5561 端口发布结果，供遥操作适配端组合下肢参考，不直接占用 runtime 身体通道。
+Python planner 独立完成 TensorRT 推理、轨迹混合及稀疏参考输出；runtime 只接收结果。请求停止后回到站立。`--publish-only` 只在 5561 端口发布结果，供遥操作适配端组合下肢参考，不直接占用 runtime 身体通道。
 
 ## VR 遥操作
 
@@ -145,7 +148,8 @@ bash scripts/build_controller.sh -DBUILD_TESTING=ON
 ctest --test-dir gear_sonic_deploy/build --output-on-failure
 source gear_sonic_deploy/scripts/setup_env.sh
 .venv_sim/bin/python tools/check_runtime.py
-.venv_sim/bin/python tools/check_runtime.py --planner
+./install.sh planner
+.venv_planner/bin/python tools/check_runtime.py --planner
 ```
 
 集成检查使用实际模型、合成机器人状态和私有 IPC 通道，不启动 DDS 或连接硬件，覆盖默认站立、四种身体输入、超时、来源切换以及头手独立性。已完成检查的范围见 [复现记录](../release/REPRODUCIBILITY.md)。

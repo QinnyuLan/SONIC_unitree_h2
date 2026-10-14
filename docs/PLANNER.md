@@ -47,8 +47,31 @@ SHA256:   39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea
 git check-ignore gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
 # 校验发布模型与 planner，不连接机器人
 python3 tools/verify_release.py --require-planner
+# 安装 TensorRT Python planner 环境
+./install.sh planner
 # 独立 planner 服务
 bash scripts/run_planner.sh
 ```
 
 不带 `--require-planner` 的检查允许新克隆仓库缺少 planner，并给出下载提示；若文件已经存在但校验不符，检查仍会失败。完整 VR 环境、设备连接和启动步骤见 [主 README](../README.md)。
+
+## Python 服务与调用接口
+
+服务、上下文构造、30 Hz → 50 Hz 重采样、轨迹混合和稀疏 10 帧发送均由 Python 完成。模型通过 TensorRT Python API 推理，CUDA 缓冲区持续复用，使用 CUDA Graph 执行。policy runtime 继续使用 C++ TensorRT。
+
+```bash
+# 与启动脚本等价；需要先配置原生库路径
+source gear_sonic_deploy/scripts/setup_env.sh
+.venv_planner/bin/python -m gear_sonic.sources.planner
+```
+
+程序调用入口为 `gear_sonic.planner.motion.G1Planner`：`initialize(h2_joints)` 接收 31 维 H2 DDS 关节状态，`update(trajectory, cursor, command)` 生成后续轨迹。`Trajectory.sparse(cursor)` 输出与 replay 相同的 G1 稀疏参考。指令字段和端口见 [架构文档](ARCHITECTURE_CN.md)。
+
+运行实际模型与通信集成检查：
+
+```bash
+source gear_sonic_deploy/scripts/setup_env.sh
+.venv_planner/bin/python tools/check_runtime.py --planner
+```
+
+此检查使用合成机器人状态，不连接机器人或 PICO。

@@ -5,16 +5,17 @@ This repository contains the runtime for H2 simulation, hardware deployment, and
 | Path | Contents |
 |---|---|
 | `runtime/` | H2 policy runtime, validated commands, observation assembly and tests |
-| `sources/planner/` | Independent G1 planner service |
+| `gear_sonic/planner/` | Python planner context, resampling and blending |
+| `gear_sonic/inference/` | TensorRT Python engine, cache and CUDA buffers |
 | `gear_sonic/commands/` | Python command protocol and client |
-| `gear_sonic/sources/` | Motion replay, planner requests, teleoperation and head/hand senders |
+| `gear_sonic/sources/` | Motion replay, planner service/requests, teleoperation and head/hand senders |
 | `models/released/` | H2 ONNX models, interface manifest, and checksums |
 | `gear_sonic/` | MuJoCo/DDS simulator, PICO input, pose mathematics, and runtime robot assets |
 | `gear_sonic_deploy/` | Shared SONIC numerical code, TensorRT inference, H2 settings, launchers, and reference motions |
 | `external_dependencies/` | Unitree Python SDK and XRoboToolkit binding sources/libraries |
 | `scripts/` | Independent runtime/planner/simulator launchers and native build |
 | `tools/` | Offline release and ONNX checks |
-| `requirements/` | Optional download/validation dependencies |
+| `requirements/` | Pinned Python deployment environments and optional download/validation dependencies |
 | `docs/` | Installation and operation guides |
 | `release/` | Release inventory and validation records |
 | `legal/` | Third-party license notices |

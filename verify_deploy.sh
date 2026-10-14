@@ -7,8 +7,6 @@ for command_name in cmake g++ make; do
 done
 [[ -n "${TensorRT_ROOT:-}" ]] || { echo "Set TensorRT_ROOT to a TensorRT 10.x installation." >&2; exit 1; }
 [[ -f "$TensorRT_ROOT/include/NvInfer.h" ]] || { echo "TensorRT headers not found under $TensorRT_ROOT" >&2; exit 1; }
-[[ -f /opt/onnxruntime/include/onnxruntime_cxx_api.h ]] || { echo "ONNX Runtime headers not found under /opt/onnxruntime" >&2; exit 1; }
-[[ -f /opt/onnxruntime/lib/libonnxruntime.so ]] || { echo "ONNX Runtime library not found under /opt/onnxruntime" >&2; exit 1; }
 [[ -f "$ROOT/gear_sonic_deploy/thirdparty/unitree_sdk2/CMakeLists.txt" ]]
 [[ -f "$ROOT/gear_sonic_deploy/policy/release/observation_config_h2_native.yaml" ]]
 echo "Native prerequisites: PASS"

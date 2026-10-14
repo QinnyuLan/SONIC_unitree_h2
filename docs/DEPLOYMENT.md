@@ -6,7 +6,7 @@ Run commands from the repository root. The H2 runtime starts in a standing pose;
 
 ## Installation
 
-Validated on Ubuntu x86_64 with Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9 and ONNX Runtime C++ 1.16.3. Follow [native setup](NATIVE_SETUP.md) for CUDA, TensorRT and ONNX Runtime installation.
+Validated on Ubuntu x86_64 with Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9. Follow [native setup](NATIVE_SETUP.md) for CUDA and TensorRT installation.
 
 ```bash
 sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
@@ -16,12 +16,13 @@ bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-The executables are `gear_sonic_deploy/target/release/sonic_h2_runtime` and `sonic_g1_planner`. The runtime can be built on its own with `-DBUILD_PLANNER=OFF`. It requires only the released encoder and decoder at startup. TensorRT caches are generated locally on first use.
+The build produces `gear_sonic_deploy/target/release/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
 
 Install the Python environment needed for each process using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
 ```bash
 ./install.sh inputs    # .venv_inputs: replay and command clients
+./install.sh planner   # .venv_planner: TensorRT Python planner
 ./install.sh sim2sim   # .venv_sim: MuJoCo and DDS; includes replay dependencies
 ./install.sh teleop    # .venv_teleop: PICO, pose conversion and kinematics
 ```
@@ -96,6 +97,8 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 
 The model stays at `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
 
+Install its environment with `./install.sh planner`. The installer uses the TensorRT Python wheel from `$TensorRT_ROOT/python`, matching the native SDK; set `TENSORRT_WHEEL` if the wheel is stored elsewhere.
+
 With the runtime running, start the service in another terminal:
 
 ```bash
@@ -109,7 +112,7 @@ Send a request from a third terminal:
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
-The planner owns inference, trajectory blending and conversion to sparse G1 references. The runtime only receives those references. Stopping planner requests returns the runtime to standing. The service also publishes its output on port 5561; `--publish-only` disables direct body-channel forwarding for use by the teleoperation bridge.
+The Python planner owns TensorRT inference, trajectory blending and conversion to sparse G1 references. The runtime only receives those references. Stopping planner requests returns the runtime to standing. The service also publishes its output on port 5561; `--publish-only` disables direct body-channel forwarding for use by the teleoperation bridge.
 
 ## VR teleoperation
 
@@ -147,7 +150,8 @@ bash scripts/build_controller.sh -DBUILD_TESTING=ON
 ctest --test-dir gear_sonic_deploy/build --output-on-failure
 source gear_sonic_deploy/scripts/setup_env.sh
 .venv_sim/bin/python tools/check_runtime.py
-.venv_sim/bin/python tools/check_runtime.py --planner
+./install.sh planner
+.venv_planner/bin/python tools/check_runtime.py --planner
 ```
 
 The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests startup standing, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](../release/REPRODUCIBILITY.md) for the scope of completed checks.

@@ -31,7 +31,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(TensorRT REQUIRED)
 find_package(Threads REQUIRED)
-find_package(onnxruntime REQUIRED)
 # Find CUDA Toolkit with proper environment variable support
 if(DEFINED ENV{CUDAToolkit_ROOT})
     set(CUDAToolkit_ROOT $ENV{CUDAToolkit_ROOT})

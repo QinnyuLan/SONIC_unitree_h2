@@ -1,0 +1,7 @@
+# Python 3.10; TensorRT wheel comes from the matching native SDK.
+numpy==1.26.4
+scipy==1.15.3
+pyzmq==27.1.0
+cuda-bindings==12.9.4
+cuda-pathfinder==1.8.3
+tensorrt==10.13.3.9

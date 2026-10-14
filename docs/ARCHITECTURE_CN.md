@@ -6,9 +6,11 @@
 
 - `runtime/`：默认站立、参考采样、encoder / decoder 推理、指令仲裁和 H2 DDS 输出。启动不依赖动作文件或 planner。
 - `gear_sonic/sources/motion_replay.py`：读取离线 G1 动作，包括已生成的 text2motion 结果，输出稀疏 10 帧。
-- `sources/planner/`：独立运行 G1 planner、混合轨迹并输出相同的稀疏 10 帧。
+- `gear_sonic/sources/planner.py`：Python planner 服务；`gear_sonic/planner/` 完成轨迹处理，`gear_sonic/inference/tensorrt.py` 直接调用 TensorRT Python API，输出相同的稀疏 10 帧。
 - `gear_sonic/sources/teleop.py`：把 PICO 跟踪数据转换为 SMPL / VR 身体参考，并独立发送头部与手部指令。可订阅 planner 的下肢参考。
 - `gear_sonic/commands/`：轻量 Python 发送接口，无机器人 SDK 或模型依赖。仅预留 64 维 token 输入，不包含 VLA 或 GR00T 实现。
+
+输入端与 planner 全部使用 Python，policy runtime 保留 C++。encoder、decoder、planner 推理均使用 TensorRT。部署不依赖 ONNX Runtime；模型接口和元数据通过发布清单与 SHA256 绑定校验，加载引擎时再检查张量接口。两端使用相同的 TensorRT 缓存格式和 FP32 构建设置（保留 TensorRT 默认的 TF32 许可，不启用 FP16）。缓存按模型、GPU、精度和 TensorRT 版本校验，不兼容时在本机重建。
 
 runtime 用三秒过渡到默认站姿，随后以 50 Hz 运行身体策略、500 Hz 发布 DDS 指令。无身体指令或指令超时后选择站立参考。机器人状态丢失、推理异常、控制线程超时或 `stop` 会结束控制并进入阻尼；停止后需重启 runtime。
 

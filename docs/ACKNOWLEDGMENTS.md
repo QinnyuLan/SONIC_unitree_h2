@@ -19,6 +19,7 @@ The project citation is provided in [references.bib](references.bib) and [CITATI
 | Unitree robot descriptions | Robot models and meshes | [MuJoCo assets](https://github.com/unitreerobotics/unitree_mujoco) · [ROS descriptions](https://github.com/unitreerobotics/unitree_ros) |
 | XRoboToolkit PC Service | PICO device communication and head/controller tracking | [Repository](https://github.com/XR-Robotics/XRoboToolkit-PC-Service) |
 | NVIDIA TensorRT | GPU inference for the exported ONNX models | [Project](https://developer.nvidia.com/tensorrt) |
-| ONNX Runtime | ONNX inference and model validation | [Repository](https://github.com/microsoft/onnxruntime) |
+| NVIDIA CUDA Python | CUDA memory, streams and graphs for the Python planner | [Repository](https://github.com/NVIDIA/cuda-python) |
+| ONNX Runtime | Optional offline model validation | [Repository](https://github.com/microsoft/onnxruntime) |
 
 Source provenance is recorded in [source_manifest.json](../release/source_manifest.json). Vendored libraries and assets retain their original copyright and license notices; see [LICENSE](../LICENSE) and [legal/](../legal/).

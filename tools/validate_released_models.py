@@ -64,6 +64,15 @@ def validate(model_dir: Path, comparisons: list[Path]) -> dict:
         for key, value in required.items():
             if metadata.get(key) != value:
                 raise ValueError(f"{name}: incompatible {key}")
+        recorded = manifest["onnx_check"][path.name]
+        for kind in ("inputs", "outputs"):
+            if recorded[kind] != [[item["name"], *item["shape"]] for item in signature[kind]]:
+                raise ValueError(f"{name}: manifest {kind} do not match ONNX")
+        if recorded["input_dtype"] != "float32" or recorded["output_dtype"] != "float32":
+            raise ValueError(f"{name}: manifest tensor type mismatch")
+        if not required.keys() <= recorded["metadata"].keys() or any(
+                metadata.get(key) != value for key, value in recorded["metadata"].items()):
+            raise ValueError(f"{name}: manifest metadata do not match ONNX")
         for index, previous_dir in enumerate(comparisons, start=1):
             previous = onnx.load(previous_dir / f"{name}.onnx")
             previous_metadata = {item.key: item.value for item in previous.metadata_props}
@@ -74,7 +83,7 @@ def validate(model_dir: Path, comparisons: list[Path]) -> dict:
                 raise ValueError(f"Interface differs from baseline {index}: {name}")
         sessions[name] = ort.InferenceSession(str(path), options, providers=["CPUExecutionProvider"])
         report["models"][name] = {"sha256": digest, **signature,
-                                  "onnx_checker": "passed", "contract": required}
+                                  "onnx_checker": "passed", "manifest_check": "passed", "contract": required}
 
     def infer(name, values):
         result = sessions[name].run(None, {"obs_dict": values})[0]

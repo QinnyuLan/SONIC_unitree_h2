@@ -29,7 +29,15 @@
           1,
           29
         ]
-      ]
+      ],
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "decoder",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_dtype": "float32",
+      "output_dtype": "float32"
     },
     "model_encoder.onnx": {
       "inputs": [
@@ -45,7 +53,15 @@
           1,
           64
         ]
-      ]
+      ],
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_dtype": "float32",
+      "output_dtype": "float32"
     },
     "model_encoder_full.onnx": {
       "inputs": [
@@ -61,8 +77,18 @@
           1,
           64
         ]
-      ]
+      ],
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "universal",
+        "observation_contract": "sonic_h2_native_v1",
+        "selector_contract": "sonic_h2_native_full_v1",
+        "selector_encoder_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_dtype": "float32",
+      "output_dtype": "float32"
     }
   },
-  "note": "Native H2 inputs and outputs. No merge step is required. ONNX bytes preserved; display name is released."
+  "note": "TensorRT deployment contract. Model hashes bind the recorded interfaces and metadata to the supplied ONNX files."
 }
