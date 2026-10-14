@@ -1,0 +1,41 @@
+{
+  "motion_name": "one_leg_jumping_R_001__A361",
+  "source_key": "one_leg_jumping_R_001__A361",
+  "source_robot_pkl": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/230509/one_leg_jumping_R_001__A361.pkl",
+  "source_smpl_pkl": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/smpl/230509/one_leg_jumping_R_001__A361.pkl",
+  "fps": 50,
+  "frames": 237,
+  "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+  "source_joint_space": "h2_physical_31d_mujoco",
+  "joint_pos_shape": [
+    237,
+    29
+  ],
+  "h2_joint_pos_shape": [
+    237,
+    31
+  ],
+  "body_quat_format": "wxyz",
+  "body_count": 1,
+  "smpl": {
+    "source_key": "one_leg_jumping_R_001__A361",
+    "source_path": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/smpl/230509/one_leg_jumping_R_001__A361.pkl",
+    "smpl_joint_shape": [
+      237,
+      24,
+      3
+    ],
+    "source_smpl_joint_frames": 237,
+    "smpl_pose_shape": [
+      237,
+      21,
+      3
+    ],
+    "source_smpl_pose_frames": 237,
+    "smpl_root_quat_shape": [
+      237,
+      4
+    ],
+    "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+  }
+}

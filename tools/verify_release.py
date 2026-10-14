@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""Fast, offline release preflight for SONIC_unitree_h2.
+
+The check only verifies files and Python imports. It never starts DDS,
+connects to a robot, opens a camera, or sends motor commands.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import platform
+import shutil
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def check_file(path: Path, required: bool = True) -> bool:
+    ok = path.is_file()
+    mark = "OK" if ok else ("MISSING" if required else "optional")
+    print(f"[{mark:7}] {path.relative_to(ROOT)}")
+    return ok or not required
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--imports", action="store_true", help="also import the simulation and teleop packages")
+    parser.add_argument("--require-planner", action="store_true", help="require the separately downloaded G1 planner (VR deployment)")
+    args = parser.parse_args()
+
+    print(f"SONIC_unitree_h2: {ROOT}")
+    print(f"platform: {platform.system()} {platform.machine()} Python {platform.python_version()}")
+    required = [
+        "gear_sonic/scripts/run_sim_loop.py",
+        "gear_sonic/utils/mujoco_sim/wbc_configs/h2_native_sonic_unitree_ros_loop.yaml",
+        "gear_sonic_deploy/deploy.sh",
+        "gear_sonic_deploy/scripts/run_h2_sim2sim.sh",
+        "gear_sonic_deploy/scripts/run_h2_sim2real_four_kp.sh",
+        "gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh",
+        "gear_sonic_deploy/policy/release/observation_config_h2_native.yaml",
+        "models/released/model_encoder_full.onnx",
+        "models/released/model_encoder.onnx",
+        "models/released/model_decoder.onnx",
+        "models/released/SHA256SUMS",
+        "models/released/deployment_manifest.json",
+        "gear_sonic_deploy/reference/example/h2_lora_reference_manifest.json",
+        "gear_sonic_deploy/reference/example_h2/deploy/h2_lora_reference_manifest.json",
+    ]
+    good = all([check_file(ROOT / path) for path in required])
+    # Use the same destination and pinned checksum as the download command.
+    sys.path.insert(0, str(ROOT))
+    from download_from_hf import PLANNER_FILE, PLANNER_SHA256
+    planner = ROOT / "gear_sonic_deploy" / PLANNER_FILE[1]
+    planner_ok = check_file(planner, required=args.require_planner)
+    if planner.is_file():
+        planner_ok = sha256(planner) == PLANNER_SHA256
+        print(f"[{'OK' if planner_ok else 'FAIL':7}] SHA256 G1 planner")
+    else:
+        print("G1 planner is downloaded separately; see docs/PLANNER.md.")
+        print("  python3 download_from_hf.py --planner-only")
+    good = good and planner_ok
+    sums = ROOT / "models/released/SHA256SUMS"
+    if sums.is_file():
+        for line in sums.read_text().splitlines():
+            expected, name = line.split(maxsplit=1)
+            path = sums.parent / name
+            ok = path.is_file() and sha256(path) == expected
+            print(f"[{'OK' if ok else 'FAIL':7}] SHA256 {path.relative_to(ROOT)}")
+            good = good and ok
+    for script in ROOT.glob("gear_sonic_deploy/scripts/*.sh"):
+        if not os.access(script, os.X_OK):
+            print(f"[WARN   ] not executable: {script.relative_to(ROOT)}")
+    if args.imports:
+        checks = [
+            ("gear_sonic", "gear_sonic"),
+            ("mujoco", "mujoco"),
+            ("numpy", "numpy"),
+            ("pyzmq", "zmq"),
+        ]
+        for label, module in checks:
+            try:
+                __import__(module)
+            except Exception as exc:  # pragma: no cover - diagnostic path
+                good = False
+                print(f"[FAIL   ] import {label}: {exc}")
+            else:
+                print(f"[OK     ] import {label}")
+    manifest = ROOT / "release/source_manifest.json"
+    if manifest.is_file():
+        data = json.loads(manifest.read_text())
+        print(f"manifest: {data.get('copied_files')} files, {data.get('copied_bytes')} bytes")
+    print("preflight: PASS" if good else "preflight: FAIL")
+    return 0 if good else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

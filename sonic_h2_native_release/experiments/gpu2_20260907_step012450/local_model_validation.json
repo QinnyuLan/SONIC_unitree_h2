@@ -1,0 +1,210 @@
+{
+  "step": 12450,
+  "models": {
+    "model_encoder": {
+      "sha256": "f7350aeac1c6c2a92792d3ddd499a9a769cc2bbb5a745f547768893957308ed2",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "encoder_name": "h2",
+        "input_features": "[\"command_multi_future_h2_native_nonflat\", \"motion_anchor_ori_b_mf_nonflat\"]",
+        "global_step": "12450",
+        "checkpoint_sha256": "819b13e6593faa22a0de2d7369345cd5954d88bbb5ed0d2e7facbbb7c80d1eb2",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        640
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_encoder_full": {
+      "sha256": "7bb83a14955f64d9f9c19bf5aad0f6b46ec445a4627ecf38a94478a33bcee1d4",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "universal",
+        "observation_contract": "sonic_h2_native_v1",
+        "selector_contract": "sonic_h2_native_full_v1",
+        "selector_slot_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "selector_encoder_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "encoder_name": "h2,teleop,smpl,g1",
+        "input_layout_encoder_names": "[\"g1\", \"teleop\", \"smpl\"]",
+        "tokenizer_feature_aliases": "{\"command_multi_future_h2_native_nonflat\": \"command_multi_future_nonflat\"}",
+        "shared_robot_reference_slot": "selector 0 interprets command_multi_future_nonflat as raw H2; selector 3 interprets it as canonical G1",
+        "global_step": "12450",
+        "checkpoint_sha256": "819b13e6593faa22a0de2d7369345cd5954d88bbb5ed0d2e7facbbb7c80d1eb2",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        1751
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_decoder": {
+      "sha256": "9de909949ca2badd8eaefc2f26dd8da5e76ab166f23e4d571e6ecb30b51988c2",
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "decoder",
+        "encoder_name": "g1_dyn",
+        "observation_contract": "sonic_h2_native_v1",
+        "h2_native_io_folded": "true",
+        "global_step": "12450",
+        "checkpoint_sha256": "819b13e6593faa22a0de2d7369345cd5954d88bbb5ed0d2e7facbbb7c80d1eb2",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        994
+      ],
+      "output_shape": [
+        1,
+        29
+      ],
+      "onnx_checker": "passed"
+    }
+  },
+  "cpu_trials_per_selector": 5,
+  "cpu_finite_selectors": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "full0_vs_h2_only_max_abs_error": 0.0,
+  "config_changes_since_step7550": [
+    {
+      "path": "algo.config.actor.backbone.paired_encoder_distillation.max_batch_size",
+      "previous": 128,
+      "current": 64
+    },
+    {
+      "path": "algo.config.checkpoint_strict_model_load",
+      "previous": true,
+      "current": false
+    },
+    {
+      "path": "algo.config.num_mini_batches",
+      "previous": 8,
+      "current": 13
+    },
+    {
+      "path": "algo.config.resume_reset_episode_statistics",
+      "previous": true,
+      "current": false
+    },
+    {
+      "path": "algo.config.world_size",
+      "previous": 3,
+      "current": 8
+    },
+    {
+      "path": "algo.trl.output_dir",
+      "previous": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-3xpro6000-ori/20260906_003658",
+      "current": "logs_rl/sonic-h2-native-8xA6000-ori/20260906_183110"
+    },
+    {
+      "path": "callbacks.h2lora_visualization.isaac_python",
+      "previous": "/home/qingyul/workspace/sonic_lora_ft/.venv_train/bin/python",
+      "current": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/.venv-isaaclab311/bin/python"
+    },
+    {
+      "path": "checkpoint",
+      "previous": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-3xpro6000-ori/20260906_003658/model_step_003250.pt",
+      "current": null
+    },
+    {
+      "path": "exp_var",
+      "previous": 20260906003658,
+      "current": 20260906183110
+    },
+    {
+      "path": "experiment_dir",
+      "previous": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-3xpro6000-ori/20260906_003658",
+      "current": "logs_rl/sonic-h2-native-8xA6000-ori/20260906_183110"
+    },
+    {
+      "path": "experiment_name",
+      "previous": 20260906003658,
+      "current": 20260906183110
+    },
+    {
+      "path": "manager_env.commands.motion.motion_lib_cfg.distributed_data_sharding.num_shards",
+      "previous": 3,
+      "current": 8
+    },
+    {
+      "path": "manager_env.commands.motion.motion_lib_cfg.motion_loader_tmpdir",
+      "previous": "/dev/shm/h2_native_3xpro6000_full_lora_auxonly",
+      "current": "/dev/shm/h2_native_8xa6000_ori"
+    },
+    {
+      "path": "num_envs",
+      "previous": 4096,
+      "current": 6656
+    },
+    {
+      "path": "num_gpus",
+      "previous": 3,
+      "current": 8
+    },
+    {
+      "path": "project_name",
+      "previous": "sonic-h2-native-3xpro6000-ori",
+      "current": "sonic-h2-native-8xA6000-ori"
+    },
+    {
+      "path": "resume",
+      "previous": true,
+      "current": false
+    },
+    {
+      "path": "swanlab.group",
+      "previous": "h2-native-4xpro6000-full-lora-auxonly",
+      "current": "h2-native-8xa6000-ori"
+    },
+    {
+      "path": "swanlab.project",
+      "previous": "sonic-h2-native-3xpro6000-ori",
+      "current": "sonic-h2-native-8xA6000-ori"
+    },
+    {
+      "path": "swanlab.tags",
+      "previous": [
+        "h2-native",
+        "fresh-release",
+        "4xpro6000",
+        "g1-smpl-only",
+        "no-teleop",
+        "full-encoder-lora",
+        "h2-aux-only-ppo",
+        "learned-std",
+        "paired-distillation",
+        "real-g1-teacher",
+        "h2-official-pd",
+        "latent-token-only",
+        "adp-pre-reset-v2"
+      ],
+      "current": [
+        "h2-native",
+        "8xA6000",
+        "fresh-release",
+        "g1-smpl-only",
+        "no-teleop",
+        "full-encoder-lora",
+        "h2-aux-only-ppo",
+        "paired-distillation",
+        "real-g1-teacher"
+      ]
+    }
+  ]
+}

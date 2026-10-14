@@ -1,0 +1,7 @@
+body_ang_vel_l2:
+  _target_: isaaclab.managers.RewardTermCfg
+  func: gear_sonic.envs.manager_env.mdp:body_ang_vel_l2
+  weight: -1.0e-4
+  params:
+    command_name: "motion"
+    body_names: ["torso_link"]

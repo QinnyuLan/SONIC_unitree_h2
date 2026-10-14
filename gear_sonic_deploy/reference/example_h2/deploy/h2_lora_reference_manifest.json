@@ -1,0 +1,366 @@
+{
+  "schema": "h2_lora_deploy_reference_v1",
+  "description": "H2 deploy references rebuilt from the IK-fixed 20260827 H2 CSV dataset; G1-semantic and H2-native sidecars are derived from the same 50 Hz resampling.",
+  "motion_root": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv",
+  "smpl_root": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform",
+  "output_dir": "gear_sonic_deploy/reference/example_h2/deploy",
+  "fps": 50,
+  "num_motions": 8,
+  "total_frames": 5484,
+  "motions": [
+    {
+      "motion_name": "forward_lunge_R_001__A359_M",
+      "reference_type": "h2",
+      "source_key": "forward_lunge_R_001__A359_M",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/forward_lunge_R_001__A359_M.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230509/forward_lunge_R_001__A359_M.npz",
+      "fps": 50,
+      "frames": 399,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        399,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        399,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "forward_lunge_R_001__A359_M",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230509/forward_lunge_R_001__A359_M.npz",
+        "smpl_joint_shape": [
+          399,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 399,
+        "smpl_pose_shape": [
+          399,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 399,
+        "smpl_root_quat_shape": [
+          399,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/forward_lunge_R_001__A359_M.csv",
+      "source_csv_sha256": "1c6bd5be8f10c52bb3169102c3f32ccc7e9a7fc0fa8e7f0472eb702357f88467"
+    },
+    {
+      "motion_name": "squat_001__A359",
+      "reference_type": "h2",
+      "source_key": "squat_001__A359",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/squat_001__A359.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230509/squat_001__A359.npz",
+      "fps": 50,
+      "frames": 425,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        425,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        425,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "squat_001__A359",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230509/squat_001__A359.npz",
+        "smpl_joint_shape": [
+          425,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 425,
+        "smpl_pose_shape": [
+          425,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 425,
+        "smpl_root_quat_shape": [
+          425,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/squat_001__A359.csv",
+      "source_csv_sha256": "90f8c6e8d58966978f715771ec5fbaa5e40229d0bb431f025a22353260b30431"
+    },
+    {
+      "motion_name": "walking_quip_360_R_002__A428",
+      "reference_type": "h2",
+      "source_key": "walking_quip_360_R_002__A428",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230713/walking_quip_360_R_002__A428.npz",
+      "fps": 50,
+      "frames": 456,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        456,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        456,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "walking_quip_360_R_002__A428",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230713/walking_quip_360_R_002__A428.npz",
+        "smpl_joint_shape": [
+          456,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 456,
+        "smpl_pose_shape": [
+          456,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 456,
+        "smpl_root_quat_shape": [
+          456,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428.csv",
+      "source_csv_sha256": "0a10913384a1852487bdef62f47f24db9e5242b51785f23a4b9a756a29890eb4"
+    },
+    {
+      "motion_name": "walking_quip_360_R_002__A428_M",
+      "reference_type": "h2",
+      "source_key": "walking_quip_360_R_002__A428_M",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428_M.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230713/walking_quip_360_R_002__A428_M.npz",
+      "fps": 50,
+      "frames": 456,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        456,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        456,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "walking_quip_360_R_002__A428_M",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/230713/walking_quip_360_R_002__A428_M.npz",
+        "smpl_joint_shape": [
+          456,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 456,
+        "smpl_pose_shape": [
+          456,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 456,
+        "smpl_root_quat_shape": [
+          456,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428_M.csv",
+      "source_csv_sha256": "102cc5984beba095ef8f3650f394ebd676e72593271eb42f43a58844036e28c4"
+    },
+    {
+      "motion_name": "dance_in_da_party_001__A464",
+      "reference_type": "h2",
+      "source_key": "dance_in_da_party_001__A464",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/231006/dance_in_da_party_001__A464.npz",
+      "fps": 50,
+      "frames": 498,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        498,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        498,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "dance_in_da_party_001__A464",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/231006/dance_in_da_party_001__A464.npz",
+        "smpl_joint_shape": [
+          498,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 498,
+        "smpl_pose_shape": [
+          498,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 498,
+        "smpl_root_quat_shape": [
+          498,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464.csv",
+      "source_csv_sha256": "c4b480f5f13be55f94f072900332673b828c2ec145e6e1f713ef10db497ad3b8"
+    },
+    {
+      "motion_name": "dance_in_da_party_001__A464_M",
+      "reference_type": "h2",
+      "source_key": "dance_in_da_party_001__A464_M",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464_M.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/231006/dance_in_da_party_001__A464_M.npz",
+      "fps": 50,
+      "frames": 498,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        498,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        498,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "dance_in_da_party_001__A464_M",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/231006/dance_in_da_party_001__A464_M.npz",
+        "smpl_joint_shape": [
+          498,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 498,
+        "smpl_pose_shape": [
+          498,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 498,
+        "smpl_root_quat_shape": [
+          498,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464_M.csv",
+      "source_csv_sha256": "cbd269e2ddf0e08cd2b4da3eaf58a96050dd95709977c5f5cab86971a1830043"
+    },
+    {
+      "motion_name": "macarena_001__A545",
+      "reference_type": "h2",
+      "source_key": "macarena_001__A545",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/240529/macarena_001__A545.npz",
+      "fps": 50,
+      "frames": 1376,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        1376,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        1376,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "macarena_001__A545",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/240529/macarena_001__A545.npz",
+        "smpl_joint_shape": [
+          1376,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 1376,
+        "smpl_pose_shape": [
+          1376,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 1376,
+        "smpl_root_quat_shape": [
+          1376,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545.csv",
+      "source_csv_sha256": "ee58c81d76aaaf71cb4101eb5a71fdb9b3c2f2fce19bafe7f27d812cf2a583f3"
+    },
+    {
+      "motion_name": "macarena_001__A545_M",
+      "reference_type": "h2",
+      "source_key": "macarena_001__A545_M",
+      "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545_M.csv",
+      "source_smpl_pkl": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/240529/macarena_001__A545_M.npz",
+      "fps": 50,
+      "frames": 1376,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        1376,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        1376,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": {
+        "source_key": "macarena_001__A545_M",
+        "source_path": "gear_sonic_deploy/reference/example_h2/smpl-x/uniform/240529/macarena_001__A545_M.npz",
+        "smpl_joint_shape": [
+          1376,
+          24,
+          3
+        ],
+        "source_smpl_joint_frames": 1376,
+        "smpl_pose_shape": [
+          1376,
+          21,
+          3
+        ],
+        "source_smpl_pose_frames": 1376,
+        "smpl_root_quat_shape": [
+          1376,
+          4
+        ],
+        "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+      },
+      "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545_M.csv",
+      "source_csv_sha256": "3639fca11b4d0652e0cf5b6b8c14eeec0363a575db7f04e6e6c56fcf76d4d1fb"
+    }
+  ],
+  "source_host": "qingyul@m10.precognition.team",
+  "source_dataset": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv"
+}

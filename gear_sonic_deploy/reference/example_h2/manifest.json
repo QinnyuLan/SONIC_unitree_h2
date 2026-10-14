@@ -1,0 +1,101 @@
+{
+  "schema": "g1_default_sim2sim_example_h2_sources_v1",
+  "description": "SMPL-X npz and original SOMA BVH sources for G1 default sim2sim reference/example motions that have exact same-name matches in /mnt/data/seed.",
+  "g1_reference_dir": "gear_sonic_deploy/reference/example",
+  "source_seed_root": "/mnt/data/seed",
+  "h2_retarget_dataset": "h2_soma_full_g1_smpl_source_ik_fixed_20260827",
+  "h2_retarget_source_host": "qingyul@m10.precognition.team",
+  "h2_retarget_source_root": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv",
+  "matched_count": 8,
+  "missing_exact_name_count": 5,
+  "matched_motions": [
+    {
+      "motion": "dance_in_da_party_001__A464",
+      "date": "231006",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/231006/dance_in_da_party_001__A464.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/231006/dance_in_da_party_001__A464.bvh",
+      "smpl_x_file": "smpl-x/uniform/231006/dance_in_da_party_001__A464.npz",
+      "soma_bvh_file": "soma_uniform/bvh/231006/dance_in_da_party_001__A464.bvh",
+      "smpl_x_bytes": 1130726,
+      "soma_bvh_bytes": 2841170
+    },
+    {
+      "motion": "dance_in_da_party_001__A464_M",
+      "date": "231006",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/231006/dance_in_da_party_001__A464_M.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/231006/dance_in_da_party_001__A464_M.bvh",
+      "smpl_x_file": "smpl-x/uniform/231006/dance_in_da_party_001__A464_M.npz",
+      "soma_bvh_file": "soma_uniform/bvh/231006/dance_in_da_party_001__A464_M.bvh",
+      "smpl_x_bytes": 1130734,
+      "soma_bvh_bytes": 2841614
+    },
+    {
+      "motion": "forward_lunge_R_001__A359_M",
+      "date": "230509",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/230509/forward_lunge_R_001__A359_M.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/230509/forward_lunge_R_001__A359_M.bvh",
+      "smpl_x_file": "smpl-x/uniform/230509/forward_lunge_R_001__A359_M.npz",
+      "soma_bvh_file": "soma_uniform/bvh/230509/forward_lunge_R_001__A359_M.bvh",
+      "smpl_x_bytes": 908894,
+      "soma_bvh_bytes": 2271973
+    },
+    {
+      "motion": "macarena_001__A545",
+      "date": "240529",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/240529/macarena_001__A545.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/240529/macarena_001__A545.bvh",
+      "smpl_x_file": "smpl-x/uniform/240529/macarena_001__A545.npz",
+      "soma_bvh_file": "soma_uniform/bvh/240529/macarena_001__A545.bvh",
+      "smpl_x_bytes": 3103778,
+      "soma_bvh_bytes": 7841486
+    },
+    {
+      "motion": "macarena_001__A545_M",
+      "date": "240529",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/240529/macarena_001__A545_M.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/240529/macarena_001__A545_M.bvh",
+      "smpl_x_file": "smpl-x/uniform/240529/macarena_001__A545_M.npz",
+      "soma_bvh_file": "soma_uniform/bvh/240529/macarena_001__A545_M.bvh",
+      "smpl_x_bytes": 3103786,
+      "soma_bvh_bytes": 7841838
+    },
+    {
+      "motion": "squat_001__A359",
+      "date": "230509",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/230509/squat_001__A359.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/230509/squat_001__A359.bvh",
+      "smpl_x_file": "smpl-x/uniform/230509/squat_001__A359.npz",
+      "soma_bvh_file": "soma_uniform/bvh/230509/squat_001__A359.bvh",
+      "smpl_x_bytes": 965942,
+      "soma_bvh_bytes": 2421149
+    },
+    {
+      "motion": "walking_quip_360_R_002__A428",
+      "date": "230713",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/230713/walking_quip_360_R_002__A428.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/230713/walking_quip_360_R_002__A428.bvh",
+      "smpl_x_file": "smpl-x/uniform/230713/walking_quip_360_R_002__A428.npz",
+      "soma_bvh_file": "soma_uniform/bvh/230713/walking_quip_360_R_002__A428.bvh",
+      "smpl_x_bytes": 1035258,
+      "soma_bvh_bytes": 2601053
+    },
+    {
+      "motion": "walking_quip_360_R_002__A428_M",
+      "date": "230713",
+      "smpl_x_source": "/mnt/data/seed/smpl-x/uniform/230713/walking_quip_360_R_002__A428_M.npz",
+      "soma_bvh_source": "/mnt/data/seed/soma_uniform/bvh/230713/walking_quip_360_R_002__A428_M.bvh",
+      "smpl_x_file": "smpl-x/uniform/230713/walking_quip_360_R_002__A428_M.npz",
+      "soma_bvh_file": "soma_uniform/bvh/230713/walking_quip_360_R_002__A428_M.bvh",
+      "smpl_x_bytes": 1035266,
+      "soma_bvh_bytes": 2594527
+    }
+  ],
+  "missing_exact_name_motions": [
+    "neutral_kick_R_001__A543",
+    "neutral_kick_R_001__A543_M",
+    "tired_forward_lunge_R_001__A359_M",
+    "tired_one_leg_jumping_R_001__A359",
+    "tired_one_leg_jumping_R_001__A359_M"
+  ],
+  "note": "Missing motions were not copied from fuzzy or similar names to avoid silently substituting different source clips."
+}

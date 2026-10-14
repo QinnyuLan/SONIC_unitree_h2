@@ -1,0 +1,76 @@
+{
+  "tests": 47,
+  "failures": 0,
+  "disabled": 0,
+  "errors": 0,
+  "time": "0.388s",
+  "status": "passed",
+  "model": "released",
+  "testsuites": [
+    {
+      "name": "FK",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "name": "H2HeadControl",
+      "tests": 4,
+      "failures": 0
+    },
+    {
+      "name": "H2LoraObservation",
+      "tests": 6,
+      "failures": 0
+    },
+    {
+      "name": "H2NativeConfig",
+      "tests": 3,
+      "failures": 0
+    },
+    {
+      "name": "H2NativePolicy",
+      "tests": 5,
+      "failures": 0
+    },
+    {
+      "name": "H2NativeKpScales",
+      "tests": 6,
+      "failures": 0
+    },
+    {
+      "name": "H2NativeGainScales",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "name": "H2ReleasedContract",
+      "tests": 5,
+      "failures": 0
+    },
+    {
+      "name": "H2LoraPlannerAdapter",
+      "tests": 6,
+      "failures": 0
+    },
+    {
+      "name": "HandBackend",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "name": "HandInputAvailability",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "name": "InspireHands",
+      "tests": 7,
+      "failures": 0
+    },
+    {
+      "name": "StreamedMotionMerger",
+      "tests": 1,
+      "failures": 0
+    }
+  ]
+}

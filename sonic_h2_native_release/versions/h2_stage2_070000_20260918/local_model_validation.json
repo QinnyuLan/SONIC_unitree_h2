@@ -1,0 +1,85 @@
+{
+  "step": 70000,
+  "training_stage": 2,
+  "models": {
+    "model_encoder": {
+      "sha256": "1f3d3b3942c04d7d06b2ccdcc4bd7eded4dc92b7b374e0118afa6ce8b4a0f99c",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "encoder_name": "h2",
+        "input_features": "[\"command_multi_future_h2_native_nonflat\", \"motion_anchor_ori_b_mf_nonflat\"]",
+        "global_step": "70000",
+        "checkpoint_sha256": "64334c3824e1747ce5aafaddcd878c063c11882200d57adba2f7714f0793ab03",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        640
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_encoder_full": {
+      "sha256": "86d43c14c65856cc44c90b5abd5f37e5ced8762e0da4e3ec7eea9713250747a7",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "universal",
+        "observation_contract": "sonic_h2_native_v1",
+        "selector_contract": "sonic_h2_native_full_v1",
+        "selector_slot_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "selector_encoder_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "encoder_name": "h2,teleop,smpl,g1",
+        "input_layout_encoder_names": "[\"g1\", \"teleop\", \"smpl\"]",
+        "tokenizer_feature_aliases": "{\"command_multi_future_h2_native_nonflat\": \"command_multi_future_nonflat\"}",
+        "shared_robot_reference_slot": "selector 0 interprets command_multi_future_nonflat as raw H2; selector 3 interprets it as canonical G1",
+        "global_step": "70000",
+        "checkpoint_sha256": "64334c3824e1747ce5aafaddcd878c063c11882200d57adba2f7714f0793ab03",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        1751
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_decoder": {
+      "sha256": "1dd42628187c3d1e67dab3d1150ac40926602c5a3a031588dd71690c2cb1d3bd",
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "decoder",
+        "encoder_name": "g1_dyn",
+        "observation_contract": "sonic_h2_native_v1",
+        "h2_native_io_folded": "true",
+        "global_step": "70000",
+        "checkpoint_sha256": "64334c3824e1747ce5aafaddcd878c063c11882200d57adba2f7714f0793ab03",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        994
+      ],
+      "output_shape": [
+        1,
+        29
+      ],
+      "onnx_checker": "passed"
+    }
+  },
+  "cpu_trials_per_selector": 5,
+  "cpu_finite_selectors": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "full0_vs_h2_only_max_abs_error": 0.0
+}

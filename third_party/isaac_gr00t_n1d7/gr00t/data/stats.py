@@ -1,0 +1,481 @@
+#!/usr/bin/env python
+
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+Calculate dataset statistics for LeRobot datasets.
+
+Usage:
+    python gr00t/data/stats.py --dataset-path <dataset_path> --embodiment-tag <embodiment_tag>
+    python gr00t/data/stats.py --dataset-path <dataset_path> --embodiment-tag <embodiment_tag> --modality-config-path <config.py>
+
+Args:
+    dataset_path: Path to the dataset.
+    embodiment_tag: Embodiment tag to use to load modality configurations.
+    modality_config_path: Optional path to a .py config file for custom embodiment tags not in the built-in registry.
+"""
+
+import hashlib
+import json
+import logging
+import os
+from pathlib import Path
+import tempfile
+from typing import Any
+
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+
+from gr00t.configs.data.embodiment_configs import MODALITY_CONFIGS
+from gr00t.data.dataset.lerobot_episode_loader import LeRobotEpisodeLoader
+from gr00t.data.state_action.action_chunking import EndEffectorActionChunk, JointActionChunk
+from gr00t.data.state_action.pose import EndEffectorPose, JointPose
+from gr00t.data.types import ActionRepresentation, ActionType, EmbodimentTag, ModalityConfig
+from gr00t.data.utils import to_json_serializable
+
+
+LE_ROBOT_DATA_FILENAME = "data/*/*.parquet"
+LE_ROBOT_INFO_FILENAME = "meta/info.json"
+LE_ROBOT_STATS_FILENAME = "meta/stats.json"
+LE_ROBOT_REL_STATS_FILENAME = "meta/relative_stats.json"
+
+logger = logging.getLogger(__name__)
+
+# Reserved top-level key, used inside both ``relative_stats.json`` and
+# ``stats.json``, mapping ``entry_name -> fingerprint``. Sits next to the
+# per-entry stat dicts; in-tree consumers always look up entries by name, so
+# the reserved key does not collide.
+STATS_FINGERPRINTS_KEY = "__fingerprints__"
+
+
+def _load_stats_cache(path: Path) -> dict[str, Any]:
+    """Load a stats JSON cache, treating any unreadable state as "no cache".
+
+    A stats file becomes unreadable when a previous writer was killed mid-flush
+    (ENOSPC, SIGKILL, runner reboot) and left a 0-byte / truncated file behind.
+    Without this guard, the leftover file traps every subsequent caller in a
+    ``json.JSONDecodeError`` until a human deletes it — observed taking down 6
+    of 8 retried test.unit.gpu jobs after a /shared NFS ENOSPC event.
+
+    Empty file, missing file, JSON parse error, and OSError are all treated
+    equivalently: regenerate from scratch. Callers MUST then write back via
+    :func:`_dump_stats_cache_atomic` so the same partial-write scenario does
+    not recur on the very next ENOSPC.
+    """
+    try:
+        if not path.exists() or path.stat().st_size == 0:
+            return {}
+        with open(path, "r") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        logger.warning("[stats] discarding unreadable cache %s: %s; regenerating", path, exc)
+        return {}
+
+
+def _dump_stats_cache_atomic(path: Path, data: dict[str, Any], *, indent: int | None = 4) -> None:
+    """Atomically write *data* as JSON to *path* via tmp-file + ``os.replace``.
+
+    Avoids the leave-a-0-byte-file failure mode that motivates
+    :func:`_load_stats_cache`: ``open(path, "w")`` truncates immediately, so a
+    SIGKILL between truncate and the final ``write()`` poisons the cache for
+    every future caller. Writing to a unique sibling temp file and then
+    ``os.replace`` guarantees that *path* either points to the previous valid
+    content (writer killed) or to the new fully-flushed content (writer
+    succeeded) — never to a partial intermediate.
+
+    The temp filename must be unique per writer. CI can run multiple GPU jobs
+    against the same cached dataset path, and a fixed ``<name>.tmp`` lets one
+    writer rename or clean up another writer's temp file.
+
+    Best-effort cleanup of the tmp file on exception so we don't litter
+    ``meta/`` with abandoned ``*.tmp`` shards.
+
+    NFS durability: explicitly ``flush`` + ``fsync`` before ``os.replace`` so
+    the tmp file's bytes are forced from the page cache to the storage
+    backend before the rename makes the new name visible. Without this, a
+    SIGKILL between a successful ``os.replace`` and the kernel's writeback
+    can still leave a 0-byte file on NFS after a client reconnect — the
+    very failure mode this helper exists to prevent.
+    """
+    tmp: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as f:
+            tmp = Path(f.name)
+            json.dump(data, f, indent=indent)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        if tmp is not None:
+            try:
+                tmp.unlink()
+            except OSError:
+                pass
+        raise
+
+
+def calculate_dataset_statistics(
+    parquet_paths: list[Path], features: list[str] | None = None
+) -> dict[str, dict[str, float]]:
+    """Calculate the dataset statistics of all columns for a list of parquet files.
+
+    Args:
+        parquet_paths (list[Path]): List of paths to parquet files to process.
+        features (list[str] | None): List of feature names to compute statistics for.
+            If None, computes statistics for all columns in the data.
+
+    Returns:
+        dict[str, DatasetStatisticalValues]: Dictionary mapping feature names to their
+            statistical values (mean, std, min, max, q01, q99).
+    """
+    # Dataset statistics
+    all_low_dim_data_list = []
+    # Collect all the data
+    for parquet_path in tqdm(
+        sorted(list(parquet_paths)),
+        desc="Collecting all parquet files...",
+    ):
+        # Load the parquet file
+        parquet_data = pd.read_parquet(parquet_path)
+        parquet_data = parquet_data
+        all_low_dim_data_list.append(parquet_data)
+    all_low_dim_data = pd.concat(all_low_dim_data_list, axis=0)
+    # Compute dataset statistics
+    dataset_statistics = {}
+    if features is None:
+        features = list(all_low_dim_data.columns)
+    for le_modality in features:
+        print(f"Computing statistics for {le_modality}...")
+        np_data = np.vstack(
+            [np.asarray(x, dtype=np.float32) for x in all_low_dim_data[le_modality]]
+        )
+        dataset_statistics[le_modality] = dict(
+            mean=np.mean(np_data, axis=0).tolist(),
+            std=np.std(np_data, axis=0).tolist(),
+            min=np.min(np_data, axis=0).tolist(),
+            max=np.max(np_data, axis=0).tolist(),
+            q01=np.quantile(np_data, 0.01, axis=0).tolist(),
+            q99=np.quantile(np_data, 0.99, axis=0).tolist(),
+        )
+    return dataset_statistics
+
+
+def _compute_stats_fingerprint(feature_name: str, feature_meta: dict) -> str:
+    """Hash the per-feature schema in ``info.json`` that drives ``calculate_dataset_statistics``.
+
+    Without this, ``meta/stats.json`` was reused whenever every feature name was
+    still present, even if the underlying ``dtype`` / ``shape`` had changed
+    (e.g. column dim grew, dtype widened). Result: silently wrong normalization
+    at training/eval time. Hashing the per-feature schema makes any such change
+    invalidate just that feature's cached entry.
+    """
+    payload = {
+        "feature": feature_name,
+        "dtype": feature_meta.get("dtype"),
+        "shape": feature_meta.get("shape"),
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _stale_features(stats: dict | None, le_features: dict, lowdim_features: list[str]) -> list[str]:
+    """Return the subset of ``lowdim_features`` whose cached entry is missing or stale.
+
+    A feature is considered fresh iff its stat-dict has all six fields and its
+    fingerprint in ``__fingerprints__`` matches the canonical hash for its
+    current ``info.json`` schema. Anything else (missing info entry, missing
+    stat entry, missing stat field, missing fingerprint, mismatched
+    fingerprint) is treated as stale and recomputed.
+    """
+    if stats is None:
+        return list(lowdim_features)
+    fingerprints = stats.get(STATS_FINGERPRINTS_KEY)
+    if not isinstance(fingerprints, dict):
+        fingerprints = {}
+    stale = []
+    for feature in lowdim_features:
+        feature_meta = le_features.get(feature)
+        if feature_meta is None:
+            stale.append(feature)
+            continue
+        if feature not in stats or not isinstance(stats[feature], dict):
+            stale.append(feature)
+            continue
+        if any(k not in stats[feature] for k in ("mean", "std", "min", "max", "q01", "q99")):
+            stale.append(feature)
+            continue
+        if fingerprints.get(feature) != _compute_stats_fingerprint(feature, feature_meta):
+            stale.append(feature)
+    return stale
+
+
+def check_stats_validity(dataset_path: Path | str, features: list[str]):
+    """Return True iff every feature in ``features`` has a fingerprint-matching cached entry.
+
+    A True result means ``generate_stats`` can skip recomputation entirely. We
+    re-derive the expected fingerprint from the *current* ``info.json`` so any
+    schema drift since the cache was written invalidates it.
+    """
+    dataset_path = Path(dataset_path)
+    stats = _load_stats_cache(dataset_path / LE_ROBOT_STATS_FILENAME)
+    if not stats:
+        return False
+    info_path = dataset_path / LE_ROBOT_INFO_FILENAME
+    if not info_path.exists():
+        return False
+    with open(info_path, "r") as f:
+        le_features = json.load(f).get("features", {})
+    return not _stale_features(stats, le_features, features)
+
+
+def generate_stats(dataset_path: Path | str):
+    dataset_path = Path(dataset_path)
+    print(f"Generating stats for {str(dataset_path)}")
+    with open(dataset_path / LE_ROBOT_INFO_FILENAME, "r") as f:
+        le_features = json.load(f)["features"]
+    lowdim_features = [f for f in le_features if "float" in le_features[f]["dtype"]]
+
+    stats_path = dataset_path / LE_ROBOT_STATS_FILENAME
+    existing = _load_stats_cache(stats_path)
+    stale = _stale_features(existing, le_features, lowdim_features)
+
+    # Pull the reserved sidecar aside so the cleanup pass below can iterate
+    # ``existing`` cleanly. Drop entries for features that no longer exist in
+    # info.json (e.g. a sensor / DOF was removed in an upstream dataset rev)
+    # so the on-disk file stays consistent with info.json under feature
+    # churn — otherwise stale stat dicts accumulate without bound on shared
+    # NFS. Any non-stat-dict, non-sidecar key is owned by an external writer
+    # and is left untouched.
+    fingerprints = existing.pop(STATS_FINGERPRINTS_KEY, None)
+    if not isinstance(fingerprints, dict):
+        fingerprints = {}
+    lowdim_set = set(lowdim_features)
+    dropped = False
+    for f in [k for k in list(existing) if k not in lowdim_set and isinstance(existing[k], dict)]:
+        del existing[f]
+        dropped = True
+    for f in [k for k in list(fingerprints) if k not in lowdim_set]:
+        del fingerprints[f]
+        dropped = True
+
+    if not stale and not dropped:
+        return
+
+    parquet_files = list(dataset_path.glob(LE_ROBOT_DATA_FILENAME))
+    fresh = calculate_dataset_statistics(parquet_files, stale) if stale else {}
+    for feature, values in fresh.items():
+        existing[feature] = values
+        fingerprints[feature] = _compute_stats_fingerprint(feature, le_features[feature])
+
+    existing[STATS_FINGERPRINTS_KEY] = fingerprints
+    _dump_stats_cache_atomic(stats_path, existing)
+
+
+class RelativeActionLoader:
+    def __init__(self, dataset_path: Path | str, embodiment_tag: EmbodimentTag, action_key: str):
+        self.dataset_path = Path(dataset_path)
+        self.modality_configs: dict[str, ModalityConfig] = {}
+        self.action_key = action_key
+        # Check action config
+        assert action_key in MODALITY_CONFIGS[embodiment_tag.value]["action"].modality_keys
+        idx = MODALITY_CONFIGS[embodiment_tag.value]["action"].modality_keys.index(action_key)
+        action_configs = MODALITY_CONFIGS[embodiment_tag.value]["action"].action_configs
+        assert action_configs is not None, MODALITY_CONFIGS[embodiment_tag.value]["action"]
+        self.action_config = action_configs[idx]
+        self.modality_configs["action"] = ModalityConfig(
+            delta_indices=MODALITY_CONFIGS[embodiment_tag.value]["action"].delta_indices,
+            modality_keys=[action_key],
+        )
+        # Check state config
+        state_key = self.action_config.state_key or action_key
+        assert state_key in MODALITY_CONFIGS[embodiment_tag.value]["state"].modality_keys
+        self.modality_configs["state"] = ModalityConfig(
+            delta_indices=MODALITY_CONFIGS[embodiment_tag.value]["state"].delta_indices,
+            modality_keys=[state_key],
+        )
+        # Check state-action consistency
+        assert (
+            self.modality_configs["state"].delta_indices[-1]
+            == self.modality_configs["action"].delta_indices[0]
+        )
+        self.loader = LeRobotEpisodeLoader(dataset_path, self.modality_configs)
+
+    def load_relative_actions(self, trajectory_id: int) -> list[np.ndarray]:
+        df = self.loader[trajectory_id]
+
+        # OPTIMIZATION: Extract columns once and convert to numpy arrays
+        # This eliminates repeated DataFrame.__getitem__ and Series.__getitem__ calls
+        if self.action_config.state_key is not None:
+            state_key = f"state.{self.action_config.state_key}"
+        else:
+            state_key = f"state.{self.action_key}"
+        action_key = f"action.{self.action_key}"
+
+        # Convert to numpy arrays once - this is much faster than repeated pandas access
+        state_data = df[state_key].values  # Shape: (episode_length, joint_dim)
+        action_data = df[action_key].values  # Shape: (episode_length, joint_dim)
+        trajectories = []
+        usable_length = len(df) - self.modality_configs["action"].delta_indices[-1]
+        action_delta_indices = np.array(self.modality_configs["action"].delta_indices)
+        for i in range(usable_length):
+            state_ind = self.modality_configs["state"].delta_indices[-1] + i
+            action_inds = action_delta_indices + i
+            last_state = state_data[state_ind]
+            actions = action_data[action_inds]
+            if self.action_config.type == ActionType.EEF:
+                action_format = self.action_config.format
+                reference_frame = EndEffectorPose.from_action_format(last_state, action_format)
+                traj = EndEffectorActionChunk.from_array(actions, action_format).relative_chunking(
+                    reference_frame=reference_frame
+                )
+                trajectories.append(traj.to(action_format).astype(np.float32))
+            elif self.action_config.type == ActionType.NON_EEF:
+                reference_frame = JointPose(last_state)
+                traj = JointActionChunk([JointPose(m) for m in actions]).relative_chunking(
+                    reference_frame=reference_frame
+                )
+                trajectories.append(np.stack([p.joints for p in traj.poses], dtype=np.float32))
+            else:
+                raise ValueError(f"Unknown ActionType: {self.action_config.type}")
+        return trajectories
+
+    def __len__(self) -> int:
+        return len(self.loader)
+
+
+def calculate_stats_for_key(
+    dataset_path: Path | str,
+    embodiment_tag: EmbodimentTag,
+    group_key: str,
+    max_episodes: int = -1,
+) -> dict:
+    loader = RelativeActionLoader(dataset_path, embodiment_tag, group_key)
+    trajectories = []
+    for episode_id in tqdm(range(len(loader)), desc=f"Loading trajectories for key {group_key}"):
+        if max_episodes != -1 and episode_id >= max_episodes:
+            break
+        trajectories.extend(loader.load_relative_actions(episode_id))
+    return {
+        "max": np.max(trajectories, axis=0),
+        "min": np.min(trajectories, axis=0),
+        "q01": np.quantile(trajectories, 0.01, axis=0),
+        "q99": np.quantile(trajectories, 0.99, axis=0),
+        "mean": np.mean(trajectories, axis=0),
+        "std": np.std(trajectories, axis=0),
+    }
+
+
+def _compute_relative_action_fingerprint(embodiment_tag: EmbodimentTag, action_key: str) -> str:
+    """Hash the inputs that change ``calculate_stats_for_key``'s output.
+
+    Cached entries in ``relative_stats.json`` are only safe to reuse when every
+    such input matches what they were computed under. A stats file produced for
+    one ``(delta_indices, format, state_key, ...)`` combo would otherwise be
+    silently reused for a different combo with the same ``action_key`` name,
+    leading to wrong normalization without any error.
+    """
+    action_modality = MODALITY_CONFIGS[embodiment_tag.value]["action"]
+    state_modality = MODALITY_CONFIGS[embodiment_tag.value]["state"]
+    idx = action_modality.modality_keys.index(action_key)
+    action_config = action_modality.action_configs[idx]
+    payload = {
+        "embodiment_tag": embodiment_tag.value,
+        "action_key": action_key,
+        "action_delta_indices": list(action_modality.delta_indices),
+        "state_delta_indices": list(state_modality.delta_indices),
+        "rep": action_config.rep.name,
+        "type": action_config.type.name,
+        "format": action_config.format.name,
+        "state_key": action_config.state_key,
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def generate_rel_stats(dataset_path: Path | str, embodiment_tag: EmbodimentTag) -> None:
+    dataset_path = Path(dataset_path)
+    action_config = MODALITY_CONFIGS[embodiment_tag.value]["action"]
+    if action_config.action_configs is None:
+        return
+    action_keys = [
+        key
+        for key, action_config in zip(action_config.modality_keys, action_config.action_configs)
+        if action_config.rep == ActionRepresentation.RELATIVE
+    ]
+    stats_path = Path(dataset_path) / LE_ROBOT_REL_STATS_FILENAME
+    stats = _load_stats_cache(stats_path)
+    fingerprints = stats.setdefault(STATS_FINGERPRINTS_KEY, {})
+    for action_key in sorted(action_keys):
+        expected_fp = _compute_relative_action_fingerprint(embodiment_tag, action_key)
+        if action_key in stats and fingerprints.get(action_key) == expected_fp:
+            continue
+        print(f"Generating relative stats for {dataset_path} {embodiment_tag} {action_key}")
+        stats[action_key] = calculate_stats_for_key(dataset_path, embodiment_tag, action_key)
+        fingerprints[action_key] = expected_fp
+    _dump_stats_cache_atomic(stats_path, to_json_serializable(dict(stats)))
+
+
+def main(
+    dataset_path: Path | str,
+    embodiment_tag: EmbodimentTag,
+    modality_config_path: str | None = None,
+):
+    """Generate dataset statistics.
+
+    Args:
+        dataset_path: Path to the dataset.
+        embodiment_tag: Embodiment tag for modality configurations.
+        modality_config_path: Optional path to a .py modality config file. Required for custom
+            embodiment tags not in the built-in MODALITY_CONFIGS registry.
+    """
+    if modality_config_path is not None:
+        import importlib
+        import sys
+
+        config_path = Path(modality_config_path)
+        if config_path.exists() and config_path.suffix == ".py":
+            sys.path.append(str(config_path.parent))
+            importlib.import_module(config_path.stem)
+            print(f"Loaded modality config: {config_path}")
+        else:
+            raise FileNotFoundError(
+                f"Modality config path does not exist or is not a .py file: {modality_config_path}"
+            )
+    # Custom tags (e.g. NEW_EMBODIMENT) are only in MODALITY_CONFIGS once a
+    # --modality-config-path registers them; fail here instead of a bare KeyError
+    # deep in generate_rel_stats (and before generate_stats writes a partial set).
+    if embodiment_tag.value not in MODALITY_CONFIGS:
+        raise ValueError(
+            f"No built-in modality config for embodiment tag '{embodiment_tag.name}' "
+            f"(value='{embodiment_tag.value}'). Available tags: {sorted(MODALITY_CONFIGS.keys())}. "
+            f"Pass --modality-config-path <your_config.py> (e.g. examples/SO100/so100_config.py) "
+            f"for custom embodiments."
+        )
+    generate_stats(dataset_path)
+    generate_rel_stats(dataset_path, embodiment_tag)
+
+
+if __name__ == "__main__":
+    import tyro
+
+    tyro.cli(main)

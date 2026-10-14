@@ -1,0 +1,24 @@
+Baseline model:
+- Source: https://github.com/unitreerobotics/unitree_mujoco
+- Commit: ae6a8403e272733e9996ef59990880330496177f
+- File: unitree_robots/h2/h2_mujoco.xml
+
+Inertial source:
+- Source: https://github.com/unitreerobotics/unitree_ros
+- Commit: d96d8f63ae17a7108d4f7229c00ef875ba7129c9
+- File: robots/h2_description/H2.urdf
+
+Generated files:
+- h2_mujoco.xml
+- mass_alignment.csv
+
+The generated model preserves the Unitree MuJoCo model's kinematics, visual and
+collision geometry, actuators, and sensors. Each body's mass, center of mass,
+principal-axis orientation, and principal inertia are replaced by values from
+the Unitree ROS URDF after MuJoCo fixed-joint folding. This folds the URDF hand
+inertials into their corresponding wrist-yaw bodies without importing the ROS
+collision meshes.
+
+Regenerate with:
+
+  python3 scripts/build_h2_unitree_mujoco_ros_mass.py

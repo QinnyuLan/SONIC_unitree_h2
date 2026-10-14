@@ -1,0 +1,12 @@
+Metadata for: kneeling_stop_003__A167_M
+==============================
+
+Body part indexes:
+[0]
+
+Total timesteps: 289
+FPS: 50
+Deploy source: h2_lora
+Reference joint space: g1_semantic_29d_from_h2_physical_headless
+Source robot pkl: /home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/230201/kneeling_stop_003__A167_M.pkl
+Source smpl pkl: /home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/smpl/230201/kneeling_stop_003__A167_M.pkl

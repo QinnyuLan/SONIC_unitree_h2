@@ -1,0 +1,44 @@
+{
+  "motion_name": "dance_in_da_party_001__A464",
+  "source_key": "dance_in_da_party_001__A464",
+  "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464.csv",
+  "source_smpl_pkl": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/example_smpl_h2/source_smpl/dance_in_da_party_001__A464.pkl",
+  "fps": 50,
+  "frames": 498,
+  "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+  "source_joint_space": "h2_physical_31d_mujoco",
+  "joint_pos_shape": [
+    498,
+    29
+  ],
+  "h2_joint_pos_shape": [
+    498,
+    31
+  ],
+  "body_quat_format": "wxyz",
+  "body_count": 1,
+  "smpl": {
+    "source_key": "dance_in_da_party_001__A464",
+    "source_path": "gear_sonic_deploy/reference/example_smpl_h2/source_smpl/dance_in_da_party_001__A464.pkl",
+    "smpl_joint_shape": [
+      498,
+      24,
+      3
+    ],
+    "source_smpl_joint_frames": 497,
+    "smpl_pose_shape": [
+      498,
+      21,
+      3
+    ],
+    "source_smpl_pose_frames": 497,
+    "smpl_root_quat_shape": [
+      498,
+      4
+    ],
+    "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+  },
+  "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464.csv",
+  "source_csv_sha256": "c4b480f5f13be55f94f072900332673b828c2ec145e6e1f713ef10db497ad3b8",
+  "reference_type": "smpl"
+}

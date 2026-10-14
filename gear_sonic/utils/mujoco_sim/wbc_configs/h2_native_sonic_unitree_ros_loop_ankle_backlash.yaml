@@ -1,0 +1,14 @@
+# Overlay for h2_native_sonic_unitree_ros_loop.yaml. The official robot asset
+# is patched only in a temporary runtime XML; the source MJCF stays unchanged.
+H2_ANKLE_ROLL_BACKLASH_DEG:
+  left: 0.6
+  right: 0.8
+H2_ANKLE_PITCH_BACKLASH_DEG:
+  left: 0.2
+H2_WAIST_BACKLASH_DEG:
+  roll: 1.0
+  pitch: 1.0
+# Make the controller compensate the physical pelvis/COM forward by about one
+# degree: the pelvis IMU must under-report forward pitch by one degree. This
+# biases only LowState; MuJoCo dynamics and the other sensors remain true.
+PELVIS_IMU_PITCH_BIAS_DEG: -1.0

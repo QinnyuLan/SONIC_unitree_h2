@@ -1,0 +1,6 @@
+Source: https://github.com/unitreerobotics/unitree_mujoco
+Commit: ae6a8403e272733e9996ef59990880330496177f
+
+Imported files:
+- LICENSE
+- unitree_robots/h2/

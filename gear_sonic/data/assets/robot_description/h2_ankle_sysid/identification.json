@@ -1,0 +1,29 @@
+{
+  "source": "/home/qingyul/workspace/SONIC-H2/gear_sonic/data/assets/robot_description/unitree_ros/h2_description/H2_loop.xml",
+  "source_sha256": "399284179c4b7067b82cc5dc910b832936f35c0d7981dc8954897251f731e458",
+  "parameters": {
+    "left": {
+      "static_nm": 0.6556372343330766,
+      "dynamic_nm": 0.334534908572124,
+      "velocity_rad_s": 0.14018264984841308,
+      "stiffness_nm_rad": 68.7122965401612,
+      "position_slope_nm_rad2": 4.1652377172263195,
+      "center_rad": -0.363
+    },
+    "right": {
+      "static_nm": 2.695598840429922,
+      "dynamic_nm": 1.0707176239479386,
+      "velocity_rad_s": 0.10750362210779985,
+      "stiffness_nm_rad": 977.1909939198963,
+      "position_slope_nm_rad2": 9.870038964297587,
+      "center_rad": -0.363
+    }
+  },
+  "fits": {
+    "left": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/logs/ankle_dynamic_left_20260906_210301_532438/dynamic_fit/fit.json",
+    "right": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/logs/ankle_dynamic_right_20260906_211438_540301/dynamic_refined/fit.json"
+  },
+  "validation_scope": "unloaded ready pose, Kp=40/Kd=2, recorded sweeps; not loaded whole-body validated",
+  "runtime": "gear_sonic.utils.mujoco_sim.ankle_response",
+  "native_asset_parameters": "unchanged"
+}

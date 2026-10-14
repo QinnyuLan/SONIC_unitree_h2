@@ -1,0 +1,207 @@
+{
+  "format_version": 1,
+  "description": "Per-joint right corrections: R_smpl_global = R_xrt_global * C_joint",
+  "source_recording": "/home/qingyul/workspace/SONIC-H2/data/trackingData_20260807_162702.txt",
+  "frame_count": 5437,
+  "fps": 71.94493047241919,
+  "split": {
+    "method": "four temporal blocks train, one temporal block validation",
+    "block_seconds": 1.0,
+    "train_frames": 4357,
+    "validation_frames": 1080
+  },
+  "default_joint_frame_quat_wxyz": [
+    6.123233995736766e-17,
+    0.0,
+    1.0,
+    0.0
+  ],
+  "joint_corrections": [
+    {
+      "joint_name": "left_shoulder",
+      "joint_index": 16,
+      "child_index": 18,
+      "quat_wxyz": [
+        0.038293746049162934,
+        0.11001521332219233,
+        0.9931635599934747,
+        -0.007508991429117537
+      ]
+    },
+    {
+      "joint_name": "left_elbow",
+      "joint_index": 18,
+      "child_index": 20,
+      "quat_wxyz": [
+        0.06258673938477656,
+        0.05773768019839772,
+        0.9963479017524736,
+        -0.00633395705170788
+      ]
+    },
+    {
+      "joint_name": "right_shoulder",
+      "joint_index": 17,
+      "child_index": 19,
+      "quat_wxyz": [
+        0.009688785502090989,
+        -0.04699104694685199,
+        0.9988309504548908,
+        -0.0058907856617639
+      ]
+    },
+    {
+      "joint_name": "right_elbow",
+      "joint_index": 19,
+      "child_index": 21,
+      "quat_wxyz": [
+        -0.04349339543617433,
+        -0.07749447631513876,
+        0.9960357129369806,
+        -0.003973568697769809
+      ]
+    }
+  ],
+  "metrics": {
+    "joint_direction": {
+      "left_shoulder": {
+        "train_local_direction_concentration": 0.9999999999978723,
+        "delta_from_original_degrees": 13.406961402909053,
+        "validation_direction_error_degrees": {
+          "original": {
+            "mean": 13.406966750715235,
+            "median": 13.40696402233549,
+            "p90": 13.40705340462993,
+            "max": 13.407378411062608
+          },
+          "calibrated": {
+            "mean": 0.0001088968113656253,
+            "median": 8.038858062875247e-05,
+            "p90": 0.0002138343388498078,
+            "max": 0.0007382155696122542
+          }
+        }
+      },
+      "left_elbow": {
+        "train_local_direction_concentration": 0.9805310950015769,
+        "delta_from_original_degrees": 9.796503871963626,
+        "validation_direction_error_degrees": {
+          "original": {
+            "mean": 13.737872305088583,
+            "median": 10.592239677123224,
+            "p90": 24.720976390317155,
+            "max": 53.54760111482406
+          },
+          "calibrated": {
+            "mean": 10.981622776048741,
+            "median": 9.557294935371363,
+            "p90": 17.328309931289485,
+            "max": 45.000512579686564
+          }
+        }
+      },
+      "right_shoulder": {
+        "train_local_direction_concentration": 0.9999999999976436,
+        "delta_from_original_degrees": 5.541488073982921,
+        "validation_direction_error_degrees": {
+          "original": {
+            "mean": 5.541494495011319,
+            "median": 5.541491699302347,
+            "p90": 5.54161953766144,
+            "max": 5.541981663401521
+          },
+          "calibrated": {
+            "mean": 0.0001094686545041556,
+            "median": 8.061947092845583e-05,
+            "p90": 0.00021825700897887046,
+            "max": 0.0006621860914979899
+          }
+        }
+      },
+      "right_elbow": {
+        "train_local_direction_concentration": 0.9866676482090986,
+        "delta_from_original_degrees": 10.206897422863568,
+        "validation_direction_error_degrees": {
+          "original": {
+            "mean": 11.17046050419041,
+            "median": 9.363602596466507,
+            "p90": 20.83849397495307,
+            "max": 32.33662345531818
+          },
+          "calibrated": {
+            "mean": 8.57040955091938,
+            "median": 7.393497539955537,
+            "p90": 15.491555127662775,
+            "max": 28.889876954375776
+          }
+        }
+      }
+    },
+    "elbow_angle_degrees": {
+      "left": {
+        "raw_xrt": {
+          "mean": 141.53255873706348,
+          "median": 152.01188743926406,
+          "p90": 162.13443119769232,
+          "max": 173.58916115669228
+        },
+        "original_fk": {
+          "mean": 143.3860608682921,
+          "median": 154.20105417084943,
+          "p90": 162.91035720738753,
+          "max": 168.5939048276634
+        },
+        "calibrated_fk": {
+          "mean": 143.06553516951706,
+          "median": 153.30733393570293,
+          "p90": 161.9666777737982,
+          "max": 170.46887800336847
+        },
+        "original_absolute_error": {
+          "mean": 7.020532129840597,
+          "median": 4.787517595173426,
+          "p90": 14.98709548689363,
+          "max": 41.20722960963528
+        },
+        "calibrated_absolute_error": {
+          "mean": 6.790373343557492,
+          "median": 4.231671439991146,
+          "p90": 13.904628080720805,
+          "max": 44.3489813423046
+        }
+      },
+      "right": {
+        "raw_xrt": {
+          "mean": 143.8136517834409,
+          "median": 156.00637627391401,
+          "p90": 162.49660886949883,
+          "max": 176.2086932324067
+        },
+        "original_fk": {
+          "mean": 148.5696570285706,
+          "median": 163.1709234609441,
+          "p90": 168.53355656835294,
+          "max": 177.10724808843145
+        },
+        "calibrated_fk": {
+          "mean": 143.90714167562342,
+          "median": 158.39593290251375,
+          "p90": 163.76848768403607,
+          "max": 175.47712526487365
+        },
+        "original_absolute_error": {
+          "mean": 6.561027340312556,
+          "median": 6.546550641520767,
+          "p90": 11.464326580118424,
+          "max": 23.12662352781925
+        },
+        "calibrated_absolute_error": {
+          "mean": 4.907390760411432,
+          "median": 4.0999276270407705,
+          "p90": 10.358410619532059,
+          "max": 23.76086044006557
+        }
+      }
+    }
+  }
+}

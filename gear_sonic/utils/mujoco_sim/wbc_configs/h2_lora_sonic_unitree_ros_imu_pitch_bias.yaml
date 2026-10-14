@@ -1,0 +1,187 @@
+ROBOT_TYPE: 'h2_lora'
+ROBOT_SCENE: "gear_sonic/data/assets/robot_description/unitree_ros/h2_description/h2_mujoco.xml"
+MJCF_MESHDIR: "gear_sonic/data/assets/robot_description/unitree_ros/h2_description"
+ADD_DEFAULT_MUJOCO_SCENE: True
+ADD_H2_OFFICIAL_FOOT_CONTACT_GEOMS: False
+CALIBRATE_BASE_Z_TO_H2_SOLE_CONTACT: True
+H2_SOLE_CONTACT_CLEARANCE: 0.002
+
+DOMAIN_ID: 0
+INTERFACE: "lo"
+SIMULATOR: "mujoco"
+
+USE_JOYSTICK: 0
+JOYSTICK_TYPE: "xbox"
+JOYSTICK_DEVICE: 0
+
+# H2 MJCF has a floating_base_joint.  FREE_BASE controls whether root torques
+# are prepended to actuator ctrl; MuJoCo actuators only cover the 31 motors.
+FREE_BASE: False
+# The stock H2 MJCF joint actuatorfrcrange is lower than the IsaacLab actuator
+# config used for H2LoRA training on several joints, most visibly ankle roll
+# (19 Nm in MJCF vs 150 Nm in training).  Override only the in-memory MuJoCo
+# model so the sim2sim low-level torque clamp matches motor_effort_limit_list.
+OVERRIDE_MUJOCO_JOINT_FORCE_LIMITS: True
+OVERRIDE_MUJOCO_DOF_PASSIVE: True
+# Match H2_CFG ImplicitActuatorCfg armature by joint, in H2 local/training
+# order.  A single 0.01 value makes arms/wrists/ankles much heavier than the
+# IsaacLab policy was trained with and changes the closed-loop velocity history.
+MUJOCO_DOF_ARMATURE: [
+  0.025101925, 0.025101925, 0.010177520, 0.025101925, 0.00721945, 0.00721945,
+  0.025101925, 0.025101925, 0.010177520, 0.025101925, 0.00721945, 0.00721945,
+  0.010177520, 0.00721945, 0.00721945, 0.00721945, 0.00721945,
+  0.003609725, 0.003609725, 0.003609725, 0.003609725, 0.003609725, 0.00425, 0.00425,
+  0.003609725, 0.003609725, 0.003609725, 0.003609725, 0.003609725, 0.00425, 0.00425
+]
+MUJOCO_DOF_DAMPING: 0.05
+MUJOCO_DOF_FRICTIONLOSS: 0.2
+MUJOCO_INTEGRATOR: implicitfast
+MUJOCO_SOLVER: Newton
+MUJOCO_ITERATIONS: 50
+MUJOCO_LS_ITERATIONS: 10
+
+PRINT_SCENE_INFORMATION: True
+ENABLE_ELASTIC_BAND: True
+APPLY_DEFAULT_POSE_ON_RESET: True
+# Preserve the Unitree ROS URDF's ankle-pitch mesh collisions.  The sole-contact
+# calibration shifts this initial pose so the lowest mesh vertex starts 2 mm
+# above the floor.
+DEFAULT_BASE_POS: [0.0, 0.0, 1.04]
+DEFAULT_BASE_QUAT: [1.0, 0.0, 0.0, 0.0]
+# Match the G1 sim2sim elastic-band mechanism while accounting for H2's taller
+# torso.  G1's anchor is about 0.207m above its attached pelvis at reset; H2's
+# torso_link starts at about 1.09m, so 1.30m gives the same startup offset.
+ELASTIC_BAND_POINT: [0.0, 0.0, 1.30]
+ELASTIC_BAND_LENGTH: 0.0
+# Use the same elastic-band stiffness/damping defaults as the G1 sim2sim path.
+ELASTIC_BAND_KP_POS: 10000.0
+ELASTIC_BAND_KD_POS: 1000.0
+ELASTIC_BAND_KP_ANG: 1000.0
+ELASTIC_BAND_KD_ANG: 10.0
+
+# H2's raw MJCF + external Python PD loop is sensitive to integration step.
+# Keep the deploy policy at 50 Hz, but compute/apply MuJoCo torques at 1000 Hz.
+SIMULATE_DT: 0.001
+VIEWER_DT: 0.02
+REWARD_DT: 0.02
+USE_SENSOR: False
+USE_LOCAL_BASE_GYRO: True
+USE_HISTORY: True
+USE_HISTORY_LOCO: True
+USE_HISTORY_MIMIC: True
+
+# Simulate a fixed pelvis-IMU mounting/calibration error without rotating the
+# MuJoCo body. The bridge publishes q_reported = q_true * local_RotY(+2.7 deg)
+# only on rt/lowstate; odometry, secondary IMU, gyro, joints, and dynamics stay true.
+PELVIS_IMU_PITCH_BIAS_DEG: 2.7
+
+# MuJoCo applies Unitree LowCmd as an explicit torque PD loop, matching
+# unitree_mujoco:
+#   tau + kp * (q_des - q) + kd * (dq_des - dq)
+
+MOTOR2JOINT: [0, 1, 2, 3, 4, 5,
+              6, 7, 8, 9, 10, 11,
+              12, 13, 14, 15, 16,
+              17, 18, 19, 20, 21, 22, 23,
+              24, 25, 26, 27, 28, 29, 30]
+
+JOINT2MOTOR: [0, 1, 2, 3, 4, 5,
+              6, 7, 8, 9, 10, 11,
+              12, 13, 14, 15, 16,
+              17, 18, 19, 20, 21, 22, 23,
+              24, 25, 26, 27, 28, 29, 30]
+
+UNITREE_LEGGED_CONST:
+  HIGHLEVEL: 0xEE
+  LOWLEVEL: 0xFF
+  TRIGERLEVEL: 0xF0
+  PosStopF: 2146000000.0
+  VelStopF: 16000.0
+  MODE_MACHINE: 5
+  MODE_PR: 0
+
+MOTOR_KP: [
+  396.3937111292, 396.3937111292, 160.7169538948, 396.3937111292, 114.0049847896, 114.0049847896,
+  396.3937111292, 396.3937111292, 160.7169538948, 396.3937111292, 114.0049847896, 114.0049847896,
+  160.7169538948, 114.0049847896, 114.0049847896, 114.0049847896, 114.0049847896,
+  57.0024923948, 57.0024923948, 57.0024923948, 57.0024923948, 57.0024923948, 67.1133099276, 67.1133099276,
+  57.0024923948, 57.0024923948, 57.0024923948, 57.0024923948, 57.0024923948, 67.1133099276, 67.1133099276
+]
+
+MOTOR_KD: [
+  12.61760370736, 12.61760370736, 5.1157795302, 12.61760370736, 3.62889137328, 3.62889137328,
+  12.61760370736, 12.61760370736, 5.1157795302, 12.61760370736, 3.62889137328, 3.62889137328,
+  5.1157795302, 3.62889137328, 3.62889137328, 3.62889137328, 3.62889137328,
+  1.814445686636, 1.814445686636, 1.814445686636, 1.814445686636, 1.814445686636, 2.13628300444, 2.13628300444,
+  1.814445686636, 1.814445686636, 1.814445686636, 1.814445686636, 1.814445686636, 2.13628300444, 2.13628300444
+]
+
+WeakMotorJointIndex:
+  left_hip_pitch_joint: 0
+  left_hip_roll_joint: 1
+  left_hip_yaw_joint: 2
+  left_knee_joint: 3
+  left_ankle_roll_joint: 4
+  left_ankle_pitch_joint: 5
+  right_hip_pitch_joint: 6
+  right_hip_roll_joint: 7
+  right_hip_yaw_joint: 8
+  right_knee_joint: 9
+  right_ankle_roll_joint: 10
+  right_ankle_pitch_joint: 11
+  waist_yaw_joint: 12
+  waist_roll_joint: 13
+  waist_pitch_joint: 14
+  head_pitch_joint: 15
+  head_yaw_joint: 16
+  left_shoulder_pitch_joint: 17
+  left_shoulder_roll_joint: 18
+  left_shoulder_yaw_joint: 19
+  left_elbow_joint: 20
+  left_wrist_roll_joint: 21
+  left_wrist_pitch_joint: 22
+  left_wrist_yaw_joint: 23
+  right_shoulder_pitch_joint: 24
+  right_shoulder_roll_joint: 25
+  right_shoulder_yaw_joint: 26
+  right_elbow_joint: 27
+  right_wrist_roll_joint: 28
+  right_wrist_pitch_joint: 29
+  right_wrist_yaw_joint: 30
+
+NUM_MOTORS: 31
+NUM_JOINTS: 31
+NUM_HAND_MOTORS: 0
+NUM_HAND_JOINTS: 0
+NUM_UPPER_BODY_JOINTS: 17
+
+DEFAULT_DOF_ANGLES: [
+  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
+  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
+  0.0, 0.0, 0.0, 0.0, 0.0,
+  0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
+  0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0
+]
+
+DEFAULT_MOTOR_ANGLES: [
+  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
+  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
+  0.0, 0.0, 0.0, 0.0, 0.0,
+  0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
+  0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0
+]
+
+motor_effort_limit_list: [
+  417, 417, 264, 417, 150, 150,
+  417, 417, 264, 417, 150, 150,
+  264, 150, 150, 150, 150,
+  75, 75, 75, 75, 75, 15, 15,
+  75, 75, 75, 75, 75, 15, 15
+]
+
+robot_dofs:
+  "h2_lora": [1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1,
+              1, 1, 1, 1, 1, 1, 1]

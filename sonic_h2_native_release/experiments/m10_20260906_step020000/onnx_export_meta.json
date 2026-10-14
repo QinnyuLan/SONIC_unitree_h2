@@ -1,0 +1,155 @@
+{
+  "action_dim": 29,
+  "actor_obs_dim": 930,
+  "actor_observation_contract": "sonic_h2_native_v1",
+  "artifact_set": "deployment",
+  "checkpoint": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/model_step_020000.pt",
+  "config": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/config.yaml",
+  "cpu_only": true,
+  "deployment_disable_legacy_actor_obs_patch": true,
+  "deployment_pair_max_abs_error": 2.6226043701171875e-06,
+  "encoder_full": {
+    "contract": "sonic_h2_native_full_v1",
+    "frozen": [
+      false,
+      true,
+      true,
+      true
+    ],
+    "input_features": [
+      "encoder_index",
+      "command_multi_future_nonflat",
+      "motion_anchor_ori_b",
+      "motion_anchor_ori_b_mf_nonflat",
+      "command_multi_future_lower_body",
+      "vr_3point_local_target",
+      "vr_3point_local_orn_target",
+      "smpl_joints_multi_future_local_nonflat",
+      "smpl_root_ori_b_multi_future",
+      "joint_pos_multi_future_wrist_for_smpl"
+    ],
+    "selector_slots": [
+      "h2",
+      "teleop",
+      "smpl",
+      "g1"
+    ],
+    "tokenizer_feature_aliases": {
+      "command_multi_future_h2_native_nonflat": "command_multi_future_nonflat"
+    },
+    "validation": {
+      "branch_max_abs_errors": {
+        "0:h2->h2": 0.0,
+        "1:teleop->teleop": 0.0,
+        "2:smpl->smpl": 0.0,
+        "3:g1->g1": 0.0
+      },
+      "h2_selector_vs_single_max_abs_error": 0.0,
+      "input_dim": 1751,
+      "max_abs_error": 0.0,
+      "routed_encoders": [
+        "h2",
+        "teleop",
+        "smpl",
+        "g1"
+      ],
+      "selector_slots": [
+        "h2",
+        "teleop",
+        "smpl",
+        "g1"
+      ]
+    }
+  },
+  "export_log": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/exported/20260906_171609_step_020000/onnx_export.log",
+  "exported_at": "2026-09-06T17:16:11",
+  "fold_h2_io_adapters": true,
+  "global_step": 20000,
+  "merge_info": {
+    "decoder_equivalence_max_abs_error": 2.7567148208618164e-06,
+    "h2_native_io_folding": {
+      "action_affine_max_abs_error": 2.384185791015625e-07,
+      "action_dim": 29,
+      "decoder_equivalence_max_abs_error": 7.3909759521484375e-06,
+      "folded": true,
+      "folded_into": [
+        "g1_dyn.first_linear",
+        "g1_dyn.output_linear"
+      ],
+      "proprioception_affine_max_abs_error": 9.5367431640625e-07,
+      "proprioception_dim": 930
+    },
+    "merged_modules": [
+      "actor_module.encoders.h2_student.module.0",
+      "actor_module.encoders.h2_student.module.2",
+      "actor_module.encoders.h2_student.module.4",
+      "actor_module.encoders.h2_student.module.6",
+      "actor_module.encoders.h2_student.module.8",
+      "actor_module.decoders.g1_dyn.module.0",
+      "actor_module.decoders.g1_dyn.module.2",
+      "actor_module.decoders.g1_dyn.module.4",
+      "actor_module.decoders.g1_dyn.module.6",
+      "actor_module.decoders.g1_dyn.module.8",
+      "actor_module.decoders.g1_dyn.module.10",
+      "actor_module.decoders.g1_dyn.module.12"
+    ],
+    "num_merged_modules": 12
+  },
+  "models": {
+    "decoder": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/exported/20260906_171609_step_020000/model_decoder.onnx",
+    "encoder": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/exported/20260906_171609_step_020000/model_encoder.onnx",
+    "encoder_full": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/exported/20260906_171609_step_020000/model_encoder_full.onnx"
+  },
+  "onnx_check": {
+    "model_decoder.onnx": {
+      "inputs": [
+        [
+          "obs_dict",
+          1,
+          994
+        ]
+      ],
+      "outputs": [
+        [
+          "action",
+          1,
+          29
+        ]
+      ]
+    },
+    "model_encoder.onnx": {
+      "inputs": [
+        [
+          "obs_dict",
+          1,
+          640
+        ]
+      ],
+      "outputs": [
+        [
+          "encoded_tokens",
+          1,
+          64
+        ]
+      ]
+    },
+    "model_encoder_full.onnx": {
+      "inputs": [
+        [
+          "obs_dict",
+          1,
+          1751
+        ]
+      ],
+      "outputs": [
+        [
+          "encoded_tokens",
+          1,
+          64
+        ]
+      ]
+    }
+  },
+  "output_dir": "/home/qingyul/workspace/GR00T-WholeBodyControl/logs_rl/sonic-h2-native-4xL40/manager/universal_token/all_modes/sonic_h2_native_e2e_release_g1_smpl_only_h2_native_release_g1smplonly_fullencoderlora_stdlearn_aggr_4xl40_100k_20260903-20260903_210325/exported/20260906_171609_step_020000",
+  "reference_orientation_contract": "sonic_full_root_relative_v0"
+}

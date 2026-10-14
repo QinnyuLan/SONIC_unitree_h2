@@ -1,0 +1,168 @@
+{
+  "model": "released",
+  "models": {
+    "model_encoder_full": {
+      "sha256": "c0938bb3da2f9b10d3e3a518ede0fd5d77b5c4c23a7fbc3c6c2fcddbf1cbac48",
+      "inputs": [
+        {
+          "name": "obs_dict",
+          "dtype": 1,
+          "shape": [
+            1,
+            1751
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "encoded_tokens",
+          "dtype": 1,
+          "shape": [
+            1,
+            64
+          ]
+        }
+      ],
+      "onnx_checker": "passed",
+      "contract": {
+        "model_role": "encoder",
+        "policy_interface": "universal",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0",
+        "selector_contract": "sonic_h2_native_full_v1"
+      }
+    },
+    "model_encoder": {
+      "sha256": "6c9d7536726237eb889162b3b3b6ea410bf891eb5b9fc16b5c2e1edbabc4bfba",
+      "inputs": [
+        {
+          "name": "obs_dict",
+          "dtype": 1,
+          "shape": [
+            1,
+            640
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "encoded_tokens",
+          "dtype": 1,
+          "shape": [
+            1,
+            64
+          ]
+        }
+      ],
+      "onnx_checker": "passed",
+      "contract": {
+        "model_role": "encoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      }
+    },
+    "model_decoder": {
+      "sha256": "6d44817fc666d83537df0caac13a8d46fb1574f0283bdb7e7b9f12e839474433",
+      "inputs": [
+        {
+          "name": "obs_dict",
+          "dtype": 1,
+          "shape": [
+            1,
+            994
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "action",
+          "dtype": 1,
+          "shape": [
+            1,
+            29
+          ]
+        }
+      ],
+      "onnx_checker": "passed",
+      "contract": {
+        "model_role": "decoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      }
+    }
+  },
+  "previous_interface_matches": {
+    "baseline_1": {
+      "model_encoder_full": true,
+      "model_encoder": true,
+      "model_decoder": true
+    },
+    "baseline_2": {
+      "model_encoder_full": true,
+      "model_encoder": true,
+      "model_decoder": true
+    },
+    "baseline_3": {
+      "model_encoder_full": true,
+      "model_encoder": true,
+      "model_decoder": true
+    }
+  },
+  "status": "passed",
+  "cpu_trials_per_selector": 5,
+  "cpu_finite_selectors": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "full_vs_compact_max_abs_error": 0.0,
+  "onnx_version": "1.23.2",
+  "onnxruntime_version": "1.23.2",
+  "training_configuration": {
+    "method": "full_finetune",
+    "lora_enabled": false,
+    "encoder_lora_enabled": false,
+    "native_adapters_enabled": false
+  },
+  "runtime_configuration_matches": {
+    "baseline_1": {
+      "manager_env.observations.policy": true,
+      "manager_env.actions": true,
+      "manager_env.config.h2_asset": true,
+      "manager_env.config.direct_joint_defaults": true,
+      "manager_env.config.policy_action_dim": true,
+      "manager_env.config.actor_prop_history_length": true,
+      "manager_env.config.actor_actions_history_length": true,
+      "manager_env.config.actor_observation_contract": true,
+      "manager_env.config.reference_orientation_contract": true,
+      "algo.config.actor.backbone.proprioception_features": true
+    },
+    "baseline_2": {
+      "manager_env.observations.policy": true,
+      "manager_env.actions": true,
+      "manager_env.config.h2_asset": true,
+      "manager_env.config.direct_joint_defaults": true,
+      "manager_env.config.policy_action_dim": true,
+      "manager_env.config.actor_prop_history_length": true,
+      "manager_env.config.actor_actions_history_length": true,
+      "manager_env.config.actor_observation_contract": true,
+      "manager_env.config.reference_orientation_contract": true,
+      "algo.config.actor.backbone.proprioception_features": true
+    },
+    "baseline_3": {
+      "manager_env.observations.policy": true,
+      "manager_env.actions": true,
+      "manager_env.config.h2_asset": true,
+      "manager_env.config.direct_joint_defaults": true,
+      "manager_env.config.policy_action_dim": true,
+      "manager_env.config.actor_prop_history_length": true,
+      "manager_env.config.actor_actions_history_length": true,
+      "manager_env.config.actor_observation_contract": true,
+      "manager_env.config.reference_orientation_contract": true,
+      "algo.config.actor.backbone.proprioception_features": true
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "motion_name": "walking_quip_360_R_002__A428_M",
+  "source_key": "walking_quip_360_R_002__A428_M",
+  "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428_M.csv",
+  "source_smpl_pkl": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/example_smpl_h2/source_smpl/walking_quip_360_R_002__A428_M.pkl",
+  "fps": 50,
+  "frames": 456,
+  "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+  "source_joint_space": "h2_physical_31d_mujoco",
+  "joint_pos_shape": [
+    456,
+    29
+  ],
+  "h2_joint_pos_shape": [
+    456,
+    31
+  ],
+  "body_quat_format": "wxyz",
+  "body_count": 1,
+  "smpl": {
+    "source_key": "walking_quip_360_R_002__A428_M",
+    "source_path": "gear_sonic_deploy/reference/example_smpl_h2/source_smpl/walking_quip_360_R_002__A428_M.pkl",
+    "smpl_joint_shape": [
+      456,
+      24,
+      3
+    ],
+    "source_smpl_joint_frames": 455,
+    "smpl_pose_shape": [
+      456,
+      21,
+      3
+    ],
+    "source_smpl_pose_frames": 455,
+    "smpl_root_quat_shape": [
+      456,
+      4
+    ],
+    "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+  },
+  "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428_M.csv",
+  "source_csv_sha256": "102cc5984beba095ef8f3650f394ebd676e72593271eb42f43a58844036e28c4",
+  "reference_type": "smpl"
+}

@@ -1,0 +1,15 @@
+H2 Deploy Reference Summary
+====================================
+Schema: h2_lora_deploy_reference_v1
+Source: /mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv
+Motions: 8
+Total frames: 5484
+
+- forward_lunge_R_001__A359_M: 399 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/forward_lunge_R_001__A359_M.csv
+- squat_001__A359: 425 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/squat_001__A359.csv
+- walking_quip_360_R_002__A428: 456 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428.csv
+- walking_quip_360_R_002__A428_M: 456 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230713/walking_quip_360_R_002__A428_M.csv
+- dance_in_da_party_001__A464: 498 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464.csv
+- dance_in_da_party_001__A464_M: 498 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/231006/dance_in_da_party_001__A464_M.csv
+- macarena_001__A545: 1376 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545.csv
+- macarena_001__A545_M: 1376 frames, source=/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545_M.csv

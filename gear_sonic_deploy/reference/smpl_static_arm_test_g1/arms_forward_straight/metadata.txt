@@ -1,0 +1,16 @@
+Metadata for: arms_forward_straight
+==============================
+
+Body part indexes:
+[0]
+
+Total timesteps: 300
+FPS: 50
+Encoder mode: 2
+Deploy source: synthetic_static_smpl_fk
+Robot profile: g1
+Reference joint space: g1_semantic_29d_vr_wrist_targets_only
+Synthetic reference: true
+SMPL stored frame: z_up_pelvis_centered_world_oriented_no_translation
+SMPL local target direction: [1.0, 0.0, 0.0]
+SMPL/wrist contract: original G1 PoseStreamer FK and wrist conversion

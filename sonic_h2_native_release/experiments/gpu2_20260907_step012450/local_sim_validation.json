@@ -1,0 +1,98 @@
+{
+  "dds_domain": 73,
+  "interface": "lo",
+  "elastic_band_enabled": true,
+  "headless": true,
+  "full_free_motion_stability_validated": false,
+  "sim_command": [
+    "/home/qingyul/workspace/SONIC-H2/.venv_sim/bin/python",
+    "gear_sonic/scripts/run_sim_loop.py",
+    "--wbc-version",
+    "h2_native_unitree_ros_loop",
+    "--no-enable-onscreen"
+  ],
+  "deploy_command": [
+    "bash",
+    "-c",
+    "source scripts/setup_env.sh >/dev/null\nexec \"$@\"",
+    "smoke",
+    "./target/release/g1_deploy_onnx_ref",
+    "lo",
+    "/home/qingyul/workspace/SONIC-H2/sonic_h2_native_release/experiments/gpu2_20260907_step012450/model_decoder.onnx",
+    "reference/example_h2/deploy",
+    "--robot-profile",
+    "h2_native",
+    "--encoder-file",
+    "/home/qingyul/workspace/SONIC-H2/sonic_h2_native_release/experiments/gpu2_20260907_step012450/model_encoder_full.onnx",
+    "--obs-config",
+    "policy/release/observation_config_h2_native.yaml",
+    "--input-type",
+    "keyboard",
+    "--output-type",
+    "zmq",
+    "--hand-backend",
+    "none",
+    "--disable-crc-check",
+    "--enable-csv-logs",
+    "--logs-dir",
+    "/home/qingyul/workspace/SONIC-H2/sonic_h2_native_release/experiments/gpu2_20260907_step012450/smoke_supported/deploy"
+  ],
+  "deployment_exit_code": 0,
+  "simulator_exit_code": 0,
+  "realtime": {
+    "scheduler": "absolute_deadline_v1",
+    "max_allowed_lag_ms": 20.0,
+    "valid": true,
+    "failure": null,
+    "time_monotonic_ms": 3942946002.140192,
+    "wall_elapsed_s": 39.293054391629994,
+    "physics_elapsed_s": 39.293,
+    "physics_steps": 39293,
+    "realtime_factor": 0.999998615744415,
+    "lag_ms": 0.054391566663980484,
+    "max_lag_ms": 1.3109510764479637,
+    "step_work_ms_mean": 0.7377740117332949,
+    "viewer_ms_mean": 0.0012498898482143999,
+    "other_ms_mean": 0.0012616337730248473
+  },
+  "signals": {
+    "encoder_input": {
+      "rows": 749,
+      "columns": 1751,
+      "finite": true,
+      "selectors": [
+        0
+      ]
+    },
+    "policy_input": {
+      "rows": 749,
+      "columns": 994,
+      "finite": true
+    },
+    "action": {
+      "rows": 749,
+      "columns": 34,
+      "finite": true
+    },
+    "q": {
+      "rows": 749,
+      "columns": 36,
+      "finite": true
+    },
+    "dq": {
+      "rows": 749,
+      "columns": 36,
+      "finite": true
+    },
+    "base_quat": {
+      "rows": 749,
+      "columns": 9,
+      "finite": true
+    }
+  },
+  "all_h2_demos_loaded": 8,
+  "played_motions": [
+    "forward_lunge_R_001__A359_M"
+  ],
+  "ankle_and_waist_nominal_gains_checked": true
+}

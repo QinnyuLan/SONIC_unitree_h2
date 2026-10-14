@@ -1,0 +1,379 @@
+{
+  "step": 9450,
+  "training_stage": 2,
+  "models": {
+    "model_encoder": {
+      "sha256": "142b7fb729528c2c0f474d656266bac313a703d10021b3759d84f9cd2b72634f",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "encoder_name": "h2",
+        "input_features": "[\"command_multi_future_h2_native_nonflat\", \"motion_anchor_ori_b_mf_nonflat\"]",
+        "global_step": "9450",
+        "checkpoint_sha256": "f5fd50637370077ec9c4dc4d181b9574c7603a60056abd79c8f38a2f65e46521",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        640
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_encoder_full": {
+      "sha256": "a92f1703be9949b44d305997c32b622084a11580dd57e73e827506fee49d0710",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "universal",
+        "observation_contract": "sonic_h2_native_v1",
+        "selector_contract": "sonic_h2_native_full_v1",
+        "selector_slot_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "selector_encoder_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "encoder_name": "h2,teleop,smpl,g1",
+        "input_layout_encoder_names": "[\"g1\", \"teleop\", \"smpl\"]",
+        "tokenizer_feature_aliases": "{\"command_multi_future_h2_native_nonflat\": \"command_multi_future_nonflat\"}",
+        "shared_robot_reference_slot": "selector 0 interprets command_multi_future_nonflat as raw H2; selector 3 interprets it as canonical G1",
+        "global_step": "9450",
+        "checkpoint_sha256": "f5fd50637370077ec9c4dc4d181b9574c7603a60056abd79c8f38a2f65e46521",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        1751
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_decoder": {
+      "sha256": "309572275dd2e44d46c4bf15b22f31a29b8d3a302c66701e4bd77767426259ee",
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "decoder",
+        "encoder_name": "g1_dyn",
+        "observation_contract": "sonic_h2_native_v1",
+        "h2_native_io_folded": "true",
+        "global_step": "9450",
+        "checkpoint_sha256": "f5fd50637370077ec9c4dc4d181b9574c7603a60056abd79c8f38a2f65e46521",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        994
+      ],
+      "output_shape": [
+        1,
+        29
+      ],
+      "onnx_checker": "passed"
+    }
+  },
+  "cpu_trials_per_selector": 5,
+  "cpu_finite_selectors": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "full0_vs_h2_only_max_abs_error": 0.0,
+  "config_changes_since_gpu2_step12450": [
+    {
+      "path": "algo.config.actor.backbone.encoder_source_routes",
+      "previous": null,
+      "current": {
+        "g1": {
+          "selector": "robot_encoder_source",
+          "routes": [
+            "h2",
+            "g1"
+          ],
+          "observation_overrides": {
+            "g1": {
+              "command_multi_future_nonflat": "paired_g1_command_multi_future_nonflat",
+              "motion_anchor_ori_b_mf_nonflat": "paired_g1_motion_anchor_ori_b_mf_nonflat"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "algo.config.actor.backbone.frozen_encoder_routes",
+      "previous": null,
+      "current": [
+        "h2"
+      ]
+    },
+    {
+      "path": "algo.config.actor.backbone.paired_encoder_distillation.enabled",
+      "previous": true,
+      "current": false
+    },
+    {
+      "path": "algo.config.actor.backbone.ppo_detach_encoders",
+      "previous": [
+        "h2"
+      ],
+      "current": []
+    },
+    {
+      "path": "algo.config.actor.has_aux_loss",
+      "previous": true,
+      "current": false
+    },
+    {
+      "path": "algo.config.compute_aux_loss",
+      "previous": true,
+      "current": false
+    },
+    {
+      "path": "algo.config.critic.input_adapter",
+      "previous": null,
+      "current": {
+        "_target_": "gear_sonic.trl.modules.h2_native_critic_adapter.H2NativeCriticAdapter",
+        "num_future_frames": "${manager_env.commands.motion.num_future_frames}",
+        "history_length": "${critic_prop_history_length}",
+        "action_history_length": "${critic_actions_history_length}",
+        "joint_dim": 29,
+        "num_bodies": 14
+      }
+    },
+    {
+      "path": "algo.config.lora_adaptation.freeze_h2_encoder",
+      "previous": null,
+      "current": true
+    },
+    {
+      "path": "algo.config.lora_adaptation.stage_transition_checkpoint",
+      "previous": null,
+      "current": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage1/model_step_002000.pt"
+    },
+    {
+      "path": "algo.config.lora_adaptation.stage_transition_reset_seed",
+      "previous": null,
+      "current": 42
+    },
+    {
+      "path": "algo.config.lora_adaptation.stage_transition_source_step",
+      "previous": null,
+      "current": 2000
+    },
+    {
+      "path": "algo.config.num_learning_iterations",
+      "previous": 100000,
+      "current": 98000
+    },
+    {
+      "path": "algo.config.pretrained_model.allowed_missing_prefixes",
+      "previous": [
+        "actor_module.encoders.h2_reference_adapter",
+        "actor_module.encoders.h2_student",
+        "actor_module.proprioception_adapter",
+        "actor_module.action_adapter"
+      ],
+      "current": [
+        "actor_module.encoders.h2_reference_adapter",
+        "actor_module.encoders.h2_student",
+        "actor_module.proprioception_adapter",
+        "actor_module.action_adapter",
+        "input_adapter."
+      ]
+    },
+    {
+      "path": "algo.trl.num_total_batches",
+      "previous": 100000,
+      "current": 98000
+    },
+    {
+      "path": "algo.trl.output_dir",
+      "previous": "logs_rl/sonic-h2-native-8xA6000-ori/20260906_183110",
+      "current": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage2"
+    },
+    {
+      "path": "exp_var",
+      "previous": 20260906183110,
+      "current": "20260906_204409_stage2"
+    },
+    {
+      "path": "experiment_dir",
+      "previous": "logs_rl/sonic-h2-native-8xA6000-ori/20260906_183110",
+      "current": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage2"
+    },
+    {
+      "path": "experiment_name",
+      "previous": 20260906183110,
+      "current": "20260906_204409_stage2"
+    },
+    {
+      "path": "manager_env.commands.motion.motion_lib_cfg.motion_loader_tmpdir",
+      "previous": "/dev/shm/h2_native_8xa6000_ori",
+      "current": "/dev/shm/h2_native_two_stage_20260906_204409"
+    },
+    {
+      "path": "manager_env.commands.motion.robot_encoder_source_probs",
+      "previous": null,
+      "current": {
+        "h2": 2.0,
+        "g1": 1.0
+      }
+    },
+    {
+      "path": "manager_env.config.critic_observation_contract",
+      "previous": null,
+      "current": "sonic_h2_native_linear_v1"
+    },
+    {
+      "path": "manager_env.config.obs.group_obs_dims.tokenizer.paired_g1_command_multi_future_nonflat",
+      "previous": null,
+      "current": [
+        10,
+        58
+      ]
+    },
+    {
+      "path": "manager_env.config.obs.group_obs_dims.tokenizer.paired_g1_motion_anchor_ori_b_mf_nonflat",
+      "previous": null,
+      "current": [
+        10,
+        6
+      ]
+    },
+    {
+      "path": "manager_env.config.obs.group_obs_dims.tokenizer.robot_encoder_source",
+      "previous": null,
+      "current": [
+        1
+      ]
+    },
+    {
+      "path": "manager_env.config.obs.group_obs_names.tokenizer",
+      "previous": [
+        "encoder_index",
+        "command_multi_future_nonflat",
+        "command_z_multi_future_nonflat",
+        "command_z",
+        "motion_anchor_ori_b",
+        "motion_anchor_ori_b_mf_nonflat",
+        "motion_anchor_ori_heading",
+        "motion_anchor_ori_heading_mf_nonflat",
+        "command_multi_future_lower_body",
+        "vr_3point_local_target",
+        "vr_3point_local_orn_target",
+        "smpl_joints_multi_future_local_nonflat",
+        "smpl_root_ori_b_multi_future",
+        "smpl_root_ori_heading_multi_future",
+        "joint_pos_multi_future_wrist_for_smpl",
+        "command_multi_future_h2_native_nonflat"
+      ],
+      "current": [
+        "encoder_index",
+        "command_multi_future_nonflat",
+        "command_z_multi_future_nonflat",
+        "command_z",
+        "motion_anchor_ori_b",
+        "motion_anchor_ori_b_mf_nonflat",
+        "motion_anchor_ori_heading",
+        "motion_anchor_ori_heading_mf_nonflat",
+        "command_multi_future_lower_body",
+        "vr_3point_local_target",
+        "vr_3point_local_orn_target",
+        "smpl_joints_multi_future_local_nonflat",
+        "smpl_root_ori_b_multi_future",
+        "smpl_root_ori_heading_multi_future",
+        "joint_pos_multi_future_wrist_for_smpl",
+        "command_multi_future_h2_native_nonflat",
+        "robot_encoder_source",
+        "paired_g1_command_multi_future_nonflat",
+        "paired_g1_motion_anchor_ori_b_mf_nonflat"
+      ]
+    },
+    {
+      "path": "manager_env.config.obs.obs_dims.tokenizer",
+      "previous": 2467,
+      "current": 3108
+    },
+    {
+      "path": "manager_env.config.robot.algo_obs_dim_dict.tokenizer",
+      "previous": 2467,
+      "current": 3108
+    },
+    {
+      "path": "manager_env.observations.critic.actions.func",
+      "previous": "gear_sonic.envs.manager_env.mdp:last_action_g1_compat",
+      "current": "gear_sonic.envs.manager_env.mdp:last_action_wo_hand"
+    },
+    {
+      "path": "manager_env.observations.critic.command_multi_future.func",
+      "previous": "gear_sonic.envs.manager_env.mdp:command_multi_future",
+      "current": "gear_sonic.envs.manager_env.mdp:command_multi_future_h2_native"
+    },
+    {
+      "path": "manager_env.observations.critic.joint_pos.func",
+      "previous": "gear_sonic.envs.manager_env.mdp:joint_pos_wo_hand",
+      "current": "gear_sonic.envs.manager_env.mdp:joint_pos_h2_native"
+    },
+    {
+      "path": "manager_env.observations.critic.joint_vel.func",
+      "previous": "gear_sonic.envs.manager_env.mdp:joint_vel_wo_hand",
+      "current": "gear_sonic.envs.manager_env.mdp:joint_vel_h2_native"
+    },
+    {
+      "path": "manager_env.observations.tokenizer.robot_encoder_source",
+      "previous": null,
+      "current": {
+        "_target_": "isaaclab.managers.ObservationTermCfg",
+        "func": "gear_sonic.envs.manager_env.mdp:get_command_obs",
+        "params": {
+          "command_name": "motion",
+          "obs_name": "episode_robot_encoder_source"
+        }
+      }
+    },
+    {
+      "path": "project_name",
+      "previous": "sonic-h2-native-8xA6000-ori",
+      "current": "sonic-h2-native-8xA6000-ori-2"
+    },
+    {
+      "path": "swanlab.group",
+      "previous": "h2-native-8xa6000-ori",
+      "current": "h2-native-two-stage"
+    },
+    {
+      "path": "swanlab.project",
+      "previous": "sonic-h2-native-8xA6000-ori",
+      "current": "sonic-h2-native-8xA6000-ori-2"
+    },
+    {
+      "path": "swanlab.tags",
+      "previous": [
+        "h2-native",
+        "8xA6000",
+        "fresh-release",
+        "g1-smpl-only",
+        "no-teleop",
+        "full-encoder-lora",
+        "h2-aux-only-ppo",
+        "paired-distillation",
+        "real-g1-teacher"
+      ],
+      "current": [
+        "h2-native",
+        "8xA6000",
+        "two-stage",
+        "stage2",
+        "critic-linear"
+      ]
+    },
+    {
+      "path": "training_stage",
+      "previous": null,
+      "current": 2
+    }
+  ]
+}

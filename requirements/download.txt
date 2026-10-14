@@ -1,0 +1,2 @@
+# Isolated downloader environment; not needed for already-present planner weights.
+huggingface-hub==0.36.0

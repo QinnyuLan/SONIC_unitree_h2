@@ -1,0 +1,106 @@
+{
+  "checkpoint": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage2/model_step_070000.pt",
+  "checkpoint_sha256": "64334c3824e1747ce5aafaddcd878c063c11882200d57adba2f7714f0793ab03",
+  "arguments": {
+    "checkpoint": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage2/model_step_070000.pt",
+    "output_dir": "logs_eval/stage2_selection_20260918/smpl_070000",
+    "data_root": "/mnt/nvme1/qingyul/dataset/h2_sonic_train_cache_bones_seed_10M_paired_g1_20260827",
+    "seed": 18,
+    "num_envs": 256,
+    "steps": 1000,
+    "encoder": "smpl",
+    "device": "cuda:0"
+  },
+  "encoder_index": [
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "robot_encoder_source": "h2_only; teacher never selected",
+  "motion_subset_count": 256,
+  "motion_keys_sha256": "88a6d34d346a568624b233aba2bae79b924b2024575d5313ca2e262a159fc36a",
+  "control_dt_s": 0.02,
+  "max_episode_s": 20.0,
+  "executed_sim_steps": 1000,
+  "rollout_wall_s": 110.70213124714792,
+  "completed": 248,
+  "failed": 1,
+  "censored": 7,
+  "completion_fraction": 0.96875,
+  "failure_fraction": 0.00390625,
+  "mean_first_episode_s": 7.049375,
+  "metrics": {
+    "error_anchor_pos": {
+      "unit": "m",
+      "sample_mean": 0.12683736631792109,
+      "motion_mean": 0.12352468686127374,
+      "sample_p50": 0.06486741453409195,
+      "sample_p90": 0.2810958594083786,
+      "motion_mean_p90": 0.28640130010586984
+    },
+    "error_feet_sole_pos_global": {
+      "unit": "m",
+      "sample_mean": 0.12242497845170515,
+      "motion_mean": 0.11961589605961057,
+      "sample_p50": 0.05939299985766411,
+      "sample_p90": 0.28210408091545114,
+      "motion_mean_p90": 0.287145031555452
+    },
+    "error_feet_sole_pos_local": {
+      "unit": "m",
+      "sample_mean": 0.05219676070572996,
+      "motion_mean": 0.05270735575444638,
+      "sample_p50": 0.0448110681027174,
+      "sample_p90": 0.09093726798892021,
+      "motion_mean_p90": 0.07760006589788453
+    },
+    "error_hands_pos_local": {
+      "unit": "m",
+      "sample_mean": 0.05021036501346129,
+      "motion_mean": 0.05174472454619774,
+      "sample_p50": 0.03975261375308037,
+      "sample_p90": 0.09988751262426378,
+      "motion_mean_p90": 0.08187777495185666
+    },
+    "error_body_pos": {
+      "unit": "m",
+      "sample_mean": 0.04007842559599547,
+      "motion_mean": 0.04135678506511424,
+      "sample_p50": 0.032488998025655746,
+      "sample_p90": 0.07604671940207482,
+      "motion_mean_p90": 0.06817335913612241
+    },
+    "error_joint_pos_physical": {
+      "unit": "rad",
+      "sample_mean": 0.09773878651958956,
+      "motion_mean": 0.09948987410705944,
+      "sample_p50": 0.08678153157234192,
+      "sample_p90": 0.16943143308162692,
+      "motion_mean_p90": 0.14104734804417374
+    }
+  },
+  "action_delta_squared_l2_mean": 0.5525603004108011,
+  "policy_state_sha256_before": "2adeb53eb5daa10937205d85761821d0926c9c1ace97672f599514878ffaf37a",
+  "policy_state_sha256_after": "2adeb53eb5daa10937205d85761821d0926c9c1ace97672f599514878ffaf37a",
+  "initial_std_clamp": {
+    "changed_count": 0,
+    "max_abs_change": 0.0
+  },
+  "optimizer_steps": 0,
+  "conditions": {
+    "deterministic_action_mean": true,
+    "events": false,
+    "observation_corruption": false,
+    "reset_noise": false,
+    "adp_sampling": false,
+    "motion_augmentation": false,
+    "fixed_motion_per_env": true,
+    "first_episode_only": true,
+    "metric_boundary": "post_physics_pre_reset; includes terminal state",
+    "terminations": "unchanged from checkpoint training config"
+  },
+  "git_head": "4e4ed1959bdc6985dac83bbbe76ce12e92ff187c",
+  "script_sha256": "f676d284c92d4903b7d35236ce649de944d19348c55095706ceeb9a6d6ce9170"
+}

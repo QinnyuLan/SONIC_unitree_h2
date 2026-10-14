@@ -1,0 +1,7 @@
+H2LoRA Deploy Reference Summary
+====================================
+Schema: h2_lora_deploy_reference_v1
+Motions: 1
+Total frames: 1000
+
+- h2_default_stand: 1000 frames, source=synthetic_h2_default_stand

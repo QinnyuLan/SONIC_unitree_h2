@@ -1,0 +1,23 @@
+Baseline geometry/contact/control model:
+- Source: https://github.com/unitreerobotics/unitree_mujoco
+- Commit: ae6a8403e272733e9996ef59990880330496177f
+- File: unitree_robots/h2/h2_mujoco.xml
+
+Inertial source:
+- Source: https://github.com/unitreerobotics/unitree_ros
+- Commit: d96d8f63ae17a7108d4f7229c00ef875ba7129c9
+- File: robots/h2_description/H2.urdf
+
+Debug exception:
+- all body mass, center of mass, and principal inertia values use Unitree ROS.
+- all body inertial orientations use Unitree ROS except pelvis.
+- pelvis inertial orientation uses Unitree MuJoCo.
+- all other body inertials use Unitree ROS after fixed-joint folding.
+- collision, visual, joints, actuators, and sensors use Unitree MuJoCo.
+
+Regenerate with:
+
+  python3 scripts/build_h2_unitree_mujoco_ros_mass.py \
+    --pelvis-inertial-orientation-source unitree_mujoco \
+    --output gear_sonic/data/assets/robot_description/unitree_mujoco/h2_ros_mass_debug/h2_mujoco.xml \
+    --report gear_sonic/data/assets/robot_description/unitree_mujoco/h2_ros_mass_debug/inertial_alignment.csv

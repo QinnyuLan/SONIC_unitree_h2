@@ -1,0 +1,154 @@
+{
+  "motion_name": "arms_overhead_straight",
+  "source_key": "arms_overhead_straight",
+  "fps": 50,
+  "frames": 300,
+  "encoder_mode": 2,
+  "joint_space": "g1_semantic_29d_vr_wrist_targets_only",
+  "source_joint_space": "original_pose_streamer_smpl_fk",
+  "template_motion": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/example_h2/deploy/forward_lunge_R_001__A359_M",
+  "template_frame": 0,
+  "joint_pos_shape": [
+    300,
+    29
+  ],
+  "h2_joint_pos_shape": [
+    300,
+    31
+  ],
+  "body_quat_format": "wxyz",
+  "body_count": 1,
+  "smpl": {
+    "synthetic": true,
+    "kinematically_consistent": true,
+    "smpl_joint_shape": [
+      300,
+      24,
+      3
+    ],
+    "smpl_pose_shape": [
+      300,
+      21,
+      3
+    ],
+    "smpl_root_quat_shape": [
+      300,
+      4
+    ],
+    "smpl_joint_frame": "z_up_pelvis_centered_world_oriented_no_translation",
+    "smpl_root_quat_format": "runtime_wxyz_after_yup_to_zup_and_remove_base_rot",
+    "wrist_targets": [
+      -1.2150177955627441,
+      1.1951502561569214,
+      0.6487091183662415,
+      0.7537938356399536,
+      0.0477462038397789,
+      -0.2577601969242096
+    ],
+    "geometry": {
+      "target_direction_local": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "smpl_root_quat_wxyz": [
+        0.7071067690849304,
+        0.0,
+        0.0,
+        -0.7071067690849304
+      ],
+      "sides": {
+        "left": {
+          "segment_directions": [
+            [
+              0.0001278443814953789,
+              2.7122723622596823e-05,
+              1.0
+            ],
+            [
+              0.00010728400957304984,
+              7.44864246371435e-06,
+              1.0
+            ],
+            [
+              -2.8450215268094325e-06,
+              -7.468181138392538e-06,
+              1.0
+            ]
+          ],
+          "segment_lengths_m": [
+            0.26755666732788086,
+            0.253065824508667,
+            0.1047525405883789
+          ],
+          "elbow_angle_deg": 180.0,
+          "shoulder_local": [
+            -0.047292426228523254,
+            0.1127564087510109,
+            0.48625755310058594
+          ],
+          "elbow_local": [
+            -0.04725822061300278,
+            0.1127636656165123,
+            0.7538142204284668
+          ],
+          "wrist_local": [
+            -0.04723107069730759,
+            0.11276555061340332,
+            1.0068800449371338
+          ],
+          "thumb_local": [
+            -0.047231368720531464,
+            0.11276476830244064,
+            1.1116325855255127
+          ]
+        },
+        "right": {
+          "segment_directions": [
+            [
+              -0.00011967188765993342,
+              -8.944898013396596e-07,
+              1.0
+            ],
+            [
+              -0.00010824850323842838,
+              -7.785301932017319e-06,
+              1.0
+            ],
+            [
+              -3.434773589106044e-06,
+              7.44200951885432e-06,
+              1.0
+            ]
+          ],
+          "segment_lengths_m": [
+            0.2748708426952362,
+            0.24977856874465942,
+            0.10411977767944336
+          ],
+          "elbow_angle_deg": 180.0,
+          "shoulder_local": [
+            -0.04498860239982605,
+            -0.10926901549100876,
+            0.4763253629207611
+          ],
+          "elbow_local": [
+            -0.04502149671316147,
+            -0.10926926136016846,
+            0.7511962056159973
+          ],
+          "wrist_local": [
+            -0.045048534870147705,
+            -0.10927120596170425,
+            1.0009747743606567
+          ],
+          "thumb_local": [
+            -0.04504889249801636,
+            -0.10927043110132217,
+            1.1050945520401
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "released",
+  "training_method": "full_finetune",
+  "actor_observation_contract": "sonic_h2_native_v1",
+  "reference_orientation_contract": "sonic_full_root_relative_v0",
+  "selector_encoder_names": [
+    "h2",
+    "teleop",
+    "smpl",
+    "g1"
+  ],
+  "model_sha256": {
+    "model_encoder_full": "c0938bb3da2f9b10d3e3a518ede0fd5d77b5c4c23a7fbc3c6c2fcddbf1cbac48",
+    "model_encoder": "6c9d7536726237eb889162b3b3b6ea410bf891eb5b9fc16b5c2e1edbabc4bfba",
+    "model_decoder": "6d44817fc666d83537df0caac13a8d46fb1574f0283bdb7e7b9f12e839474433"
+  },
+  "onnx_check": {
+    "model_decoder.onnx": {
+      "inputs": [
+        [
+          "obs_dict",
+          1,
+          994
+        ]
+      ],
+      "outputs": [
+        [
+          "action",
+          1,
+          29
+        ]
+      ]
+    },
+    "model_encoder.onnx": {
+      "inputs": [
+        [
+          "obs_dict",
+          1,
+          640
+        ]
+      ],
+      "outputs": [
+        [
+          "encoded_tokens",
+          1,
+          64
+        ]
+      ]
+    },
+    "model_encoder_full.onnx": {
+      "inputs": [
+        [
+          "obs_dict",
+          1,
+          1751
+        ]
+      ],
+      "outputs": [
+        [
+          "encoded_tokens",
+          1,
+          64
+        ]
+      ]
+    }
+  },
+  "note": "Native H2 inputs and outputs. No merge step is required. ONNX bytes preserved; display name is released."
+}

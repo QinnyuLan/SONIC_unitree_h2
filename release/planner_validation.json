@@ -1,0 +1,23 @@
+{
+  "planner_local_path": "gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx",
+  "repository": "nvidia/GEAR-SONIC",
+  "revision": "72935a37d3860204617ebaaf6c855a1c5aff7b8c",
+  "sha256": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",
+  "bytes": 773952989,
+  "local_matches_upstream_metadata": true,
+  "checks_passed": [
+    "local planner checksum",
+    "already present planner skips network and dependency installation",
+    "mock Hub download preserves pinned revision",
+    "mock corrupt download does not replace existing file",
+    "mock network failure does not replace existing file",
+    "temporary download files cleaned up",
+    "missing optional planner passes preflight",
+    "missing required planner fails preflight",
+    "corrupt local planner fails preflight",
+    "three deployment entry points print commands",
+    "published files contain no LFS pointers or files >= 100 MiB",
+    "fresh local ordinary Git clone passes base checks; missing planner prompts download; all deployment paths resolve; working tree stays clean"
+  ],
+  "limits": "Planner download failure paths used a mocked Hub; official metadata and existing complete local weight were verified. No robot or interactive simulator was started."
+}

@@ -1,0 +1,7 @@
+H2-native Direct Reference Summary
+==================================
+Encoder mode: 0 (h2_native)
+Motions: 1
+Total frames: 1000
+
+- h2_stand_arms_forward_straight: static stand, straight arms along +X

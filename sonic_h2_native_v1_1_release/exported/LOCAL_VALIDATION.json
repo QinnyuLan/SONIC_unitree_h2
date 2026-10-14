@@ -1,0 +1,37 @@
+{
+  "export_id": "deployment_step_016150_cpu_fully_folded",
+  "checkpoint_step": 16150,
+  "source": "sky@120.79.230.50:6022",
+  "exported_at": "2026-09-02T13:34:12",
+  "actor_observation_contract": "sonic_h2_native_v1",
+  "reference_orientation_contract": "sonic_robot_heading_v1",
+  "models": {
+    "encoder_sha256": "fb441324ac9e54499265665237c4b0e5ef75ea5d53195cac89c80d77c9c1551b",
+    "decoder_sha256": "8568f58903685e492e2780ccdecd2b11aa415bebbce3b386cecd23c9d1a43513",
+    "encoder_shape": "[1,1751] -> [1,64]",
+    "decoder_shape": "[1,994] -> [1,29]"
+  },
+  "local_validation": {
+    "download_sha256_match": true,
+    "release_alias_contract_match": true,
+    "cpp_build_passed": true,
+    "onnx_shape_and_metadata_validation_passed": true,
+    "tensorrt_clean_rebuild_passed": true,
+    "simulator_profile": "h2_native_unitree_ros_loop",
+    "simulator_onscreen": false,
+    "mujoco_floor_friction": [1.2, 0.005, 0.0001],
+    "h2_native_sidecars_checkpoint_step": 16150,
+    "h2_native_encoder_sidecar_sha256": "2dcf5bc3df1bcff5203d88b9d2be24d09d9b9fdcad4f798d69b3dfdd63f72b8a",
+    "h2_native_decoder_sidecar_sha256": "8568f58903685e492e2780ccdecd2b11aa415bebbce3b386cecd23c9d1a43513",
+    "h2_native_encoder_sidecar_shape": "[1,640] -> [1,64]",
+    "reference_dataset": "h2_soma_full_g1_smpl_source_ik_fixed_20260827",
+    "reference_motions_loaded": 8,
+    "reference_motions_control_window_passed": 1,
+    "fully_completed_motions": [
+      "forward_lunge_R_001__A359_M"
+    ],
+    "h2_reference_selector_0_control_passed": true,
+    "deploy_clean_shutdown_passed": true,
+    "simulator_clean_shutdown_passed": true
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "logging": {
+    "dt": 0.02,
+    "num_joints": 29,
+    "num_actions": 29,
+    "ring_capacity": 10000
+  },
+  "robot_config": {
+    "command_motor_count": 31,
+    "control_frequency": 50,
+    "encoder_file": "../sonic_h2_native_release/versions/h2_stage2_070000_20260918/model_encoder_full.onnx",
+    "h2_ankle_pitch_kd_scale": 1,
+    "h2_ankle_pitch_kp_scale": 1,
+    "h2_ankle_roll_kp_scale": 1,
+    "h2_left_ankle_pitch_kp_scale": 1.39999998,
+    "h2_left_knee_pitch_kp_scale": 1.29999995,
+    "h2_right_ankle_pitch_kp_scale": 1.60000002,
+    "h2_right_knee_pitch_kp_scale": 1.29999995,
+    "h2_vr_head_control": false,
+    "h2_waist_pitch_kp_scale": 1,
+    "h2_waist_roll_kp_scale": 1,
+    "is_using_encoder": true,
+    "model_path": "../sonic_h2_native_release/versions/h2_stage2_070000_20260918/model_decoder.onnx",
+    "obs_config_path": "policy/release/observation_config_h2_native.yaml",
+    "planner_encoder_mode": 3,
+    "planner_fp16": false,
+    "planner_frequency": 10,
+    "planner_path": "none",
+    "policy_action_dim": 29,
+    "policy_fp16": false,
+    "project_h2_lora_planner_reference": true,
+    "project_h2_native_planner_reference": false,
+    "reference_motion_path": "reference/example_g1_explore",
+    "robot_profile": "h2_native"
+  }
+}

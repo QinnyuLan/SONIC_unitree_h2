@@ -1,0 +1,44 @@
+{
+  "motion_name": "squat_001__A359",
+  "source_key": "squat_001__A359",
+  "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/squat_001__A359.csv",
+  "source_smpl_pkl": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/example_smpl_h2/source_smpl/squat_001__A359.pkl",
+  "fps": 50,
+  "frames": 425,
+  "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+  "source_joint_space": "h2_physical_31d_mujoco",
+  "joint_pos_shape": [
+    425,
+    29
+  ],
+  "h2_joint_pos_shape": [
+    425,
+    31
+  ],
+  "body_quat_format": "wxyz",
+  "body_count": 1,
+  "smpl": {
+    "source_key": "squat_001__A359",
+    "source_path": "gear_sonic_deploy/reference/example_smpl_h2/source_smpl/squat_001__A359.pkl",
+    "smpl_joint_shape": [
+      425,
+      24,
+      3
+    ],
+    "source_smpl_joint_frames": 424,
+    "smpl_pose_shape": [
+      425,
+      21,
+      3
+    ],
+    "source_smpl_pose_frames": 424,
+    "smpl_root_quat_shape": [
+      425,
+      4
+    ],
+    "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+  },
+  "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/230509/squat_001__A359.csv",
+  "source_csv_sha256": "90f8c6e8d58966978f715771ec5fbaa5e40229d0bb431f025a22353260b30431",
+  "reference_type": "smpl"
+}

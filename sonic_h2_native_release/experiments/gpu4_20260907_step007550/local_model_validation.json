@@ -1,0 +1,131 @@
+{
+  "step": 7550,
+  "models": {
+    "model_encoder": {
+      "sha256": "d968ecb86d76d8669ee0a9ee3670fe3725c694efdf49f9d9cd7e18dbe7b47844",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "h2_native",
+        "observation_contract": "sonic_h2_native_v1",
+        "encoder_name": "h2",
+        "input_features": "[\"command_multi_future_h2_native_nonflat\", \"motion_anchor_ori_b_mf_nonflat\"]",
+        "global_step": "7550",
+        "checkpoint_sha256": "d29ea506f1d741ad1494044cc9780755d29076687b45af7ef6a2a2ee38b20879",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        640
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_encoder_full": {
+      "sha256": "6f407439345486f88cf9b43f3125fccf7e183f7cddbfec12ed1a2a60dabbff63",
+      "metadata": {
+        "model_role": "encoder",
+        "policy_interface": "universal",
+        "observation_contract": "sonic_h2_native_v1",
+        "selector_contract": "sonic_h2_native_full_v1",
+        "selector_slot_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "selector_encoder_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "encoder_name": "h2,teleop,smpl,g1",
+        "input_layout_encoder_names": "[\"g1\", \"teleop\", \"smpl\"]",
+        "tokenizer_feature_aliases": "{\"command_multi_future_h2_native_nonflat\": \"command_multi_future_nonflat\"}",
+        "shared_robot_reference_slot": "selector 0 interprets command_multi_future_nonflat as raw H2; selector 3 interprets it as canonical G1",
+        "global_step": "7550",
+        "checkpoint_sha256": "d29ea506f1d741ad1494044cc9780755d29076687b45af7ef6a2a2ee38b20879",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        1751
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "onnx_checker": "passed"
+    },
+    "model_decoder": {
+      "sha256": "3e97481ae1ffe76877d8ce15dd651e894c7b02ff3800f67d21eeaf7d4f33bc21",
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "decoder",
+        "encoder_name": "g1_dyn",
+        "observation_contract": "sonic_h2_native_v1",
+        "h2_native_io_folded": "true",
+        "global_step": "7550",
+        "checkpoint_sha256": "d29ea506f1d741ad1494044cc9780755d29076687b45af7ef6a2a2ee38b20879",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "input_shape": [
+        1,
+        994
+      ],
+      "output_shape": [
+        1,
+        29
+      ],
+      "onnx_checker": "passed"
+    }
+  },
+  "cpu_trials_per_selector": 5,
+  "cpu_finite_selectors": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "full0_vs_h2_only_max_abs_error": 0.0,
+  "config_changes_since_step1500": [
+    {
+      "path": "algo.config.num_mini_batches",
+      "previous": 13,
+      "current": 8
+    },
+    {
+      "path": "algo.config.resume_reset_episode_statistics",
+      "previous": false,
+      "current": true
+    },
+    {
+      "path": "algo.config.world_size",
+      "previous": 4,
+      "current": 3
+    },
+    {
+      "path": "algo.trl.per_device_train_batch_size",
+      "previous": 1024,
+      "current": 512
+    },
+    {
+      "path": "checkpoint",
+      "previous": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-3xpro6000-ori/20260906_003658/model_step_001250.pt",
+      "current": "/home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-3xpro6000-ori/20260906_003658/model_step_003250.pt"
+    },
+    {
+      "path": "manager_env.commands.motion.motion_lib_cfg.distributed_data_sharding.num_shards",
+      "previous": 4,
+      "current": 3
+    },
+    {
+      "path": "manager_env.commands.motion.motion_lib_cfg.motion_loader_tmpdir",
+      "previous": "/dev/shm/h2_native_4xpro6000_full_lora_auxonly",
+      "current": "/dev/shm/h2_native_3xpro6000_full_lora_auxonly"
+    },
+    {
+      "path": "num_envs",
+      "previous": 13312,
+      "current": 4096
+    },
+    {
+      "path": "num_gpus",
+      "previous": 4,
+      "current": 3
+    }
+  ]
+}

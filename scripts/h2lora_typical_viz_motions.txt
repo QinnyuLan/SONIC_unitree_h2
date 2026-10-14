@@ -1,0 +1,11 @@
+# One item per line: motion_key[:encoder].
+# The checkpoint watcher reloads this file before each checkpoint visualization,
+# so this list can be edited without stopping the training run.
+walk_forward_stop_001__A039:g1
+walk_forward_stop_001__A039:smpl
+jog_forward_loop_002__A037_M:g1
+jog_forward_loop_002__A037_M:smpl
+turn_walk_360_001__A149_M:g1
+turn_walk_360_001__A149_M:smpl
+hurry_idle_loop_004__A146_M:g1
+hurry_idle_loop_004__A146_M:smpl

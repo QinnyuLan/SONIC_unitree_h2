@@ -1,0 +1,4 @@
+# Overlay for h2_native_sonic_unitree_ros_loop.yaml.
+# Only the pelvis quaternion published through LowState is biased; the MuJoCo
+# model, dynamics, contacts, odometry, torso IMU, and control chain stay intact.
+PELVIS_IMU_PITCH_BIAS_DEG: 1.0

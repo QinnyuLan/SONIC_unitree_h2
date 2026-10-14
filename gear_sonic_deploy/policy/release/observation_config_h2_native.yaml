@@ -1,0 +1,66 @@
+observations:
+  - name: "token_state"
+    enabled: true
+  - name: "his_base_angular_velocity_10frame_step1"
+    enabled: true
+  - name: "his_body_joint_positions_10frame_step1"
+    enabled: true
+  - name: "his_body_joint_velocities_10frame_step1"
+    enabled: true
+  - name: "his_last_actions_10frame_step1"
+    enabled: true
+  - name: "his_gravity_dir_10frame_step1"
+    enabled: true
+
+encoder:
+  dimension: 64
+  use_fp16: false
+  encoder_observations:
+    - name: "encoder_index"
+      enabled: true
+    - name: "h2_native_reference"
+      enabled: true
+    - name: "motion_anchor_ori_b"
+      enabled: true
+    - name: "motion_anchor_ori_b_mf_nonflat"
+      enabled: true
+    - name: "command_multi_future_lower_body"
+      enabled: true
+    - name: "vr_3point_local_target"
+      enabled: true
+    - name: "vr_3point_local_orn_target"
+      enabled: true
+    - name: "smpl_joints_multi_future_local_nonflat"
+      enabled: true
+    - name: "smpl_root_ori_b_multi_future"
+      enabled: true
+    - name: "joint_pos_multi_future_wrist_for_smpl"
+      enabled: true
+  encoder_modes:
+    - name: "h2_native"
+      mode_id: 0
+      required_observations:
+        - encoder_index
+        - h2_native_reference
+        - motion_anchor_ori_b_mf_nonflat
+    - name: "teleop"
+      mode_id: 1
+      required_observations:
+        - encoder_index
+        - command_multi_future_lower_body
+        - vr_3point_local_target
+        - vr_3point_local_orn_target
+        - motion_anchor_ori_b
+    - name: "smpl"
+      mode_id: 2
+      required_observations:
+        - encoder_index
+        - smpl_joints_multi_future_local_nonflat
+        - smpl_root_ori_b_multi_future
+        - joint_pos_multi_future_wrist_for_smpl
+    - name: "g1"
+      mode_id: 3
+      required_observations:
+        - encoder_index
+        - h2_native_reference
+        - motion_anchor_ori_b_mf_nonflat

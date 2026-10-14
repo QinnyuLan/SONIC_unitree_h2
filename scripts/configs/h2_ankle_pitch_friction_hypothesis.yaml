@@ -1,0 +1,13 @@
+# OFFLINE DIAGNOSTIC ONLY. Not a validated hardware parameter set.
+# Fit on +/-6 deg, 0.25 Hz, Kp=40, Kd=2, unloaded ready-pose sweeps.
+# Values ADD to the official output-pitch joint frictionloss (0.2 Nm).
+# Other official motor/linkage losses remain unchanged.
+# hard_friction changes only pitch friction solver parameters to reduce creep:
+# solref=[max(2*dt, 0.002), 1], solimp=[0.999, 0.999, 0.001, 0.5, 2].
+# It does not change PD gains, commands, transmission, inertia or floor friction.
+left:
+  frictionloss_add_nm: 0.6
+  hard_friction: true
+right:
+  frictionloss_add_nm: 1.6
+  hard_friction: true

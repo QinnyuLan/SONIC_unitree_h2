@@ -1,0 +1,12 @@
+Metadata for: macarena_001__A545
+==============================
+
+Body part indexes:
+[0]
+
+Total timesteps: 1376
+FPS: 50
+Deploy source: h2_lora
+Reference joint space: g1_semantic_29d_from_h2_physical_headless
+Source robot CSV: /mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545.csv
+Source SMPL: gear_sonic_deploy/reference/example_h2/smpl-x/uniform/240529/macarena_001__A545.npz

@@ -1,0 +1,80 @@
+{
+  "step": 20000,
+  "models": {
+    "model_encoder": {
+      "sha256": "80d16e85dcfb4b34a556569c6140d851227b12ec841b508b6cfdda649bf8be44",
+      "input_shape": [
+        1,
+        640
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "encoder",
+        "encoder_name": "h2",
+        "h2_native_io_folded": "false",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "onnx_checker": "passed"
+    },
+    "model_encoder_full": {
+      "sha256": "200d4cbb043a36c8b6e106c2e72059c0625f4a4c5d2ae1b74246025c68d810fd",
+      "input_shape": [
+        1,
+        1751
+      ],
+      "output_shape": [
+        1,
+        64
+      ],
+      "metadata": {
+        "policy_interface": "universal",
+        "model_role": "encoder",
+        "encoder_name": "h2,teleop,smpl,g1",
+        "selector_contract": "sonic_h2_native_full_v1",
+        "selector_slot_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "selector_encoder_names": "[\"h2\", \"teleop\", \"smpl\", \"g1\"]",
+        "selector_branch_frozen": "[false, true, true, true]",
+        "tokenizer_feature_aliases": "{\"command_multi_future_h2_native_nonflat\": \"command_multi_future_nonflat\"}",
+        "h2_native_io_folded": "false",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "onnx_checker": "passed"
+    },
+    "model_decoder": {
+      "sha256": "994addb6272e82a0a4b3edfe4dd73c56840600b097fa3656cb1f29ccf64adcb4",
+      "input_shape": [
+        1,
+        994
+      ],
+      "output_shape": [
+        1,
+        29
+      ],
+      "metadata": {
+        "policy_interface": "h2_native",
+        "model_role": "decoder",
+        "encoder_name": "g1_dyn",
+        "h2_native_io_folded": "true",
+        "observation_contract": "sonic_h2_native_v1",
+        "reference_orientation_contract": "sonic_full_root_relative_v0"
+      },
+      "onnx_checker": "passed"
+    }
+  },
+  "cpu_trials_per_selector": 5,
+  "cpu_finite_selectors": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "full0_vs_h2_only_max_abs_error": 0.0,
+  "deployment_config_differences_from_step25400": {},
+  "deployment_config_fields_compared": 13
+}

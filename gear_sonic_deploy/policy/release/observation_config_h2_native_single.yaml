@@ -1,0 +1,29 @@
+# H2-only non-v1.1 encoder contract: 580D H2 reference plus 60D anchor history.
+observations:
+  - name: "token_state"
+    enabled: true
+  - name: "his_base_angular_velocity_10frame_step1"
+    enabled: true
+  - name: "his_body_joint_positions_10frame_step1"
+    enabled: true
+  - name: "his_body_joint_velocities_10frame_step1"
+    enabled: true
+  - name: "his_last_actions_10frame_step1"
+    enabled: true
+  - name: "his_gravity_dir_10frame_step1"
+    enabled: true
+
+encoder:
+  dimension: 64
+  use_fp16: false
+  encoder_observations:
+    - name: "h2_native_reference"
+      enabled: true
+    - name: "motion_anchor_ori_b_mf_nonflat"
+      enabled: true
+  encoder_modes:
+    - name: "h2_native"
+      mode_id: 0
+      required_observations:
+        - h2_native_reference
+        - motion_anchor_ori_b_mf_nonflat

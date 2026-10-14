@@ -1,0 +1,17 @@
+Metadata for: jump_twice_R_002__A533
+==============================
+
+Body part indexes:
+[0 4 10 18 5 11 19 9 16 22 28 17 23 29]
+
+Total timesteps: 165
+FPS: 50
+Reference type: g1
+Encoder mode: 3
+Joint order: G1_ISAACLab_ORDER (29 native G1 joints)
+Quaternion order: wxyz
+Units: m, rad, m/s, rad/s
+Source CSV: /home/qingyul/Datasets/bones_seed/g1/csv/240327/jump_twice_R_002__A533.csv
+Source SHA256: 6629e6fb17ab5f199e17630804f51092b15228b510f656bf50580940dd429e96
+Source sample rate: 120 Hz
+Endpoint standing check: passed (13 frames at each end)

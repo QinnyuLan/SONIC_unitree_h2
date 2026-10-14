@@ -1,0 +1,3 @@
+numpy==1.26.4
+onnx==1.23.2
+onnxruntime==1.23.2

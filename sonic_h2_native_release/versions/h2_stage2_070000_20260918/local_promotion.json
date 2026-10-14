@@ -1,0 +1,17 @@
+{
+  "promoted_at": "2026-09-18T18:14:53.997644+08:00",
+  "global_step": 70000,
+  "training_stage": 2,
+  "source_server": "qingyul@gpu3.precognition.team",
+  "source_archive": "/home/qingyul/workspace/sonic_transfer/models/h2_stage2_070000_20260918.tar.gz",
+  "archive_sha256": "0d4b7db6be40a86454f61e95932dca340d79a7223f594de393d3398d5cb84ffb",
+  "version_directory": "/home/qingyul/workspace/SONIC-H2/sonic_h2_native_release/versions/h2_stage2_070000_20260918",
+  "previous_default_backup": "/home/qingyul/workspace/SONIC-H2/sonic_h2_native_release/exported/backup_before_stage2_step070000_20260918_181453",
+  "models": {
+    "model_decoder": "1dd42628187c3d1e67dab3d1150ac40926602c5a3a031588dd71690c2cb1d3bd",
+    "model_encoder": "1f3d3b3942c04d7d06b2ccdcc4bd7eded4dc92b7b374e0118afa6ce8b4a0f99c",
+    "model_encoder_full": "86d43c14c65856cc44c90b5abd5f37e5ced8762e0da4e3ec7eea9713250747a7"
+  },
+  "hardware_executed": false,
+  "validation_scope": "CPU four selectors, local compiled runtime constants, supported loopback H2 and G1 reference tests; free-standing not validated"
+}

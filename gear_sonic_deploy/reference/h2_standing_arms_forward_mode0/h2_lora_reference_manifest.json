@@ -1,0 +1,128 @@
+{
+  "schema": "h2_lora_deploy_reference_v1",
+  "description": "Static H2-native mode-0 standing reference with straight forward arms.",
+  "motion_root": null,
+  "smpl_root": null,
+  "output_dir": "gear_sonic_deploy/reference/h2_standing_arms_forward_mode0",
+  "fps": 50,
+  "num_motions": 1,
+  "total_frames": 1000,
+  "motions": [
+    {
+      "motion_name": "h2_stand_arms_forward_straight",
+      "source_key": "h2_stand_arms_forward_straight",
+      "source_robot_pkl": null,
+      "source_smpl_pkl": null,
+      "fps": 50,
+      "frames": 1000,
+      "encoder_mode": 0,
+      "robot_profile": "h2_native",
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco",
+      "joint_pos_shape": [
+        1000,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        1000,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": null,
+      "h2_joint_angles": [
+        -0.31200000643730164,
+        0.0,
+        0.0,
+        0.6690000295639038,
+        0.0,
+        -0.3630000054836273,
+        -0.31200000643730164,
+        0.0,
+        0.0,
+        0.6690000295639038,
+        0.0,
+        -0.3630000054836273,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.562792181968689,
+        0.10740987211465836,
+        -2.206921339035034,
+        1.647625207901001,
+        0.0,
+        0.0,
+        0.0,
+        -1.562792181968689,
+        -0.10740987211465836,
+        2.206921339035034,
+        1.647625207901001,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_pos": [
+        0.0,
+        0.0,
+        1.0399999618530273
+      ],
+      "root_quat_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometry": {
+        "left": {
+          "shoulder_xyz": [
+            0.0030848,
+            0.11,
+            0.483117
+          ],
+          "elbow_xyz": [
+            0.26837841726822825,
+            0.11000000070858129,
+            0.4831169994255494
+          ],
+          "wrist_xyz": [
+            0.50820915395741,
+            0.11000000140507593,
+            0.483116999273269
+          ],
+          "shoulder_to_wrist_direction": [
+            1.0,
+            2.781643608344977e-09,
+            -1.4387170268288767e-09
+          ],
+          "elbow_internal_angle_deg": 180.0
+        },
+        "right": {
+          "shoulder_xyz": [
+            0.0030848,
+            -0.11,
+            0.483117
+          ],
+          "elbow_xyz": [
+            0.26837841726822825,
+            -0.11000000070858129,
+            0.4831169994255494
+          ],
+          "wrist_xyz": [
+            0.50820915395741,
+            -0.11000000140507593,
+            0.483116999273269
+          ],
+          "shoulder_to_wrist_direction": [
+            1.0,
+            -2.781643608344977e-09,
+            -1.4387170268288767e-09
+          ],
+          "elbow_internal_angle_deg": 180.0
+        }
+      },
+      "note": "Static H2-native mode-0 reference; no SMPL encoder input is present."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+# All published files use ordinary Git; downloaded/local-only assets are ignored.
+# Preserve the exact bytes of released models and native libraries.
+*.onnx -text
+*.a -text
+*.so* -text
+*.npz -text
+*.pkl -text
+*.deb -text

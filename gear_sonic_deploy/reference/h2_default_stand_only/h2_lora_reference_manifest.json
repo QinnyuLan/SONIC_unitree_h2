@@ -1,0 +1,79 @@
+{
+  "schema": "h2_lora_deploy_reference_v1",
+  "description": "Synthetic H2 default-stand reference for H2LoRA real deploy diagnostics.",
+  "motion_root": null,
+  "smpl_root": null,
+  "output_dir": "gear_sonic_deploy/reference/h2_default_stand_only",
+  "fps": 50,
+  "num_motions": 1,
+  "total_frames": 1000,
+  "motions": [
+    {
+      "motion_name": "h2_default_stand",
+      "reference_type": "h2",
+      "source_key": "h2_default_stand",
+      "source_robot_pkl": null,
+      "source_smpl_pkl": null,
+      "fps": 50,
+      "frames": 1000,
+      "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+      "source_joint_space": "h2_physical_31d_mujoco_default_pose",
+      "joint_pos_shape": [
+        1000,
+        29
+      ],
+      "h2_joint_pos_shape": [
+        1000,
+        31
+      ],
+      "body_quat_format": "wxyz",
+      "body_count": 1,
+      "smpl": null,
+      "h2_default_angles": [
+        -0.312,
+        0.0,
+        0.0,
+        0.669,
+        0.0,
+        -0.363,
+        -0.312,
+        0.0,
+        0.0,
+        0.669,
+        0.0,
+        -0.363,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        0.2,
+        0.0,
+        0.6,
+        0.0,
+        0.0,
+        0.0,
+        0.2,
+        -0.2,
+        0.0,
+        0.6,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_pos": [
+        0.0,
+        0.0,
+        1.04
+      ],
+      "root_quat_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "note": "Synthetic H2LoRA nominal default stand generated from deploy policy_parameters.hpp."
+    }
+  ]
+}

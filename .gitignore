@@ -1,0 +1,55 @@
+# Generated Python environments, caches and build products
+.venv*/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
+build/
+target/
+dist/
+*.o
+*.trt
+*.engine
+
+# Runtime recordings and local outputs
+logs/
+logs_rl/
+logs_eval/
+outputs/
+recordings/
+teleop_vids/
+*.log
+MUJOCO_LOG.TXT
+
+# Local editor and machine settings
+.DS_Store
+.idea/
+.vscode/
+*.code-workspace
+.env
+.env.local
+
+# Rebuild the Python binding for the target machine (native SDK libraries are included).
+xrobotoolkit_sdk.cpython-*-*-*.so
+
+# Optional MotionBricks training weights were unresolved LFS pointers in the source.
+# They are not consumed by the released sim2sim, sim2real or VR entry points.
+/motionbricks/out/**/*.ckpt
+
+# The shared G1 planner is kept locally; fetch it with download_from_hf.py --planner-only.
+/gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
+/gear_sonic_deploy/planner/target_vel/V2/.planner_sonic.onnx.*.part
+
+# Optional assets exceeding GitHub's 100 MiB per-file limit. Keep local copies.
+# None is required by the three released H2 deployment entry points.
+/sonic_h2_native_v1_1_release/exported/model_decoder.onnx
+/sonic_h2_native_v1_1_release/exported/model_decoder_h2_native.onnx
+/gear_sonic/data/robots/g1/g1_43dof_s3.usda
+/data/body_models/smplx/SMPLX_NEUTRAL.npz
+
+# Source directories named data/ and models/, released ONNX models and runtime
+# robot assets are intentionally tracked with ordinary Git.

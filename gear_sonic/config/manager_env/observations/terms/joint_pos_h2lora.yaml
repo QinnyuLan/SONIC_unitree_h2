@@ -1,0 +1,7 @@
+joint_pos:
+  _target_: isaaclab.managers.ObservationTermCfg
+  func: gear_sonic.envs.manager_env.mdp:joint_pos_wo_hand
+  params:
+    asset_cfg:
+      _target_: isaaclab.managers.SceneEntityCfg
+      name: "robot"

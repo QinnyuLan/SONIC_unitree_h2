@@ -1,0 +1,12 @@
+H2LoRA Deploy Reference Summary
+====================================
+Schema: h2_lora_deploy_reference_v1
+Motions: 6
+Total frames: 2805
+
+- idle_one_foot_left_003__A043: 970 frames, source=/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/220728/idle_one_foot_left_003__A043.pkl
+- idle_one_foot_right_002__A040: 710 frames, source=/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/220727/idle_one_foot_right_002__A040.pkl
+- kneeling_start_003__A167_M: 162 frames, source=/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/230201/kneeling_start_003__A167_M.pkl
+- kneeling_stop_003__A167_M: 289 frames, source=/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/230201/kneeling_stop_003__A167_M.pkl
+- jump_and_land_light_002__A001: 437 frames, source=/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/210531/jump_and_land_light_002__A001.pkl
+- one_leg_jumping_R_001__A361: 237 frames, source=/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/extreme_h2/motionlib/robot/230509/one_leg_jumping_R_001__A361.pkl

@@ -1,0 +1,110 @@
+{
+  "dds_domain": 73,
+  "interface": "lo",
+  "elastic_band_enabled": true,
+  "headless": true,
+  "full_free_motion_stability_validated": false,
+  "sim_command": [
+    "/home/qingyul/workspace/SONIC-H2/.venv_sim/bin/python",
+    "gear_sonic/scripts/run_sim_loop.py",
+    "--wbc-version",
+    "h2_native_unitree_ros_loop",
+    "--no-enable-onscreen",
+    "--visual-style",
+    "paper"
+  ],
+  "deploy_command": [
+    "bash",
+    "-c",
+    "source scripts/setup_env.sh >/dev/null\nexec \"$@\"",
+    "smoke",
+    "./deploy.sh",
+    "--robot-profile",
+    "h2_native",
+    "--encoder-file",
+    "../sonic_h2_native_release/versions/h2_stage2_070000_20260918/model_encoder_full.onnx",
+    "--decoder-file",
+    "../sonic_h2_native_release/versions/h2_stage2_070000_20260918/model_decoder.onnx",
+    "--obs-config",
+    "policy/release/observation_config_h2_native.yaml",
+    "--motion-data",
+    "reference/example_g1_explore",
+    "--no-planner",
+    "--input-type",
+    "keyboard",
+    "--output-type",
+    "zmq",
+    "--hand-backend",
+    "none",
+    "--h2-left-ankle-pitch-kp-scale",
+    "1.4",
+    "--h2-right-ankle-pitch-kp-scale",
+    "1.6",
+    "--h2-left-knee-pitch-kp-scale",
+    "1.3",
+    "--h2-right-knee-pitch-kp-scale",
+    "1.3",
+    "--enable-csv-logs",
+    "--logs-dir",
+    "/home/qingyul/workspace/SONIC-H2/sonic_h2_native_release/versions/h2_stage2_070000_20260918/smoke_configured_g1/deploy",
+    "sim"
+  ],
+  "deployment_exit_code": 0,
+  "simulator_exit_code": 0,
+  "realtime": {
+    "scheduler": "absolute_deadline_v1",
+    "max_allowed_lag_ms": 20.0,
+    "valid": true,
+    "failure": null,
+    "time_monotonic_ms": 4879298583.9365425,
+    "wall_elapsed_s": 33.45006294827908,
+    "physics_elapsed_s": 33.45,
+    "physics_steps": 33450,
+    "realtime_factor": 0.9999981181416855,
+    "lag_ms": 0.06294809281826019,
+    "max_lag_ms": 1.6496265307068825,
+    "step_work_ms_mean": 0.7498903964021103,
+    "viewer_ms_mean": 0.0011108753303419492,
+    "other_ms_mean": 0.0012425561846193534
+  },
+  "signals": {
+    "encoder_input": {
+      "rows": 749,
+      "columns": 1751,
+      "finite": true,
+      "selectors": [
+        3
+      ]
+    },
+    "policy_input": {
+      "rows": 749,
+      "columns": 994,
+      "finite": true
+    },
+    "action": {
+      "rows": 749,
+      "columns": 34,
+      "finite": true
+    },
+    "q": {
+      "rows": 749,
+      "columns": 36,
+      "finite": true
+    },
+    "dq": {
+      "rows": 749,
+      "columns": 36,
+      "finite": true
+    },
+    "base_quat": {
+      "rows": 749,
+      "columns": 9,
+      "finite": true
+    }
+  },
+  "all_g1_demos_loaded": 7,
+  "played_motions": [
+    "Motion index: 0 : prayer_R_001__A430 completed."
+  ],
+  "configured_ankle_knee_gains_checked": true
+}

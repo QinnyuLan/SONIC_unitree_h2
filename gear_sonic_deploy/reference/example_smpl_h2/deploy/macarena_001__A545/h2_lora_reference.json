@@ -1,0 +1,44 @@
+{
+  "motion_name": "macarena_001__A545",
+  "source_key": "macarena_001__A545",
+  "source_robot_pkl": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545.csv",
+  "source_smpl_pkl": "/home/qingyul/workspace/SONIC-H2/gear_sonic_deploy/reference/example_smpl_h2/source_smpl/macarena_001__A545.pkl",
+  "fps": 50,
+  "frames": 1376,
+  "joint_space": "g1_semantic_29d_from_h2_physical_headless",
+  "source_joint_space": "h2_physical_31d_mujoco",
+  "joint_pos_shape": [
+    1376,
+    29
+  ],
+  "h2_joint_pos_shape": [
+    1376,
+    31
+  ],
+  "body_quat_format": "wxyz",
+  "body_count": 1,
+  "smpl": {
+    "source_key": "macarena_001__A545",
+    "source_path": "gear_sonic_deploy/reference/example_smpl_h2/source_smpl/macarena_001__A545.pkl",
+    "smpl_joint_shape": [
+      1376,
+      24,
+      3
+    ],
+    "source_smpl_joint_frames": 1375,
+    "smpl_pose_shape": [
+      1376,
+      21,
+      3
+    ],
+    "source_smpl_pose_frames": 1375,
+    "smpl_root_quat_shape": [
+      1376,
+      4
+    ],
+    "smpl_root_quat_format": "wxyz_after_smpl_yup_to_zup_and_remove_base_rot"
+  },
+  "source_robot_csv": "/mnt/nvme3/qingyul/seed/h2_soma_full_g1_smpl_source_ik_fixed_20260827/csv/240529/macarena_001__A545.csv",
+  "source_csv_sha256": "ee58c81d76aaaf71cb4101eb5a71fdb9b3c2f2fce19bafe7f27d812cf2a583f3",
+  "reference_type": "smpl"
+}

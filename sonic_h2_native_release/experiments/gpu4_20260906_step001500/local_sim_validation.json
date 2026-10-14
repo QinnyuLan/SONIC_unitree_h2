@@ -1,0 +1,45 @@
+{
+  "encoder_input.csv": {
+    "rows": 599,
+    "columns": 1751,
+    "finite": true,
+    "selectors": [
+      0.0
+    ]
+  },
+  "policy_input.csv": {
+    "rows": 599,
+    "columns": 994,
+    "finite": true
+  },
+  "action.csv": {
+    "rows": 599,
+    "columns": 34,
+    "finite": true
+  },
+  "q.csv": {
+    "rows": 599,
+    "columns": 36,
+    "finite": true
+  },
+  "dq.csv": {
+    "rows": 599,
+    "columns": 36,
+    "finite": true
+  },
+  "base_quat.csv": {
+    "rows": 599,
+    "columns": 9,
+    "finite": true
+  },
+  "elastic_band_enabled": true,
+  "headless": true,
+  "dds_domain": 73,
+  "interface": "lo",
+  "all_h2_demos_loaded": 8,
+  "played_motions": [
+    "forward_lunge_R_001__A359_M"
+  ],
+  "deployment_exit_code": 0,
+  "full_free_motion_stability_validated": false
+}

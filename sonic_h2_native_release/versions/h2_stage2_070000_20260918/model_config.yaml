@@ -1,0 +1,1750 @@
+num_gpus: 8
+max_retries: 1
+seed: 0
+codebase_version: 1.0
+headless: true
+num_envs: 6656
+auto_load_latest: false
+checkpoint: null
+project_name: sonic-h2-native-8xA6000-ori-2
+experiment_name: 20260906_204409_stage2
+base_dir: logs_rl
+timestamp: ${now:%Y%m%d_%H%M%S}
+experiment_dir: /home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage2
+save_dir: ${experiment_dir}/.hydra
+force_flat_terrain: false
+use_wandb: false
+log_task_name: TEST
+multi_gpu: true
+global_rank: 0
+sim_type: isaacsim
+env_spacing: 20
+output_dir: ${experiment_dir}/output
+eval_overrides:
+  headless: false
+  num_envs: 1
+  auto_load_latest: false
+  use_wandb: false
+algo:
+  trl:
+    dataset_name: dummy
+    output_dir: /home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage2
+    learning_rate: ${algo.config.actor_learning_rate}
+    num_total_batches: 98000
+    total_episodes: null
+    num_ppo_epochs: ${algo.config.num_learning_epochs}
+    num_mini_batches: ${algo.config.num_mini_batches}
+    per_device_train_batch_size: 512
+    gradient_accumulation_steps: 1
+    report_to: none
+    gamma: ${algo.config.gamma}
+    lam: ${algo.config.lam}
+    vf_coef: ${algo.config.value_loss_coef}
+    max_grad_norm: ${algo.config.max_grad_norm}
+    lr_scheduler_type: constant
+    save_strategy: 'no'
+    disable_tqdm: true
+  config:
+    critic:
+      _target_: gear_sonic.trl.modules.actor_critic_modules.Critic
+      running_mean_std: true
+      mixed_precision: ${algo.config.critic_mixed_precision}
+      backbone:
+        _target_: gear_sonic.trl.modules.base_module.BaseModule
+        process_output_dim: true
+        module_config_dict:
+          type: MLP
+          input_dim:
+          - critic_obs
+          output_dim:
+          - 1
+          layer_config:
+            type: MLP
+            hidden_dims:
+            - 2048
+            - 2048
+            - 1024
+            - 1024
+            - 512
+            - 512
+            activation: SiLU
+      input_adapter:
+        _target_: gear_sonic.trl.modules.h2_native_critic_adapter.H2NativeCriticAdapter
+        num_future_frames: ${manager_env.commands.motion.num_future_frames}
+        history_length: ${critic_prop_history_length}
+        action_history_length: ${critic_actions_history_length}
+        joint_dim: 29
+        num_bodies: 14
+    actor:
+      backbone:
+        quantizer:
+          _target_: vector_quantize_pytorch.FSQ
+        encoders:
+          g1:
+            inputs:
+            - command_multi_future_nonflat
+            - motion_anchor_ori_b_mf_nonflat
+            params:
+              _target_: gear_sonic.trl.modules.base_module.BaseModule
+              input_dim: null
+              output_dim: null
+              num_input_temporal_dims: ${manager_env.commands.motion.num_future_frames}
+              num_output_temporal_dims: ${algo.config.actor.backbone.max_num_tokens}
+              module_config_dict:
+                layer_config:
+                  type: MLP
+                  hidden_dims:
+                  - 2048
+                  - 1024
+                  - 512
+                  - 512
+                  activation: SiLU
+          teleop:
+            inputs:
+            - command_multi_future_lower_body
+            - vr_3point_local_target
+            - vr_3point_local_orn_target
+            - motion_anchor_ori_b
+            params:
+              _target_: gear_sonic.trl.modules.base_module.BaseModule
+              input_dim: null
+              output_dim: null
+              num_input_temporal_dims: null
+              num_output_temporal_dims: ${algo.config.actor.backbone.max_num_tokens}
+              module_config_dict:
+                layer_config:
+                  type: MLP
+                  hidden_dims:
+                  - 2048
+                  - 1024
+                  - 512
+                  - 512
+                  activation: SiLU
+          smpl:
+            inputs:
+            - smpl_joints_multi_future_local_nonflat
+            - smpl_root_ori_b_multi_future
+            - joint_pos_multi_future_wrist_for_smpl
+            params:
+              _target_: gear_sonic.trl.modules.base_module.BaseModule
+              input_dim: null
+              output_dim: null
+              num_input_temporal_dims: ${manager_env.commands.motion.smpl_num_future_frames}
+              num_output_temporal_dims: ${algo.config.actor.backbone.max_num_tokens}
+              module_config_dict:
+                layer_config:
+                  type: MLP
+                  hidden_dims:
+                  - 2048
+                  - 1024
+                  - 512
+                  - 512
+                  activation: SiLU
+          h2:
+            inputs:
+            - command_multi_future_h2_native_nonflat
+            - motion_anchor_ori_b_mf_nonflat
+            sub_encoder_only: true
+            sub_encoders:
+            - h2_reference_adapter
+            - h2_student
+          h2_reference_adapter:
+            inputs: []
+            sub_encoder_only: true
+            params:
+              _target_: gear_sonic.trl.modules.h2_native_adapters.H2NativeReferenceAdapter
+              num_frames: ${manager_env.commands.motion.num_future_frames}
+              joint_dim: 29
+              command_frame_dim: 58
+              orientation_dim: 6
+              rank: 8
+              alpha: 8
+          h2_latent_adapter:
+            inputs: []
+            sub_encoder_only: true
+            params:
+              _target_: gear_sonic.trl.modules.h2_native_adapters.H2NativeLatentAdapter
+              token_dim: ${algo.config.actor.backbone.num_fsq_levels}
+              rank: 8
+              alpha: 8
+            enabled: false
+          h2_student:
+            inputs: []
+            sub_encoder_only: true
+            clone_from: g1
+        decoders:
+          g1_dyn:
+            inputs:
+            - token_flattened
+            - proprioception
+            outputs:
+            - action
+            has_temporal_dim: false
+            params:
+              _target_: gear_sonic.trl.modules.base_module.BaseModule
+              input_dim: null
+              output_dim: null
+              num_input_temporal_dims: null
+              num_output_temporal_dims: null
+              module_config_dict:
+                layer_config:
+                  type: MLP
+                  hidden_dims:
+                  - 2048
+                  - 2048
+                  - 1024
+                  - 1024
+                  - 512
+                  - 512
+                  activation: SiLU
+          g1_kin:
+            inputs:
+            - token
+            outputs:
+            - command_multi_future_nonflat
+            - motion_anchor_ori_b_mf_nonflat
+            has_temporal_dim: true
+            params:
+              _target_: gear_sonic.trl.modules.base_module.BaseModule
+              input_dim: null
+              output_dim: null
+              num_input_temporal_dims: ${algo.config.actor.backbone.max_num_tokens}
+              num_output_temporal_dims: ${manager_env.commands.motion.num_future_frames}
+              module_config_dict:
+                layer_config:
+                  type: MLP
+                  hidden_dims:
+                  - 2048
+                  - 1024
+                  - 512
+                  - 512
+                  activation: SiLU
+        _target_: gear_sonic.trl.modules.universal_token_modules.UniversalTokenModule
+        num_future_frames: ${manager_env.commands.motion.num_future_frames}
+        proprioception_features:
+        - actor_obs
+        encoder_sample_probs: ${manager_env.commands.motion.encoder_sample_probs}
+        num_fsq_levels: 32
+        fsq_level_list: 32
+        max_num_tokens: 2
+        reencode_smpl_g1_recon: false
+        optimize_encoders_ratio_for_CHIP: true
+        policy_interface: h2_native
+        encoder_route_overrides:
+          g1: h2
+        proprioception_adapter:
+          _target_: gear_sonic.trl.modules.h2_native_adapters.H2NativeProprioceptionAdapter
+          joint_dim: 29
+          history_length: ${actor_prop_history_length}
+          action_history_length: ${actor_actions_history_length}
+          rank: 8
+          alpha: 8
+        action_adapter:
+          _target_: gear_sonic.trl.modules.h2_native_adapters.H2NativeActionAdapter
+          joint_dim: 29
+          rank: 8
+          alpha: 8
+        paired_encoder_distillation:
+          enabled: false
+          student_encoder: h2
+          teacher_encoder: g1
+          decoder: g1_dyn
+          max_batch_size: 64
+          teacher_observation_overrides:
+            command_multi_future_nonflat: paired_g1_command_multi_future_nonflat
+            motion_anchor_ori_b_mf_nonflat: paired_g1_motion_anchor_ori_b_mf_nonflat
+        aux_loss_coef:
+          h2_native_latent: 0.75
+          h2_native_token: 0.1
+          h2_native_action: 0.0
+          h2_native_adapter_residual: 0.0
+          h2_native_code_disagreement: 0.0
+        ppo_detach_encoders: []
+        frozen_encoder_routes:
+        - h2
+        encoder_source_routes:
+          g1:
+            selector: robot_encoder_source
+            routes:
+            - h2
+            - g1
+            observation_overrides:
+              g1:
+                command_multi_future_nonflat: paired_g1_command_multi_future_nonflat
+                motion_anchor_ori_b_mf_nonflat: paired_g1_motion_anchor_ori_b_mf_nonflat
+      _target_: gear_sonic.trl.modules.actor_critic_modules.Actor
+      running_mean_std: false
+      input_obs_dict: true
+      has_aux_loss: false
+    num_learning_epochs: 4
+    num_mini_batches: 13
+    clip_param: 0.2
+    gamma: 0.99
+    lam: 0.95
+    value_loss_coef: 1.0
+    entropy_coef: 0.003
+    actor_learning_rate: 4.0e-06
+    critic_learning_rate: 6.0e-06
+    critic_mixed_precision: bf16
+    max_grad_norm: 0.1
+    use_clipped_value_loss: true
+    schedule: adaptive
+    desired_kl: 0.018
+    adaptive_lr_min: 5.0e-07
+    adaptive_lr_max: 6.0e-06
+    use_new_actor_critic: true
+    use_padding_mask: false
+    ppo_shuffle_every_epoch: true
+    sync_advantage_normalization: true
+    empty_cache_every_n_ppo_epoch: 0
+    num_steps_per_env: 24
+    save_interval: 500
+    eval_frequency: 500
+    load_optimizer: true
+    init_noise_std: 0.05
+    num_learning_iterations: 98000
+    init_at_random_ep_len: true
+    global_rank: 0
+    world_size: 8
+    resume_use_configured_learning_rates: true
+    min_advantage_std: 1.0e-08
+    use_clampped_std: true
+    std_clamp_min: 0.03
+    std_clamp_max: 0.14
+    freeze_noise_std: false
+    sanitize_action_mean: true
+    action_mean_clip: 6.0
+    pretrained_model:
+      path: sonic_release/last.pt
+      state_dict_key: checkpoint
+      strict: false
+      module_mapping:
+        policy: policy_state_dict
+        value_model: value_state_dict
+      allowed_missing_prefixes:
+      - actor_module.encoders.h2_reference_adapter
+      - actor_module.encoders.h2_student
+      - actor_module.proprioception_adapter
+      - actor_module.action_adapter
+      - input_adapter.
+    lora_adaptation:
+      enabled: true
+      rank: 32
+      alpha: 32
+      dropout: 0.0
+      max_trainable_ratio: 0.12
+      disable_redundant_aux_forward: false
+      train_noise_std: true
+      critic_include_input_projection: true
+      encoder_lora:
+        enabled: true
+        encoder_name: h2_student
+        rank: 32
+        alpha: 32
+        dropout: 0.0
+        include_output_projection: true
+      freeze_h2_encoder: true
+      stage_transition_checkpoint: /home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/logs_rl/sonic-h2-native-8xA6000-ori-2/20260906_204409/stage1/model_step_002000.pt
+      stage_transition_source_step: 2000
+      stage_transition_reset_seed: 42
+    compute_aux_loss: false
+    aux_loss_scale: 4.0
+    aux_loss_forward_interval: 1
+    train_noise_std: true
+    noise_std_learning_rate: 5.0e-07
+    checkpoint_strict_model_load: false
+    resume_reset_episode_statistics: false
+    disable_teleop_encoder_sampling: true
+  _recursive_: false
+env: ???
+terrain: ???
+callbacks:
+  model_save:
+    _target_: gear_sonic.trl.callbacks.model_save_callback.ModelSaveCallback
+    save_dir: ${experiment_dir}
+    save_frequency: 1000
+    max_disk_usage: 14.8
+    save_last_frequency: 50
+  wandb:
+    _target_: gear_sonic.trl.callbacks.wandb_callback.WandbCallback
+  read_eval:
+    _target_: gear_sonic.trl.callbacks.read_eval_callback.ReadEvalCallback
+    eval_dir: ${experiment_dir}/eval
+    check_interval: 1
+  im_resample:
+    _target_: gear_sonic.trl.callbacks.im_resample_callback.ImResampleCallback
+    motion_resample_frequency: 250
+    skip_resample_frequency: null
+  swanlab:
+    _target_: gear_sonic.trl.callbacks.swanlab_callback.SwanLabCallback
+  h2lora_visualization:
+    _target_: gear_sonic.trl.callbacks.h2lora_visualization_callback.H2LoRAVisualizationCallback
+    enabled: false
+    frequency: 1000
+    start_step: 1000
+    motion_file: /mnt/nvme1/qingyul/dataset/h2_sonic_train_cache_bones_seed_10M_paired_g1_20260827/robot
+    smpl_motion_file: /mnt/nvme1/qingyul/dataset/h2_sonic_train_cache_bones_seed_10M_paired_g1_20260827/smpl
+    h2_mjcf: /home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/gear_sonic/data/assets/robot_description/mjcf/h2_unitree/h2_mujoco.xml
+    motions_file: scripts/h2_native_bones_seed10m_g1_smpl_viz_motions.txt
+    motions: null
+    output_root: visualizations/h2lora_internal
+    isaac_python: /home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/.venv-isaaclab311/bin/python
+    render_python: .venv/bin/python
+    action_mode: mean
+    num_steps: 360
+    fps: 50
+    width: 1280
+    height: 720
+    gif_fps: 10
+    gif_width: 480
+    upload_swanlab: false
+    swanlab_video_mode: animated_image
+    cuda_visible_devices: -1
+    collect_device: cpu
+    h2lora_full_dof_order: isaaclab
+    collect_timeout_seconds: 300
+    collect_exit_grace_seconds: 2
+    render_timeout_seconds: 900
+    gif_timeout_seconds: 300
+    checkpoint_wait_seconds: 60
+    checkpoint_poll_seconds: 2.0
+    train_end_wait_seconds: 1200
+    skip_existing: true
+    resume_checkpoint: ${checkpoint}
+trainer:
+  _target_: gear_sonic.trl.trainer.ppo_trainer_aux_loss.TRLAuxLossPPOTrainer
+wandb:
+  wandb_project: null
+  wandb_tags: online
+  wandb_group: null
+  wandb_id: null
+  wandb_entity: null
+  wandb_dir: /tmp
+manager_env:
+  commands:
+    motion:
+      encoder_sample_probs:
+        g1: 3.0
+        teleop: 0.0
+        smpl: 2.0
+      _target_: gear_sonic.envs.manager_env.mdp.commands.TrackingCommandCfg
+      asset_name: robot
+      motion_lib_cfg:
+        motion_file: /mnt/nvme1/qingyul/dataset/h2_sonic_train_cache_bones_seed_10M_paired_g1_20260827/robot
+        smpl_motion_file: /mnt/nvme1/qingyul/dataset/h2_sonic_train_cache_bones_seed_10M_paired_g1_20260827/smpl
+        asset:
+          assetRoot: /home/qingyul/workspace/GR00T-WBC-H2TRAINBASE/gear_sonic/data/assets/robot_description/mjcf/
+          assetFileName: h2_unitree/h2_mujoco.xml
+          urdfFileName: ''
+        extend_config: []
+        target_fps: 50
+        multi_thread: true
+        filter_motion_keys: null
+        adaptive_sampling:
+          enable: true
+          attribute_pre_reset_cursor: true
+          bin_size: 50
+          sequence_length_agnostic: true
+          init_num_failures: 1
+          uniform_sampling_rate: 0.2
+          pre_failure_sample_window: 200
+          endpoint_error_sampling:
+            enable: true
+            score_mixing: normalized_distributions
+            encoder_mode_names:
+            - g1
+            - teleop
+            - smpl
+            encoder_mode_weights:
+            - 0.6
+            - 0.0
+            - 0.4
+            failure_weight: 1.0
+            endpoint_error_weight: 0.75
+            ema_alpha: 0.1
+            initial_normalized_error: 1.0
+            max_normalized_error: 4.0
+            root_weight: 0.75
+            root_scale: 0.35
+            feet_local_weight: 1.0
+            feet_local_scale: 0.15
+            feet_global_weight: 0.5
+            feet_global_scale: 0.4
+            hands_local_weight: 1.0
+            hands_local_scale: 0.15
+          use_failure_rate_decay: false
+          decay_gamma: 0.8
+          adp_samp_failure_rate_max_over_mean: 20
+          max_prob_per_bin: auto
+          max_prob_per_motion: auto
+          pre_failure_sample_min_steps: 0
+          pre_failure_sample_max_steps: 199
+          pre_failure_sample_probability: 1.0
+        category_balanced_sampling:
+          enable: true
+          blend: 0.2
+          categories:
+            reach:
+              target_fraction: 0.4
+              patterns:
+              - (^|[_-])reach(ing)?([_-]|$)
+            kneel:
+              target_fraction: 0.25
+              patterns:
+              - (^|[_-])(kneel|kneeling|sit_on_heels)([_-]|$)
+            crouch_squat:
+              target_fraction: 0.25
+              patterns:
+              - (^|[_-])(crouch(ed|ing)?|squat(ting)?|stoop(ing)?)([_-]|$)
+            lunge:
+              target_fraction: 0.1
+              patterns:
+              - (^|[_-])(lunge|forward_lunge)([_-]|$)
+            backward:
+              target_fraction: 0.0
+              patterns:
+              - (^|[_-])backward([_-]|$)
+            turning:
+              target_fraction: 0.0
+              patterns:
+              - (^|[_-])(turn|turning|rotate|rotating|pivot|spin|spinning)([_-]|$)
+            dance:
+              target_fraction: 0.0
+              patterns:
+              - (^|[_-])(dance|dancing|salsa|hiphop|hip_hop)([_-]|$)
+            jump:
+              target_fraction: 0.0
+              patterns:
+              - (^|[_-])(jump|jumping|hop|hopping|leap)([_-]|$)
+        distributed_data_sharding:
+          enable: true
+          num_shards: 8
+          strategy: balanced_frames
+          seed: 42
+        smpl_y_up: true
+        max_cpu_workers: 12
+        cache_all_motions_to_ddr: false
+        ddr_cache_max_bytes: 34359738368
+        load_unique_motions: true
+        h2lora_headless_dof: true
+        h2lora_full_dof_order: isaaclab
+        disable_dof_reorder: true
+        require_paired_g1_reference: true
+        motion_loader_queue_get_timeout_s: 30
+        motion_loader_worker_join_timeout_s: 30
+        motion_loader_tmpdir: /dev/shm/h2_native_two_stage_20260906_204409
+      resampling_time_range:
+      - 1000000000.0
+      - 1000000000.0
+      debug_vis: false
+      dt_future_ref_frames: 0.1
+      num_future_frames: 10
+      pose_range:
+        x:
+        - -0.05
+        - 0.05
+        'y':
+        - -0.05
+        - 0.05
+        z:
+        - -0.01
+        - 0.01
+        roll:
+        - -0.1
+        - 0.1
+        pitch:
+        - -0.1
+        - 0.1
+        yaw:
+        - -0.2
+        - 0.2
+      velocity_range:
+        x:
+        - -0.5
+        - 0.5
+        'y':
+        - -0.5
+        - 0.5
+        z:
+        - -0.2
+        - 0.2
+        roll:
+        - -0.52
+        - 0.52
+        pitch:
+        - -0.52
+        - 0.52
+        yaw:
+        - -0.78
+        - 0.78
+      joint_position_range:
+      - -0.1
+      - 0.1
+      joint_velocity_range:
+      - 0
+      - 0
+      direct_smpl_head_control: true
+      smpl_head_scale_range:
+        pitch:
+        - 0.8
+        - 1.2
+        yaw:
+        - 0.8
+        - 1.2
+      smpl_head_joint_limits:
+        pitch:
+        - -0.48
+        - 0.75
+        yaw:
+        - -1.45
+        - 1.45
+      smpl_head_max_velocity: 4.0
+      anchor_body: pelvis
+      vr_3point_body:
+      - left_wrist_yaw_link
+      - right_wrist_yaw_link
+      - torso_link
+      vr_3point_body_offset:
+      - - 0.18
+        - -0.025
+        - 0.0
+      - - 0.18
+        - 0.025
+        - 0.0
+      - - 0.0
+        - 0.0
+        - 0.35
+      reward_point_body:
+      - torso_link
+      reward_point_body_offset:
+      - - 0.0
+        - 0.0
+        - 0.5
+      body_names:
+      - pelvis
+      - left_hip_roll_link
+      - left_knee_link
+      - left_ankle_pitch_link
+      - right_hip_roll_link
+      - right_knee_link
+      - right_ankle_pitch_link
+      - torso_link
+      - left_shoulder_roll_link
+      - left_elbow_link
+      - left_wrist_yaw_link
+      - right_shoulder_roll_link
+      - right_elbow_link
+      - right_wrist_yaw_link
+      feet_body_names:
+      - left_ankle_pitch_link
+      - right_ankle_pitch_link
+      feet_point_offsets:
+      - - - -0.075
+          - 0.0365
+          - -0.05
+        - - 0.035
+          - 0.0365
+          - -0.044
+        - - 0.15
+          - 0.0365
+          - -0.05
+      - - - -0.075
+          - -0.0365
+          - -0.05
+        - - 0.035
+          - -0.0365
+          - -0.044
+        - - 0.15
+          - -0.0365
+          - -0.05
+      smpl_num_future_frames: 10
+      smpl_dt_future_ref_frames: 0.02
+      cat_upper_body_poses: true
+      cat_upper_body_poses_prob: 0.5
+      freeze_frame_aug: true
+      optimize_encoders_ratio_for_CHIP: true
+      teleop_sample_prob_when_smpl: 0.0
+      use_h2lora_alignment: true
+      max_num_load_motions: 13312
+      sample_unique_motions: false
+      motion_lib_num_dof: 29
+      hand_default_positions:
+      - 0.0
+      - 0.0
+      hand_default_velocities:
+      - 0.0
+      - 0.0
+      robot_encoder_source_probs:
+        h2: 2.0
+        g1: 1.0
+    _target_: gear_sonic.envs.manager_env.mdp.commands.CommandsCfg
+  actions:
+    joint_pos:
+      _target_: isaaclab.envs.mdp.actions.JointPositionActionCfg
+      asset_name: robot
+      joint_names:
+      - .*
+      use_default_offset: true
+    _target_: gear_sonic.envs.manager_env.mdp.actions.ActionsCfg
+  observations:
+    policy:
+      gravity_dir:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:gravity_dir
+        params:
+          command_name: motion
+        history_length: ${actor_prop_history_length}
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.05
+          n_max: 0.05
+      base_ang_vel:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:base_ang_vel
+        history_length: ${actor_prop_history_length}
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.2
+          n_max: 0.2
+      joint_pos:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:joint_pos_h2_native
+        params:
+          asset_cfg:
+            _target_: isaaclab.managers.SceneEntityCfg
+            name: robot
+        history_length: ${actor_prop_history_length}
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.01
+          n_max: 0.01
+      joint_vel:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:joint_vel_h2_native
+        params:
+          asset_cfg:
+            _target_: isaaclab.managers.SceneEntityCfg
+            name: robot
+        history_length: ${actor_prop_history_length}
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.5
+          n_max: 0.5
+      actions:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:last_action_wo_hand
+        params:
+          asset_cfg:
+            _target_: isaaclab.managers.SceneEntityCfg
+            name: robot
+        history_length: ${actor_actions_history_length}
+      _target_: gear_sonic.envs.manager_env.mdp.observations.PolicyCfg
+      enable_corruption: true
+      concatenate_terms: true
+    critic:
+      command_multi_future:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_multi_future_h2_native
+        params:
+          command_name: motion
+      motion_anchor_pos_b:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:motion_anchor_pos_b
+        params:
+          command_name: motion
+      motion_anchor_ori_b:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:motion_anchor_ori_b
+        params:
+          command_name: motion
+      body_pos:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:robot_body_pos_b
+        params:
+          command_name: motion
+      body_ori:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:robot_body_ori_b
+        params:
+          command_name: motion
+      base_lin_vel:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:base_lin_vel
+        history_length: ${critic_prop_history_length}
+      base_ang_vel:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:base_ang_vel
+        history_length: ${critic_prop_history_length}
+      joint_pos:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:joint_pos_h2_native
+        params:
+          asset_cfg:
+            _target_: isaaclab.managers.SceneEntityCfg
+            name: robot
+        history_length: ${critic_prop_history_length}
+      joint_vel:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:joint_vel_h2_native
+        params:
+          asset_cfg:
+            _target_: isaaclab.managers.SceneEntityCfg
+            name: robot
+        history_length: ${critic_prop_history_length}
+      actions:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:last_action_wo_hand
+        params:
+          asset_cfg:
+            _target_: isaaclab.managers.SceneEntityCfg
+            name: robot
+        history_length: ${critic_actions_history_length}
+      _target_: gear_sonic.envs.manager_env.mdp.observations.PrivilegedCfg
+    tokenizer:
+      encoder_index:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:get_command_obs
+        params:
+          command_name: motion
+          obs_name: episode_encoder_index
+      command_multi_future_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_multi_future
+        params:
+          command_name: motion
+          non_flatten: true
+      command_z_multi_future_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_z_multi_future
+        params:
+          command_name: motion
+          non_flatten: true
+      motion_anchor_ori_b_mf_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:motion_anchor_ori_b_mf
+        params:
+          command_name: motion
+          non_flatten: true
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.05
+          n_max: 0.05
+      command_multi_future_lower_body:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_multi_future_lower_body
+        params:
+          command_name: motion
+      vr_3point_local_target:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:vr_3point_local_target
+        params:
+          command_name: motion
+      vr_3point_local_orn_target:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:vr_3point_local_orn_target
+        params:
+          command_name: motion
+      motion_anchor_ori_b:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:motion_anchor_ori_b
+        params:
+          command_name: motion
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.05
+          n_max: 0.05
+      command_z:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_z
+        params:
+          command_name: motion
+      smpl_joints_multi_future_local_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:smpl_joints_multi_future_local
+        params:
+          command_name: motion
+          non_flatten: true
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.05
+          n_max: 0.05
+      smpl_root_ori_b_multi_future:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:smpl_root_ori_b_mf
+        params:
+          command_name: motion
+          non_flatten: true
+        noise:
+          _target_: isaaclab.utils.noise.AdditiveUniformNoiseCfg
+          n_min: -0.05
+          n_max: 0.05
+      joint_pos_multi_future_wrist_for_smpl:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:joint_pos_multi_future_select_joints_for_smpl
+        params:
+          command_name: motion
+          joints_idx:
+          - 23
+          - 24
+          - 25
+          - 26
+          - 27
+          - 28
+      _target_: gear_sonic.envs.manager_env.mdp.observations.TokenizerCfg
+      enable_corruption: true
+      concatenate_terms: false
+      command_multi_future_h2_native_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_multi_future_h2_native
+        params:
+          command_name: motion
+          non_flatten: true
+      paired_g1_command_multi_future_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:command_multi_future_paired_g1
+        params:
+          command_name: motion
+          non_flatten: true
+      paired_g1_motion_anchor_ori_b_mf_nonflat:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:paired_g1_motion_anchor_ori_b_mf
+        params:
+          command_name: motion
+          non_flatten: true
+      robot_encoder_source:
+        _target_: isaaclab.managers.ObservationTermCfg
+        func: gear_sonic.envs.manager_env.mdp:get_command_obs
+        params:
+          command_name: motion
+          obs_name: episode_robot_encoder_source
+    _target_: gear_sonic.envs.manager_env.mdp.observations.ObservationsCfg
+  rewards:
+    tracking_anchor_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_pos_error
+      weight: 1.5
+      params:
+        command_name: motion
+        std: 0.24
+    tracking_anchor_pos_broad:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_pos_error
+      weight: 0.6
+      params:
+        command_name: motion
+        std: 1.2
+    tracking_anchor_pos_huber:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_pos_huber_penalty
+      weight: 0.0
+      params:
+        command_name: motion
+        delta: 0.25
+    tracking_anchor_ori:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_ori_error
+      weight: 0.75
+      params:
+        command_name: motion
+        std: 0.4
+    tracking_anchor_linvel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_linvel_error
+      weight: 0.65
+      params:
+        command_name: motion
+        std: 0.8
+    tracking_anchor_linvel_relative:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_linvel_relative_error
+      weight: 0.0
+      params:
+        command_name: motion
+        std: 0.8
+        eps: 0.1
+    tracking_anchor_angvel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_angvel_error
+      weight: 0.35
+      params:
+        command_name: motion
+        std: 1.5
+    tracking_anchor_angvel_relative:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_anchor_angvel_relative_error
+      weight: 0.0
+      params:
+        command_name: motion
+        std: 1.0
+        eps: 0.1
+    tracking_joint_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_joint_pos_error
+      weight: 0.0
+      params:
+        command_name: motion
+        std: 0.25
+    tracking_relative_body_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_relative_body_pos_error
+      weight: 1.0
+      params:
+        command_name: motion
+        std: 0.3
+    tracking_relative_body_ori:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_relative_body_ori_error
+      weight: 1.0
+      params:
+        command_name: motion
+        std: 0.4
+    tracking_body_linvel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_body_linvel_error
+      weight: 1.0
+      params:
+        command_name: motion
+        std: 0.9
+    tracking_body_angvel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_body_angvel_error
+      weight: 1.0
+      params:
+        command_name: motion
+        std: 2.8
+    action_rate_l2:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:action_rate_l2
+      weight: -0.1
+    joint_limit:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:joint_pos_limits
+      weight: -10.0
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+          joint_names:
+          - .*
+    undesired_contacts:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:undesired_contacts
+      weight: -0.1
+      params:
+        sensor_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: contact_forces
+          body_names:
+          - ^(?!left_ankle_roll_link$)(?!right_ankle_roll_link$)(?!left_ankle_pitch_link$)(?!right_ankle_pitch_link$)(?!left_wrist_yaw_link$)(?!right_wrist_yaw_link$)(?!left_elbow_link$)(?!right_elbow_link$).+$
+        threshold: 1.0
+    anti_shake_ang_vel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:anti_shake_ang_vel_l2
+      weight: -0.015
+      params:
+        command_name: motion
+        threshold: 1.0
+        body_names:
+        - torso_link
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+    body_ang_vel_l2:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:body_ang_vel_l2
+      weight: -0.0002
+      params:
+        command_name: motion
+        body_names:
+        - torso_link
+    tracking_vr_5point_local:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_local_vr_5point_error
+      weight: 0.8
+      params:
+        command_name: motion
+        std: 0.12
+    tracking_local_hands_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_local_vr_3point_error
+      weight: 0.0
+      params:
+        command_name: motion
+        std: 0.16
+        point_weights:
+        - 1.0
+        - 1.0
+        - 0.0
+    tracking_local_hands_pos_huber:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_local_vr_3point_huber_penalty
+      weight: 0.0
+      params:
+        command_name: motion
+        delta: 0.1
+        max_distance: 1.0
+        point_weights:
+        - 1.0
+        - 1.0
+        - 0.0
+    tracking_feet_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_feet_pos_error
+      weight: 1.6
+      params:
+        command_name: motion
+        std: 0.14
+        relative: true
+        body_names: ${manager_env.commands.motion.feet_body_names}
+        point_offsets: ${manager_env.commands.motion.feet_point_offsets}
+        independent_points: true
+    tracking_global_feet_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_feet_pos_error
+      weight: 1.2
+      params:
+        command_name: motion
+        std: 0.28
+        relative: false
+        body_names: ${manager_env.commands.motion.feet_body_names}
+        point_offsets: ${manager_env.commands.motion.feet_point_offsets}
+        independent_points: true
+    tracking_global_feet_pos_tight:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_feet_pos_error
+      weight: 1.4
+      params:
+        command_name: motion
+        std: 0.12
+        relative: false
+        body_names: ${manager_env.commands.motion.feet_body_names}
+        point_offsets: ${manager_env.commands.motion.feet_point_offsets}
+        independent_points: true
+    tracking_global_feet_pos_huber:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_feet_pos_huber_penalty
+      weight: -0.35
+      params:
+        command_name: motion
+        delta: 0.1
+        max_distance: 1.5
+        relative: false
+        body_names: ${manager_env.commands.motion.feet_body_names}
+        point_offsets: ${manager_env.commands.motion.feet_point_offsets}
+    stationary_feet_vel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:stationary_feet_vel_l2
+      weight: -0.07
+      params:
+        command_name: motion
+        ref_vel_threshold: 0.15
+        robot_vel_deadzone: 0.02
+        body_names: ${manager_env.commands.motion.feet_body_names}
+        point_offsets: ${manager_env.commands.motion.feet_point_offsets}
+        use_reference_contact: true
+    feet_acc:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:joint_acc_l2
+      weight: -2.5e-06
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+          joint_names:
+          - .*ankle.*
+    tracking_torso_local_hands_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_torso_local_body_points_error
+      weight: 1.2
+      params:
+        command_name: motion
+        std: 0.16
+        frame_body_name: torso_link
+        body_names:
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+        point_offsets:
+        - - 0.18
+          - -0.025
+          - 0.0
+        - - 0.18
+          - 0.025
+          - 0.0
+        independent_points: true
+    tracking_torso_local_hands_pos_tight:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_torso_local_body_points_error
+      weight: 1.2
+      params:
+        command_name: motion
+        std: 0.08
+        frame_body_name: torso_link
+        body_names:
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+        point_offsets:
+        - - 0.18
+          - -0.025
+          - 0.0
+        - - 0.18
+          - 0.025
+          - 0.0
+        independent_points: true
+    tracking_torso_local_hands_pos_huber:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_torso_local_body_points_huber_penalty
+      weight: -0.25
+      params:
+        command_name: motion
+        delta: 0.08
+        max_distance: 0.8
+        frame_body_name: torso_link
+        body_names:
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+        point_offsets:
+        - - 0.18
+          - -0.025
+          - 0.0
+        - - 0.18
+          - 0.025
+          - 0.0
+    tracking_torso_local_elbows_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_torso_local_body_points_error
+      weight: 0.8
+      params:
+        command_name: motion
+        std: 0.11
+        frame_body_name: torso_link
+        body_names:
+        - left_elbow_link
+        - right_elbow_link
+        point_offsets:
+        - - 0.0
+          - 0.0
+          - 0.0
+        - - 0.0
+          - 0.0
+          - 0.0
+        independent_points: true
+    tracking_arm_extension:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_limb_extension_error
+      weight: 1.0
+      params:
+        command_name: motion
+        std: 0.06
+        proximal_body_names:
+        - left_shoulder_roll_link
+        - right_shoulder_roll_link
+        distal_body_names:
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+        distal_point_offsets:
+        - - 0.18
+          - -0.025
+          - 0.0
+        - - 0.18
+          - 0.025
+          - 0.0
+    tracking_arm_chain_geometry:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_limb_chain_geometry_error
+      weight: 0.0
+      params:
+        command_name: motion
+        direction_std: 0.18
+        extension_std: 0.08
+        proximal_body_names:
+        - left_shoulder_roll_link
+        - right_shoulder_roll_link
+        intermediate_body_names:
+        - left_elbow_link
+        - right_elbow_link
+        distal_body_names:
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+        frame_body_name: torso_link
+        distal_point_offsets:
+        - - 0.18
+          - -0.025
+          - 0.0
+        - - 0.18
+          - 0.025
+          - 0.0
+        straight_ratio_threshold: 0.85
+        straight_emphasis: 2.0
+    tracking_arm_joint_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_h2_joint_subset_pos_error
+      weight: 0.6
+      params:
+        command_name: motion
+        std: 0.15
+        joint_names:
+        - left_shoulder_pitch_joint
+        - left_shoulder_roll_joint
+        - left_shoulder_yaw_joint
+        - left_elbow_joint
+        - left_wrist_roll_joint
+        - left_wrist_pitch_joint
+        - left_wrist_yaw_joint
+        - right_shoulder_pitch_joint
+        - right_shoulder_roll_joint
+        - right_shoulder_yaw_joint
+        - right_elbow_joint
+        - right_wrist_roll_joint
+        - right_wrist_pitch_joint
+        - right_wrist_yaw_joint
+        joint_weights:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 2.0
+        - 0.5
+        - 0.5
+        - 0.5
+        - 1.0
+        - 1.0
+        - 1.0
+        - 2.0
+        - 0.5
+        - 0.5
+        - 0.5
+    tracking_leg_joint_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_h2_joint_subset_pos_error
+      weight: 0.65
+      params:
+        command_name: motion
+        std: 0.16
+        joint_names:
+        - left_hip_pitch_joint
+        - left_hip_roll_joint
+        - left_hip_yaw_joint
+        - left_knee_joint
+        - left_ankle_pitch_joint
+        - left_ankle_roll_joint
+        - right_hip_pitch_joint
+        - right_hip_roll_joint
+        - right_hip_yaw_joint
+        - right_knee_joint
+        - right_ankle_pitch_joint
+        - right_ankle_roll_joint
+        joint_weights:
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.5
+        - 2.0
+        - 1.5
+        - 1.0
+        - 1.0
+        - 1.0
+        - 1.5
+        - 2.0
+        - 1.5
+    tracking_feet_ori:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_relative_body_ori_error
+      weight: 0.5
+      params:
+        command_name: motion
+        std: 0.25
+        body_names: ${manager_env.commands.motion.feet_body_names}
+    tracking_swing_feet_pos:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_phase_feet_pos_error
+      weight: 0.0
+      params:
+        command_name: motion
+        std: 0.12
+        phase: swing
+        relative: true
+        body_names:
+        - left_ankle_pitch_link
+        - right_ankle_pitch_link
+        point_offsets:
+        - - - -0.075
+            - 0.0365
+            - -0.05
+          - - 0.035
+            - 0.0365
+            - -0.044
+          - - 0.15
+            - 0.0365
+            - -0.05
+        - - - -0.075
+            - -0.0365
+            - -0.05
+          - - 0.035
+            - -0.0365
+            - -0.044
+          - - 0.15
+            - -0.0365
+            - -0.05
+    tracking_swing_feet_linvel:
+      _target_: isaaclab.managers.RewardTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_phase_feet_linvel_error
+      weight: 0.0
+      params:
+        command_name: motion
+        std: 0.6
+        phase: swing
+        body_names:
+        - left_ankle_pitch_link
+        - right_ankle_pitch_link
+        point_offsets:
+        - - - -0.075
+            - 0.0365
+            - -0.05
+          - - 0.035
+            - 0.0365
+            - -0.044
+          - - 0.15
+            - 0.0365
+            - -0.05
+        - - - -0.075
+            - -0.0365
+            - -0.05
+          - - 0.035
+            - -0.0365
+            - -0.044
+          - - 0.15
+            - -0.0365
+            - -0.05
+    _target_: gear_sonic.envs.manager_env.mdp.rewards.RewardsCfg
+  terminations:
+    anchor_pos:
+      _target_: isaaclab.managers.TerminationTermCfg
+      func: gear_sonic.envs.manager_env.mdp:exceeded_anchor_height
+      params:
+        command_name: motion
+        threshold: 0.35
+        threshold_adaptive: true
+        down_threshold: 0.75
+        root_height_threshold: 0.5
+    anchor_ori_full:
+      _target_: isaaclab.managers.TerminationTermCfg
+      func: gear_sonic.envs.manager_env.mdp:exceeded_anchor_ori
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+        command_name: motion
+        threshold: 1.0
+    ee_body_pos:
+      _target_: isaaclab.managers.TerminationTermCfg
+      func: gear_sonic.envs.manager_env.mdp:exceeded_body_height
+      params:
+        command_name: motion
+        threshold: 0.35
+        threshold_adaptive: true
+        down_threshold: 0.75
+        root_height_threshold: 0.5
+        body_names:
+        - left_ankle_pitch_link
+        - right_ankle_pitch_link
+        - left_wrist_yaw_link
+        - right_wrist_yaw_link
+        point_offsets:
+        - - - -0.075
+            - 0.0365
+            - -0.05
+          - - 0.035
+            - 0.0365
+            - -0.044
+          - - 0.15
+            - 0.0365
+            - -0.05
+        - - - -0.075
+            - -0.0365
+            - -0.05
+          - - 0.035
+            - -0.0365
+            - -0.044
+          - - 0.15
+            - -0.0365
+            - -0.05
+        - - - 0.18
+            - -0.025
+            - 0.0
+          - - 0.18
+            - -0.025
+            - 0.0
+          - - 0.18
+            - -0.025
+            - 0.0
+        - - - 0.18
+            - 0.025
+            - 0.0
+          - - 0.18
+            - 0.025
+            - 0.0
+          - - 0.18
+            - 0.025
+            - 0.0
+    time_out:
+      _target_: isaaclab.managers.TerminationTermCfg
+      func: gear_sonic.envs.manager_env.mdp:tracking_time_out
+      time_out: true
+      params:
+        command_name: motion
+    foot_pos_xyz:
+      _target_: isaaclab.managers.TerminationTermCfg
+      func: gear_sonic.envs.manager_env.mdp:exceeded_body_pos
+      params:
+        command_name: motion
+        threshold: 0.5
+        body_names: ${manager_env.commands.motion.feet_body_names}
+        point_offsets: ${manager_env.commands.motion.feet_point_offsets}
+    _target_: gear_sonic.envs.manager_env.mdp.terminations.TerminationsCfg
+  events:
+    physics_material:
+      _target_: isaaclab.managers.EventTermCfg
+      func: gear_sonic.envs.manager_env.mdp:randomize_rigid_body_material
+      mode: startup
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+          body_names: .*
+        static_friction_range:
+        - 0.3
+        - 1.6
+        dynamic_friction_range:
+        - 0.3
+        - 1.2
+        restitution_range:
+        - 0.0
+        - 0.5
+        num_buckets: 64
+    add_joint_default_pos:
+      _target_: isaaclab.managers.EventTermCfg
+      func: gear_sonic.envs.manager_env.mdp:randomize_joint_default_pos
+      mode: startup
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+          joint_names:
+          - .*
+        pos_distribution_params:
+        - -0.01
+        - 0.01
+        operation: add
+    base_com:
+      _target_: isaaclab.managers.EventTermCfg
+      func: gear_sonic.envs.manager_env.mdp:randomize_rigid_body_com
+      mode: startup
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+          body_names: torso_link
+        com_range:
+          x:
+          - -0.012
+          - 0.012
+          'y':
+          - -0.015
+          - 0.015
+          z:
+          - -0.02
+          - 0.02
+    hand_payload:
+      _target_: isaaclab.managers.EventTermCfg
+      func: gear_sonic.envs.manager_env.mdp:randomize_rigid_body_mass_mixture
+      mode: startup
+      params:
+        asset_cfg:
+          _target_: isaaclab.managers.SceneEntityCfg
+          name: robot
+          body_names:
+          - left_wrist_yaw_link
+          - right_wrist_yaw_link
+        mass_distribution_params:
+        - 0.05
+        - 0.35
+        active_probability: 0.25
+        recompute_inertia: true
+    _target_: gear_sonic.envs.manager_env.mdp.events.EventCfg
+  curriculum:
+    _target_: gear_sonic.envs.manager_env.mdp.curriculum.CurriculumCfg
+  recorders:
+    _target_: gear_sonic.envs.manager_env.mdp.recorders.RecordersCfg
+  _target_: gear_sonic.envs.manager_env.modular_tracking_env_cfg.ModularTrackingEnvCfg
+  config:
+    num_envs: ${num_envs}
+    env_spacing: 2.0
+    decimation: 4
+    episode_length_s: 10.0
+    sim_dt: 0.005
+    viewer_eye:
+    - 4.5
+    - 0.0
+    - 6.0
+    viewer_lookat:
+    - 0.0
+    - 0.0
+    - 2.0
+    render_results: false
+    save_rendering_dir: ${experiment_dir}/renderings_training
+    experiment_dir: ${experiment_dir}
+    terrain_type: plane
+    object_mass: null
+    table_offset: null
+    eval_camera_offset:
+    - 2
+    - 2
+    - 1
+    action_transform_module_cfg: null
+    action_transform_module_checkpoint: null
+    meta_action_dim: null
+    needs_policy_atm: true
+    obs:
+      obs_dict: {}
+      obs_dims:
+        actor_obs: 930
+        critic_obs: 1645
+        tokenizer: 3108
+      group_obs_dims:
+        tokenizer:
+          encoder_index:
+          - 3
+          command_multi_future_nonflat:
+          - 10
+          - 58
+          command_z_multi_future_nonflat:
+          - 10
+          - 1
+          command_z:
+          - 1
+          motion_anchor_ori_b:
+          - 6
+          motion_anchor_ori_b_mf_nonflat:
+          - 10
+          - 6
+          motion_anchor_ori_heading:
+          - 6
+          motion_anchor_ori_heading_mf_nonflat:
+          - 10
+          - 6
+          command_multi_future_lower_body:
+          - 240
+          vr_3point_local_target:
+          - 9
+          vr_3point_local_orn_target:
+          - 12
+          smpl_joints_multi_future_local_nonflat:
+          - 10
+          - 72
+          smpl_root_ori_b_multi_future:
+          - 10
+          - 6
+          smpl_root_ori_heading_multi_future:
+          - 10
+          - 6
+          joint_pos_multi_future_wrist_for_smpl:
+          - 10
+          - 6
+          command_multi_future_h2_native_nonflat:
+          - 10
+          - 58
+          robot_encoder_source:
+          - 1
+          paired_g1_command_multi_future_nonflat:
+          - 10
+          - 58
+          paired_g1_motion_anchor_ori_b_mf_nonflat:
+          - 10
+          - 6
+      group_obs_names:
+        tokenizer:
+        - encoder_index
+        - command_multi_future_nonflat
+        - command_z_multi_future_nonflat
+        - command_z
+        - motion_anchor_ori_b
+        - motion_anchor_ori_b_mf_nonflat
+        - motion_anchor_ori_heading
+        - motion_anchor_ori_heading_mf_nonflat
+        - command_multi_future_lower_body
+        - vr_3point_local_target
+        - vr_3point_local_orn_target
+        - smpl_joints_multi_future_local_nonflat
+        - smpl_root_ori_b_multi_future
+        - smpl_root_ori_heading_multi_future
+        - joint_pos_multi_future_wrist_for_smpl
+        - command_multi_future_h2_native_nonflat
+        - robot_encoder_source
+        - paired_g1_command_multi_future_nonflat
+        - paired_g1_motion_anchor_ori_b_mf_nonflat
+    action_clip_value: 20.0
+    robot:
+      type: h2lora
+      algo_obs_dim_dict:
+        actor_obs: 930
+        critic_obs: 1645
+        tokenizer: 3108
+      actions_dim: 29
+    rewards:
+      num_critics: 1
+    train_only_events:
+    - push_robot
+    - compliance_force_push
+    h2_asset:
+      source: unitreerobotics/unitree_ros
+      source_url: https://github.com/unitreerobotics/unitree_ros
+      source_commit: ${oc.env:H2_UNITREE_ROS_COMMIT,d96d8f63ae17a7108d4f7229c00ef875ba7129c9}
+      urdf_path: ${oc.env:H2_URDF_ASSET_PATH,external_dependencies/unitree_ros/robots/h2_description/H2.urdf}
+      urdf_sha256: ${oc.env:H2_URDF_SHA256,32866f6f2dae8ed79dc622b015160f4f8fc018ce266ce4f84322084ddc741401}
+      simulation_asset_kind: ${oc.env:H2_ROBOT_ASSET_KIND,unitree_ros_usd}
+      simulation_usd_path: ${oc.env:H2_USD_ASSET_PATH,gear_sonic/data/assets/robot_description/usd/h2_unitree_ros_d96d8f63/H2.usd}
+      simulation_usd_sha256: ${oc.env:H2_USD_SHA256,655c62dd216ea510b66d84071106dcfb0c354b781a2152e49da795983ce41b03}
+      actuator_profile: unitree_rl_mjlab_h2
+      actuator_reference_commit: 1425b15f73bd4095f0df53709d7c389c3eb9e790
+      actuator_natural_frequency_hz: 10.0
+      actuator_damping_ratio: 2.0
+      physics_step_s: 0.005
+      backlash_max_rad: 0.003490658503988659
+    policy_action_dim: 29
+    use_h2lora_bridge: true
+    actor_observation_contract: sonic_h2_native_v1
+    policy_action_clip_value: 6.0
+    clip_h2lora_sim_actions: false
+    h2lora_diagnostics_interval: 24
+    store_env_actions_in_extras: false
+    actor_prop_history_length: ${actor_prop_history_length}
+    actor_actions_history_length: ${actor_actions_history_length}
+    critic_prop_history_length: ${critic_prop_history_length}
+    critic_actions_history_length: ${critic_actions_history_length}
+    direct_joint_defaults:
+      head_pitch_joint: 0.0
+      head_yaw_joint: 0.0
+    h2lora_policy_interface: h2_native
+    reference_orientation_contract: sonic_full_root_relative_v0
+    pretrained_controller: sonic_release
+    critic_observation_contract: sonic_h2_native_linear_v1
+    sync_adaptive_sampling_all_gpus_freq: 100
+use_manager_env: true
+use_swanlab: true
+exp_base: ${hydra:runtime.choices.exp}
+exp_var: 20260906_204409_stage2
+actor_prop_history_length: 10
+actor_actions_history_length: 10
+critic_prop_history_length: 10
+critic_actions_history_length: 10
+swanlab:
+  project: sonic-h2-native-8xA6000-ori-2
+  mode: ${oc.env:SWANLAB_MODE,cloud}
+  tags:
+  - h2-native
+  - 8xA6000
+  - two-stage
+  - stage2
+  - critic-linear
+  group: h2-native-two-stage
+  job_type: train
+training_stage: 2
+resume: false

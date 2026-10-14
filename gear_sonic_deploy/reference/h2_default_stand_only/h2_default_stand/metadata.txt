@@ -1,0 +1,12 @@
+Metadata for: h2_default_stand
+==============================
+
+Body part indexes:
+[0]
+
+Total timesteps: 1000
+FPS: 50
+Deploy source: h2_lora
+Reference joint space: g1_semantic_29d_from_h2_physical_headless
+Synthetic reference: true
+Source deploy header: gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/policy_parameters.hpp

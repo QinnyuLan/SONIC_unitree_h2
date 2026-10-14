@@ -1,0 +1,2 @@
+swanlab:
+  _target_: gear_sonic.trl.callbacks.swanlab_callback.SwanLabCallback

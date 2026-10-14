@@ -1,0 +1,81 @@
+# H2Lora Deploy - Observation Configuration
+# =========================================
+# The H2Lora decoder keeps the released SONIC G1 policy observation/action
+# contract: 29D G1-semantic body state, raw 29D last action, and 64D token.
+# Robot-specific H2 physical state/action conversion is handled in deploy C++.
+
+observations:
+
+  - name: "token_state"
+    enabled: true
+
+  # Keep the 930D decoder proprioception slice in the exact ONNX export order.
+  # Although local_dir_hist_h2lora.yaml lists gravity first in defaults, the
+  # IsaacLab ObservationManager follows PolicyCfg field order:
+  # base_ang_vel, joint_pos, joint_vel, actions, gravity_dir.
+  - name: "his_base_angular_velocity_10frame_step1"
+    enabled: true
+
+  - name: "his_body_joint_positions_10frame_step1"
+    enabled: true
+
+  - name: "his_body_joint_velocities_10frame_step1"
+    enabled: true
+
+  - name: "his_last_actions_10frame_step1"
+    enabled: true
+
+  # Keep all 30 gravity-history values intact. The deploy runtime refreshes
+  # only the newest 29D frame inside his_last_actions_10frame_step1.
+  - name: "his_gravity_dir_10frame_step1"
+    enabled: true
+
+encoder:
+  dimension: 64
+  use_fp16: false
+  encoder_observations:
+    # Keep this order identical to export_universal_token_encoders_as_onnx:
+    # [encoder_index scalar selector | encoder_index tokenizer obs | tokenizer obs
+    # filtered from sonic_h2lora_release tokenizer_obs_names].
+    - name: "encoder_index"
+      enabled: true
+    - name: "command_multi_future_nonflat"
+      enabled: true
+    - name: "motion_anchor_ori_b"
+      enabled: true
+    - name: "motion_anchor_ori_b_mf_nonflat"
+      enabled: true
+    - name: "command_multi_future_lower_body"
+      enabled: true
+    - name: "vr_3point_local_target"
+      enabled: true
+    - name: "vr_3point_local_orn_target"
+      enabled: true
+    - name: "smpl_joints_multi_future_local_nonflat"
+      enabled: true
+    - name: "smpl_root_ori_b_multi_future"
+      enabled: true
+    - name: "joint_pos_multi_future_wrist_for_smpl"
+      enabled: true
+  encoder_modes:
+    - name: "g1"
+      mode_id: 0
+      required_observations:
+        - encoder_index
+        - command_multi_future_nonflat
+        - motion_anchor_ori_b_mf_nonflat
+    - name: "teleop"
+      mode_id: 1
+      required_observations:
+        - encoder_index
+        - command_multi_future_lower_body
+        - vr_3point_local_target
+        - vr_3point_local_orn_target
+        - motion_anchor_ori_b
+    - name: "smpl"
+      mode_id: 2
+      required_observations:
+        - encoder_index
+        - smpl_joints_multi_future_local_nonflat
+        - smpl_root_ori_b_multi_future
+        - joint_pos_multi_future_wrist_for_smpl
