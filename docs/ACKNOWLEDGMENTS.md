@@ -7,7 +7,7 @@
 - **TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments.** Qingyu Lan, Zhihao Tian, Zifan Wang, and Junwei Liang, 2026. [Paper](https://arxiv.org/abs/2610.17999) · [Project](https://bfm-trace.github.io/).
 - **SONIC: Supersizing Motion Tracking for Natural Humanoid Whole-Body Control.** Zhengyi Luo et al., 2025. TRACE builds on SONIC's pretrained motion representation and whole-body controller. [Paper](https://arxiv.org/abs/2511.07820) · [Code](https://github.com/NVlabs/GR00T-WholeBodyControl) · [Models](https://huggingface.co/nvidia/GEAR-SONIC).
 
-The TRACE BibTeX entry follows the project page. The SONIC entry follows the upstream citation included with the source code. Both are provided in [references.bib](references.bib). GitHub's citation metadata is defined in [CITATION.cff](../CITATION.cff), with TRACE as the preferred citation and SONIC listed as an upstream reference.
+The project citation is provided in [references.bib](references.bib) and [CITATION.cff](../CITATION.cff). The original SONIC citation is retained in [README.upstream.md](../README.upstream.md#citation).
 
 ## Software and Assets
 

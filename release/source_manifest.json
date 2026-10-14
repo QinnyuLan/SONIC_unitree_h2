@@ -22898,23 +22898,23 @@
     },
     {
       "path": "CITATION.cff",
-      "bytes": 2827,
-      "sha256": "09752524a4ccd02e168aa50806fa104b1671d23380272d8658e2a9862203c89e"
+      "bytes": 1057,
+      "sha256": "f72e35cf2530e56046c21ba3a610d9e646bae17282aedd245ea33c5e46540a30"
     },
     {
       "path": "README.md",
-      "bytes": 4168,
-      "sha256": "d9253b3afc28800dbc22944c6e595a19aaa9eb451002dc2196cd56a6b33ad88f"
+      "bytes": 3233,
+      "sha256": "97f78217ba81494655f118536d9faa84a54000715cce2237919e5504ca012140"
     },
     {
       "path": "README_CN.md",
-      "bytes": 3914,
-      "sha256": "963f3075b7fd33c6bcdcc90ddfabe20bd6e113b3eb02fdd9b4faacaaa10ad036"
+      "bytes": 2994,
+      "sha256": "350d872e97609a72397f2d98acbc25cb98be13c8b9d5decfd717ecf5ed72628e"
     },
     {
       "path": "docs/ACKNOWLEDGMENTS.md",
-      "bytes": 2548,
-      "sha256": "b4066fe06a3e12e29f90bf94d582f4a5f7205396c911696a3a2be4f09fdf723d"
+      "bytes": 2416,
+      "sha256": "45f5976acc89c81e1e5735c8427552cef56267817b449f2398b1b06b763147bc"
     },
     {
       "path": "docs/DEPLOYMENT.md",
@@ -22948,8 +22948,8 @@
     },
     {
       "path": "docs/references.bib",
-      "bytes": 952,
-      "sha256": "e9342d353c6c7e53c4bf5d2e424a58be4e48ed581d0fac6661dcd8cffa977a11"
+      "bytes": 351,
+      "sha256": "06fff4f1c99503219749ec2eab964b27a0696e774ce277e5d5d7f43666c9ee3b"
     },
     {
       "path": "docs/report/h2_model_deployment_workflow_handoff.md",
@@ -22973,8 +22973,8 @@
     },
     {
       "path": "docs/source/resources/citations.md",
-      "bytes": 1198,
-      "sha256": "4cd12a1459890e903c2cfb66ea2a2914bf7693ba5c0a13dd5b0d7688f93dc6f4"
+      "bytes": 489,
+      "sha256": "970ebd00fc4c1aa5f4b834bad71a530e51a285b6262879222d9c6ea5bcc532da"
     },
     {
       "path": "docs/source/user_guide/troubleshooting.md",
@@ -24367,7 +24367,7 @@
       "sha256": "08a4daf00933addc397eb091197e10f7f52bf317911c70740998b7bb409509d0"
     }
   ],
-  "release_artifacts_bytes": 149553533,
+  "release_artifacts_bytes": 149548466,
   "release_artifacts_count": 297,
   "published_model": {
     "name": "released",
