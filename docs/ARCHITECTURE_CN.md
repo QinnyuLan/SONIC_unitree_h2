@@ -15,7 +15,7 @@
 
 C++ 执行代码、TensorRT 封装、Unitree SDK 和 CMake 构建入口统一位于 `src/runtime/`。测试所需的动作读取和运动学代码放在 `src/runtime/tests/`，不参与正式 runtime 的编译。模型、回放示例、部署配置分别位于 `models/`、`motions/`、`config/`；编译产物为 `build/runtime/bin/sonic_h2_runtime`。目录说明见[工程结构](LAYOUT.md)。
 
-runtime 用三秒过渡到默认站姿，随后以 50 Hz 运行身体策略、500 Hz 发布 DDS 指令。无身体指令或指令超时后选择站立参考。机器人状态丢失、推理异常、控制线程超时或 `stop` 会结束控制并进入阻尼；停止后需重启 runtime。
+runtime 用三秒过渡到配置站姿（`phase=initializing`），随后通过 PD 保持姿态并等待（`phase=ready`、`policy_enabled=false`）。在 runtime 终端按 **]** 或 **s** 后，才以 50 Hz 运行身体策略（`phase=running`、`policy_enabled=true`）；DDS 指令保持 500 Hz。提前按下的启动键和开启前排队的身体参考会被丢弃。按 **o** 进入阻尼并锁定停止，需要重启 runtime 才能恢复。无身体指令或指令超时后选择站立参考。机器人状态丢失、推理异常、控制线程超时或 `stop` 会结束控制并进入阻尼；停止后需重启 runtime。
 
 仿真器实现独立位于 `src/sim/`，通过 DDS 与 runtime 通信，不导入上游指令模块。仿真与遥操作使用的机器人资源统一位于 `assets/`。Python 安装入口为根目录 `pyproject.toml`。
 
@@ -46,6 +46,8 @@ H2 回放读取原生 31 维 MuJoCo 关节文件，排除头部并重排为 29 �
 VR 使用左腕、右腕、头部三点的 `positions[3,3]` 与 `orientations[3,4]`，坐标为标定后的机器人局部坐标；`lower_body` 携带相同的 G1 稀疏参考。SMPL 使用间隔 20 ms 的 10 帧，包含 `joints[10,24,3]`、`root_quat[10,4]` 和 `wrist_joints[10,6]`。SMPL joints 为以根为中心、世界轴表达的向量，runtime 转为 SMPL 根坐标。腕部顺序为左 roll、右 roll、左 pitch、右 pitch、左 yaw、右 yaw。所有四元数均为 **wxyz**。
 
 runtime 根据包的时间推进参考，角度/速度线性插值，四元数使用 SLERP。来源、session 或身体类型切换时对齐 heading；同一连续输入的后续包保留转向变化。超出参考末帧时暂时保持末值，直到指令到期回到站立。
+
+站姿参考读取 `config/runtime/standing_pose.json`，用于初始化、PD 等待，以及无身体输入时的 policy 站立参考；它与 decoder 训练时的关节基准角和动作缩放独立。
 
 发布模型接口保持为 full encoder 1751 → 64、decoder 994 → 29。selector 0/1/2/3 分别表示 H2 原生轨迹或默认站立、VR、SMPL、G1。decoder 的 10 帧历史按从旧到新排列。
 

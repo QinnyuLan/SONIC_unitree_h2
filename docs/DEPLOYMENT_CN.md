@@ -45,10 +45,10 @@ bash scripts/run_h2_paper_sim.sh
 终端 2：启动 SONIC policy runtime。
 
 ```bash
-bash scripts/run_runtime.sh sim
+bash scripts/run_sonic_h2_runtime.sh sim
 ```
 
-runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略、等待指令。两端默认使用 loopback、DDS domain 0；更换 domain 时，在两个终端设置相同的 `DDS_DOMAIN`。站立策略开始运行后，点击仿真窗口并按 **9** 解除弹力带，观察无支撑站立，再发送动作指令。
+runtime 用三秒从测量姿态过渡到配置的站姿，显示 **[READY]** 后通过 PD 保持姿态，policy 尚未启用。在**终端 2** 按 **]** 或 **s** 开启 policy，无需回车；初始化结束前按下的启动键会被忽略，需要在就绪后重新按键。按 **o** 停止 policy 并进入阻尼模式，停止后需重新启动 runtime，不能直接按启动键恢复。两端默认使用 loopback、DDS domain 0；更换 domain 时，在两个终端设置相同的 `DDS_DOMAIN`。站立策略开始运行后，点击仿真窗口并按 **9** 解除弹力带，观察无支撑站立，再发送动作指令。
 
 终端 3：启动交互式 motion replay。
 
@@ -67,6 +67,14 @@ bash scripts/run_planner.sh --keyboard
 该终端同时运行 TensorRT planner 工作进程和键盘面板。**1 / 2 / 3** 选择慢走 / 行走 / 跑步，**0** 选择静止；**W/S** 前进/后退，**A/D** 左右平移，**Q/E** 转向，**+/-** 调整速度。**空格** 停止并返回站立，**Esc** 或 **Ctrl+C** 退出面板及 planner 工作进程。完整按键及全部模式切换见[接口说明](../src/interface/README.md#planner-keyboard-control)。
 
 两个输入面板均等待 runtime 的新鲜状态后才发送动作。状态中断后，回放会暂停且不会自动恢复，planner 会清除键盘指令。退出输入端后，仿真器和 runtime 继续运行。planner 需要单独安装环境、下载权重，首次构建引擎可能需要数分钟。安装与测试范围见 [planner 配置](PLANNER.md)和[验证记录](REPRODUCIBILITY.md)。
+
+### 站姿配置与 runtime 按键
+
+初始化以及 **[READY]** 阶段保持弹力带支撑。此时 PD 只保持关节姿态，按 **]** 或 **s** 后才开启 policy 平衡控制。按键在 runtime 所在终端生效，无需回车。**o** 将位置增益设为零、阻尼设为 8，停止控制并要求重启 runtime；无支撑的机器人可能在停止后倒下。
+
+站姿参考位于 [`config/runtime/standing_pose.json`](../config/runtime/standing_pose.json)。双腿统一采用：髋俯仰 **−0.10 rad**、膝关节 **0.25 rad**（约 **14°**）、踝俯仰 **−0.15 rad**，减小屈膝幅度并保留轻微弯曲。该参考同时用于初始化、PD 等待，以及没有身体输入时的 policy 站立；仿真器的初始姿态与此预设一致。头部仍独立接收指令。
+
+可以通过 `--standing-pose /absolute/path/to/standing_pose.json` 指定其他参考，角度单位为 rad。调整作用于输入 policy 的参考姿态，decoder 训练时的关节基准角与动作缩放保持原定义。修改参考后，先验证仿真中的站立和动作跟踪，再用于实机。
 
 ### Runtime 启动故障排查
 
@@ -140,11 +148,11 @@ Unitree H2 可能存在较大的仿真到实机差异。应重点检查连杆传
 在 [`h2_deploy.env`](../config/h2_deploy.env) 设置机器人网卡、DDS domain、手部后端和增益。准备好支撑与急停后运行：
 
 ```bash
-bash scripts/run_runtime.sh real --print-command
-bash scripts/run_runtime.sh real
+bash scripts/run_sonic_h2_runtime.sh real --print-command
+bash scripts/run_sonic_h2_runtime.sh real
 ```
 
-启动器显示目标网卡，输入 `RUN` 后开始控制，并自动过渡到默认站姿。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接机器人端 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
+启动器显示目标网卡，输入 `RUN` 后开始控制，并自动过渡到配置的站姿。显示 **[READY]** 后，在 runtime 终端按 **]** 或 **s** 开启 policy；按 **o** 进入阻尼并锁定停止，恢复时需重启 runtime。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接机器人端 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
 
 使用 Inspire 灵巧手时，先在 H2 PC2 部署仓库中的 `tools/robot_services/inspire_hands/` 服务。串口映射、开机自启动、看门狗和只读验收见[机器人端手部服务指南](INSPIRE_HANDS_CN.md)。该服务独立于身体 policy 运行。
 

@@ -6,7 +6,7 @@ ROLE="${1:-}"
 cd "$ROOT"
 source "$ROOT/config/h2_head_adjust.env"
 case "$ROLE" in
-  deploy) exec bash "$ROOT/scripts/run_runtime.sh" real "$@" ;;
+  deploy) exec bash "$ROOT/scripts/run_sonic_h2_runtime.sh" real "$@" ;;
   bridge) exec "$ROOT/.venv_teleop/bin/python" -m interface.teleop.bridge "$@" ;;
   planner) exec bash "$ROOT/scripts/run_planner.sh" --publish-only "$@" ;;
   pico)

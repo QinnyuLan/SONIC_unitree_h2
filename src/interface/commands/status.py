@@ -37,6 +37,8 @@ class RuntimeStatus:
     def label(self):
         if not self.state:
             return "Runtime: waiting for fresh state"
+        if self.state.get("phase") == "ready":
+            return "Runtime: pose ready, policy OFF | press ] or s in the runtime terminal"
         return f"Runtime: {self.state.get('phase')} | {self.state.get('body_kind')} | source: {self.state.get('source') or 'none'}"
 
     def close(self):

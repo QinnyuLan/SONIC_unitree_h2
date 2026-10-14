@@ -26,7 +26,7 @@ Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy)
 
 ## Getting Started
 
-The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. Policy and planner inference use TensorRT. The optional ECHO-G generator prepares speech and G1 gestures offline for motion replay.
+The runtime initializes a standing pose, waits for **]** or **s** to enable the policy, then accepts commands from independent motion replay, planner, and teleoperation processes. Press **o** to stop with damping. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. Policy and planner inference use TensorRT. The optional ECHO-G generator prepares speech and G1 gestures offline for motion replay.
 
 ```bash
 git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git

@@ -1,0 +1,8 @@
+{
+  "schema": "sonic.h2.standing_pose.v1",
+  "leg_joint_angles_rad": {
+    "hip_pitch": -0.10,
+    "knee": 0.25,
+    "ankle_pitch": -0.15
+  }
+}

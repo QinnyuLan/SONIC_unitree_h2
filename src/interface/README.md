@@ -61,7 +61,7 @@ With the simulator and policy runtime running in terminals 1 and 2, start the br
 | `l` | Toggle looping; use only for clips with a continuous loop boundary |
 | `q` / Esc / Ctrl+C | Exit replay and release body control |
 
-Selecting a collection does not play it automatically. Playback waits for fresh runtime state in the `running` phase. A state or command-connection loss pauses playback; reconnecting does not resume it. Pausing returns the robot to its default standing reference rather than holding an intermediate motion pose. Space resumes from the saved reference time; Enter starts from the beginning. The runtime status and current input owner are shown above the collection list.
+Selecting a collection does not play it automatically. Playback waits for fresh runtime state in the `running` phase. After the runtime prints `[READY]`, press **]** or **s** in its terminal to enable policy control. **o** in that terminal stops with damping and requires a runtime restart. A state or command-connection loss pauses playback; reconnecting does not resume it. Pausing returns the robot to its default standing reference rather than holding an intermediate motion pose. Space resumes from the saved reference time; Enter starts from the beginning. The runtime status and current input owner are shown above the collection list.
 
 Use `--endpoint` and `--state` for custom runtime sockets, or `--motions-root` for another directory containing the four named collections. `--speed` sets playback speed. Speech/audio bundles continue to use the direct motion-path CLI above; the keyboard browser handles the four typed motion collections.
 

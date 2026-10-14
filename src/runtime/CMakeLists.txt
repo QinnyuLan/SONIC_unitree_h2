@@ -59,8 +59,8 @@ if(BUILD_TESTING)
     GTest::GTest GTest::Main sonic_test_support unitree_sdk2)
   add_test(NAME controller_tests COMMAND controller_tests)
 
-  add_executable(runtime_tests tests/test_runtime.cpp)
-  target_link_libraries(runtime_tests PRIVATE GTest::GTest GTest::Main sonic_runtime_headers)
+  add_executable(runtime_tests tests/test_runtime.cpp tests/test_operator_control.cpp)
+  target_link_libraries(runtime_tests PRIVATE GTest::GTest GTest::Main sonic_runtime_headers util)
   add_test(NAME runtime_tests COMMAND runtime_tests)
   set_tests_properties(controller_tests runtime_tests PROPERTIES
     WORKING_DIRECTORY "${SONIC_ROOT}")

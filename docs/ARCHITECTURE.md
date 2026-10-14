@@ -43,7 +43,7 @@ Offline speech/gesture generation lives in `tools/text2motion_offline/echo_g/`, 
 
 Python and C++ use the same engine-cache format and FP32 build policy (TensorRT's default TF32 allowance, no FP16). Cache compatibility includes model SHA256, GPU name, precision and TensorRT version. A missing or incompatible cache is rebuilt on the local GPU.
 
-Startup interpolates from measured joints to the default pose over three seconds. The body policy then runs at 50 Hz; DDS targets publish at 500 Hz. A missing or expired body command selects the standing reference. Robot-state loss, invalid model output, explicit stop or control-thread timeout ends control with damping. The head and hands have their own command ownership and expiry. Stop is latched until the runtime restarts.
+Startup interpolates from measured joints to the configured standing pose over three seconds (`phase=initializing`), then holds that pose with PD control (`phase=ready`, `policy_enabled=false`). A fresh **]** or **s** key in the runtime terminal enables the 50 Hz body policy (`phase=running`, `policy_enabled=true`); DDS targets publish at 500 Hz in all active phases. Early start keys and pre-start body references are discarded. **o** stops with damping and latches until restart. A missing or expired body command selects the standing reference. Robot-state loss, invalid model output, explicit stop or control-thread timeout ends control with damping. The head and hands have their own command ownership and expiry. Stop is latched until the runtime restarts.
 
 ## Transport
 
@@ -93,6 +93,8 @@ The first producer owns its channel until expiry or `stand`. Another producer ne
 Angles are radians; velocities rad/s; positions meters; all quaternions **wxyz**. G1 and H2 angles are absolute. Their message kinds select different model branches; neither applies a joint-space projection. H2 replay reorders the native 31D MuJoCo source into 29D body policy order and drops the head columns before sending. SMPL joints are root-centered vectors expressed in world axes; the runtime rotates them into the SMPL root frame. SMPL wrists follow `[left_roll, right_roll, left_pitch, right_pitch, left_yaw, right_yaw]`.
 
 References advance according to packet time. Position/velocity interpolation is linear; quaternion interpolation uses SLERP. Sampling beyond a packet's reference horizon holds its final sample until expiry. Replay sets terminal velocities to zero. Heading is aligned once when the source/session or body kind changes, then remains fixed across packets so turns are preserved.
+
+The standing reference comes from `config/runtime/standing_pose.json` and is independent of the trained decoder joint offsets and action scales. It is used for initialization, PD waiting, and the policy reference when no body input is active.
 
 The full encoder layout remains 1751 → 64: selector 0 for native H2 trajectories and default standing, 1 for VR, 2 for SMPL, 3 for native G1. The decoder remains 994 → 29 and receives ten history frames in oldest-to-newest order. The interface reserves direct token input; no VLA model, GR00T integration or associated dependencies are included.
 

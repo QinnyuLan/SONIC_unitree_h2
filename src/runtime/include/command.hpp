@@ -154,6 +154,7 @@ class CommandInbox {
     return active_ && now < expires_ && !stopped_ ? &*active_ : nullptr;
   }
   bool Stopped() const { return stopped_; }
+  void DiscardActive() { active_.reset(); }
   uint64_t Generation() const { return generation_; }
   uint64_t Rejected() const { return rejected_; }
   const std::string& LastRejection() const { return rejection_; }

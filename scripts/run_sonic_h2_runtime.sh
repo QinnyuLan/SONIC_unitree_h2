@@ -30,7 +30,8 @@ if "$PRINT_ONLY"; then printf '%q ' "${COMMAND[@]}"; printf '\n'; exit 0; fi
 [[ -x "${COMMAND[0]}" ]] || { echo "Build first: bash scripts/build_controller.sh" >&2; exit 1; }
 source "$ROOT/scripts/setup_env.sh"
 if [[ "$MODE" == real ]]; then
-  echo "H2 will move to its default standing pose and accept commands on $NETWORK_INTERFACE (DDS $DDS_DOMAIN)."
+  echo "H2 will move to its standing pose on $NETWORK_INTERFACE (DDS $DDS_DOMAIN)."
+  echo "After [READY], press ] or s to enable policy. Press o to stop with damping."
   read -r -p "Type RUN to start robot control: " RESPONSE
   [[ "$RESPONSE" == RUN ]] || exit 1
 fi

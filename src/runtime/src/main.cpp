@@ -8,6 +8,9 @@
 #include "h2_head_control.hpp"
 #include "dex3_hands.hpp"
 #include "inspire_hands.hpp"
+#include "runtime_control.hpp"
+#include "standing_pose.hpp"
+#include "terminal_keyboard.hpp"
 #include "utils.hpp"
 #include <unitree/robot/channel/channel_publisher.hpp>
 #include <unitree/robot/channel/channel_subscriber.hpp>
@@ -28,6 +31,7 @@ volatile std::sig_atomic_t interrupted = 0;
 void Signal(int) { interrupted = 1; }
 struct Options {
   std::string network = "lo", model = "models/sonic_h2_released";
+  std::string standing_pose;
   std::string body = "tcp://127.0.0.1:5558", state = "tcp://127.0.0.1:5559";
   std::string head = "tcp://127.0.0.1:5562", hands = "tcp://127.0.0.1:5563";
   int domain = 0;
@@ -43,6 +47,7 @@ Options Parse(int argc, char** argv) {
     if (key == "--help") {
       std::cout << "SONIC_unitree_h2 policy runtime\n"
         "  --model-dir PATH       released encoder/decoder directory\n"
+        "  --standing-pose PATH   standing reference (default config/runtime/standing_pose.json)\n"
         "  --network IFACE        DDS interface (default lo)\n"
         "  --domain N             DDS domain\n"
         "  --sim                  simulator CRC and motion-switcher settings\n"
@@ -55,7 +60,9 @@ Options Parse(int argc, char** argv) {
         "  --hand-backend none|inspire|dex3\n"
         "  --left-ankle-kp S --right-ankle-kp S\n"
         "  --left-ankle-roll-kp S --right-ankle-roll-kp S\n"
-        "  --left-knee-kp S --right-knee-kp S\n";
+        "  --left-knee-kp S --right-knee-kp S\n"
+        "  Keyboard: after pose initialization, ] or s starts policy; o stops with damping.\n"
+        "  Stop is latched; restart the runtime to resume. No Enter is needed.\n";
       std::exit(0);
     }
     if (key == "--sim") { o.sim = true; continue; }
@@ -64,6 +71,7 @@ Options Parse(int argc, char** argv) {
     const std::string value = argv[i];
     if (key == "--network") o.network = value;
     else if (key == "--model-dir") o.model = value;
+    else if (key == "--standing-pose") o.standing_pose = value;
     else if (key == "--domain") o.domain = std::stoi(value);
     else if (key == "--seconds") o.seconds = std::stod(value);
     else if (key == "--command-bind") o.body = value;
@@ -83,6 +91,8 @@ Options Parse(int argc, char** argv) {
   Require(o.domain >= 0 && o.domain <= 232, "invalid DDS domain");
   Require(std::isfinite(o.seconds) && o.seconds >= 0, "invalid duration");
   Require(o.dry_run || o.sim || o.network != "lo", "real hardware requires --network");
+  if (o.standing_pose.empty()) o.standing_pose =
+      (std::filesystem::path(o.model) / "../../config/runtime/standing_pose.json").lexically_normal().string();
   return o;
 }
 
@@ -101,6 +111,8 @@ class Runtime {
     const auto decoder_path = (dir / "model_decoder.onnx").string();
     h2_native_contract::ValidateDeploymentModels(encoder_path, decoder_path,
                                                 "sonic_full_root_relative_v0");
+    standing_pose_ = LoadStandingPose(options_.standing_pose);
+    observations_ = Observations(StandingBodyReference(standing_pose_));
     const auto model_start = Clock::now();
     std::cout << "Initializing policy models; DDS control has not started. Ctrl+C cancels startup." << std::endl;
     Require(encoder_.Initialize(encoder_path, false), "encoder initialization failed");
@@ -121,11 +133,16 @@ class Runtime {
   }
   ~Runtime() { Shutdown(); }
   void Run() {
+    TerminalKeyboard keyboard;
+    std::cout << "[WAITING] Waiting for robot state. Pose initialization takes 3 seconds.\n"
+              << "[KEYS] After [READY]: ] or s starts policy; o stops with damping; Ctrl+C exits.\n"
+              << "[POSE] Hip pitch " << standing_pose_[0] << ", knee " << standing_pose_[3]
+              << ", ankle pitch " << standing_pose_[5] << " rad (both legs)." << std::endl;
     const auto started = Clock::now();
     auto next = started;
     while (!interrupted && !stopped_ &&
            (options_.seconds == 0 || std::chrono::duration<double>(Clock::now() - started).count() < options_.seconds)) {
-      try { Tick(); }
+      try { Tick(keyboard.Poll()); }
       catch (const std::exception& e) { std::cerr << "Runtime stopped: " << e.what() << '\n'; stopped_ = true; failed_ = true; }
       next += std::chrono::milliseconds(20);
       if (next < Clock::now()) next = Clock::now();
@@ -166,13 +183,26 @@ class Runtime {
       }
     });
   }
-  void Tick() {
+  void Tick(const std::string& keys) {
+    const auto previous_phase = control_.Phase();
+    control_.Keys(keys);
+    if (control_.Phase() == ControlPhase::Stopped) {
+      stopped_ = true;
+      std::cout << "[STOPPED] Policy disabled; damping applied. Restart runtime to resume." << std::endl;
+      return;
+    }
+    const bool started_policy = previous_phase != ControlPhase::Running && control_.Running();
+    if (started_policy) std::cout << "[RUNNING] Policy enabled. Waiting for body commands; o stops with damping." << std::endl;
+    else if (!control_.Running() && keys.find_first_of("]s") != std::string::npos)
+      std::cout << "[WAITING] Start ignored: wait for [READY], then press ] or s again." << std::endl;
     body_.Poll(); head_.Poll(); hands_.Poll();
     if (body_.inbox.Stopped()) { stopped_ = true; return; }
+    // Do not execute a trajectory queued before the operator enabled policy.
+    if (!control_.Running() || started_policy) body_.inbox.DiscardActive();
     const auto now = Clock::now();
     RobotState robot;
     if (options_.dry_run) {
-      for (int j = 0; j < 31; ++j) robot.q[j] = H2DefaultAngleDds(j);
+      robot.q = standing_pose_;
     } else {
       const auto state = low_state_.GetDataWithTime();
       if (!state.data) return;
@@ -195,14 +225,20 @@ class Runtime {
     if (!initialized_) {
       initial_q_ = robot.q;
       head_targets_ = {robot.q[h2_head_dds_indices[0]], robot.q[h2_head_dds_indices[1]]};
-      initialized_ = true; ramp_start_ = now;
+      initialized_ = true;
+      control_.BeginInitialization(now);
+      std::cout << "[INITIALIZING] Moving to standing pose; policy is disabled." << std::endl;
     }
-    const double ramp = options_.dry_run ? 1.0 : std::min(1.0, std::chrono::duration<double>(now - ramp_start_).count() / 3.0);
+    const auto phase_before_update = control_.Phase();
+    control_.Update(now);
+    if (phase_before_update != control_.Phase() && control_.Phase() == ControlPhase::Ready)
+      std::cout << "[READY] Holding standing pose with PD; policy is disabled. Press ] or s to start, o to stop." << std::endl;
+    const double ramp = control_.Ramp(now);
     MotorCommand motor{};
     const auto* command = body_.inbox.Active(now);
-    if (ramp < 1) {
+    if (!control_.Running()) {
       for (int j = 0; j < 31; ++j) {
-        motor.q_target[j] = initial_q_[j] + ramp * (H2DefaultAngleDds(j) - initial_q_[j]);
+        motor.q_target[j] = initial_q_[j] + ramp * (standing_pose_[j] - initial_q_[j]);
         motor.kp[j] = ProfileInitKp("h2_native", j);
         motor.kd[j] = ProfileInitKd("h2_native", j);
       }
@@ -243,7 +279,7 @@ class Runtime {
     motor_command_.SetData(motor);
     UpdateHands(hands_.inbox.Active(now));
     Json status = {{"schema", "sonic.h2.state.v1"}, {"sent_at_ms", WallMilliseconds()},
-        {"phase", ramp < 1 ? "initializing" : "running"},
+        {"phase", control_.Name()}, {"policy_enabled", control_.Running()},
         {"body_kind", command ? command->kind : "stand"}, {"source", command ? command->source : ""},
         {"root_quat", robot.root}, {"joint_pos", robot.q}, {"joint_vel", robot.dq},
         {"head_active", head != nullptr}, {"head_target", head_targets_},
@@ -290,6 +326,7 @@ class Runtime {
     }
   }
   void Shutdown() {
+    control_.Stop();
     stopped_ = true;
     if (writer_.joinable()) { writer_.request_stop(); writer_.join(); Write(); }
   }
@@ -300,6 +337,8 @@ class Runtime {
   EncoderEngine encoder_;
   PolicyEngine policy_;
   Observations observations_;
+  RuntimeControl control_;
+  std::array<double, 31> standing_pose_{};
   DataBuffer<LowState_> low_state_;
   DataBuffer<MotorCommand> motor_command_;
   ChannelPublisherPtr<LowCmd_> publisher_;
@@ -314,7 +353,6 @@ class Runtime {
   std::array<double, 31> initial_q_{};
   std::array<double, 29> last_action_{};
   std::array<double, 2> head_targets_{};
-  Clock::time_point ramp_start_;
   std::jthread writer_;
 };
 }  // namespace

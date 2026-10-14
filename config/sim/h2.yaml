@@ -39,9 +39,8 @@ APPLY_DEFAULT_POSE_ON_RESET: True
 # above the floor.
 DEFAULT_BASE_POS: [0.0, 0.0, 1.11]
 DEFAULT_BASE_QUAT: [1.0, 0.0, 0.0, 0.0]
-# Match the G1 sim2sim elastic-band mechanism while accounting for H2's taller
-# torso.  G1's anchor is about 0.207m above its attached pelvis at reset; H2's
-# torso_link starts at about 1.09m, so 1.30m gives the same startup offset.
+# Suspend H2 above its calibrated standing height during initialization.
+# Release the elastic support only after enabling the policy in the runtime.
 ELASTIC_BAND_POINT: [0.0, 0.0, 1.30]
 ELASTIC_BAND_LENGTH: 0.0
 # Use the same elastic-band stiffness/damping defaults as the G1 sim2sim path.
@@ -214,17 +213,18 @@ NUM_HAND_MOTORS: 0
 NUM_HAND_JOINTS: 0
 NUM_UPPER_BODY_JOINTS: 17
 
+# Match config/runtime/standing_pose.json; trained policy offsets are separate.
 DEFAULT_DOF_ANGLES: [
-  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
-  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
+  -0.10, 0.0, 0.0, 0.25, 0.0, -0.15,
+  -0.10, 0.0, 0.0, 0.25, 0.0, -0.15,
   0.0, 0.0, 0.0, 0.0, 0.0,
   0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
   0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0
 ]
 
 DEFAULT_MOTOR_ANGLES: [
-  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
-  -0.312, 0.0, 0.0, 0.669, 0.0, -0.363,
+  -0.10, 0.0, 0.0, 0.25, 0.0, -0.15,
+  -0.10, 0.0, 0.0, 0.25, 0.0, -0.15,
   0.0, 0.0, 0.0, 0.0, 0.0,
   0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
   0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0

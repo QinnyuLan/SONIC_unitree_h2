@@ -26,7 +26,7 @@
 
 ## 快速开始
 
-policy runtime 启动后以默认姿态站立，接收独立 motion replay、planner 和遥操作进程的指令。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。输入端与 planner 统一使用 Python，实时 policy runtime 使用 C++，policy 与 planner 推理使用 TensorRT。可选的 ECHO-G 生成器离线生成语音和 G1 手势，再通过 motion replay 展示。
+runtime 完成站姿初始化后，等待按 **]** 或 **s** 开启 policy，再接收独立 motion replay、planner 和遥操作进程的指令；按 **o** 进入阻尼并停止。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。输入端与 planner 统一使用 Python，实时 policy runtime 使用 C++，policy 与 planner 推理使用 TensorRT。可选的 ECHO-G 生成器离线生成语音和 G1 手势，再通过 motion replay 展示。
 
 ```bash
 git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git

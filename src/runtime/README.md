@@ -1,6 +1,6 @@
 # H2 Policy Runtime
 
-The C++ runtime executes the H2 encoder and decoder through TensorRT, receives commands from independent Python services, and publishes robot targets through Unitree DDS. It starts with the default standing reference. Head pitch/yaw and hand targets use separate command channels.
+The C++ runtime executes the H2 encoder and decoder through TensorRT, receives commands from independent Python services, and publishes robot targets through Unitree DDS. It initializes the configured standing pose, holds with PD control, and waits for the operator to enable policy control. Head pitch/yaw and hand targets use separate command channels.
 
 ## Layout
 
@@ -22,8 +22,10 @@ Install the [native dependencies](../../docs/NATIVE_SETUP.md), then run from the
 
 ```bash
 bash scripts/build_controller.sh
-bash scripts/run_runtime.sh sim
+bash scripts/run_sonic_h2_runtime.sh sim
 ```
+
+After **[READY]**, press **]** or **s** in this terminal to enable policy. Press **o** to stop with damping; restart the runtime to resume. No Enter is needed. Early start keys are discarded. Keep support engaged during PD waiting. The standing reference is in `config/runtime/standing_pose.json`; use `--standing-pose PATH` to select another reference. Details are in the [deployment guide](../../docs/DEPLOYMENT.md#standing-pose-and-runtime-keys).
 
 The build produces `build/runtime/bin/sonic_h2_runtime` and the independent `build/runtime/bin/unitree_audio_player`. See [speech/gesture replay](../../docs/TEXT2MOTION.md#unitree-built-in-speaker) for the audio utility. Launch scripts supply the model directory and library paths. Hardware settings are in `config/h2_deploy.env`; teleoperation settings are in `config/h2_head_adjust.env`.
 

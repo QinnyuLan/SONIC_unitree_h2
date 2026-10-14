@@ -37,6 +37,8 @@ inline void PutRotation(Buffer& buffer, size_t offset, const Quat& q) {
 // policy joints. There is no motion library or trajectory generator here.
 class Observations {
  public:
+  explicit Observations(std::array<double, 29> standing_reference = h2_native_default_angles_policy)
+      : standing_reference_(standing_reference) {}
   void ResetReference() { heading_valid_ = false; }
 
   std::array<float, 1751> Encoder(const Command* command, const RobotState& state,
@@ -67,7 +69,7 @@ class Observations {
     if (mode == 0 || mode == 3) {
       for (size_t f = 0; f < 10; ++f) {
         for (size_t j = 0; j < 29; ++j) {
-          out[4 + f * 29 + j] = standing ? h2_native_default_angles_policy[j]
+          out[4 + f * 29 + j] = standing ? standing_reference_[j]
               : Sample(reference->at("joint_pos"), cursor + f, j);
           out[294 + f * 29 + j] = standing ? 0
               : Sample(reference->at("joint_vel"), cursor + f, j);
@@ -137,6 +139,7 @@ class Observations {
     return out;
   }
  private:
+  std::array<double, 29> standing_reference_;
   struct History { Vec3 angular{}, gravity{}; std::array<double, 29> q{}, dq{}, action{}; };
   std::deque<History> history_;
   bool heading_valid_ = false;

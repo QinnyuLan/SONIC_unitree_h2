@@ -17,4 +17,4 @@ The Python entry point is:
 
 Simulation settings are in `config/sim/h2.yaml`; H2 robot assets are in `assets/robots/h2/`. Resource lookup uses the checkout location, independent of the process working directory. `rendering/` contains viewer/camera code; `diagnostics/` contains simulation logs.
 
-Start the policy runtime in another terminal using `bash scripts/run_runtime.sh sim`. See [deployment](../../docs/DEPLOYMENT.md#sim2sim) for DDS domains, elastic support and motion commands.
+Start the policy runtime in another terminal using `bash scripts/run_sonic_h2_runtime.sh sim`. See [deployment](../../docs/DEPLOYMENT.md#sim2sim) for DDS domains, elastic support and motion commands.

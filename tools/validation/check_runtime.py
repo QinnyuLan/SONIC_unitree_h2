@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Exercise the actual GPU runtime through private IPC sockets, without DDS/devices."""
 import argparse
+import os
+import pty
 from contextlib import ExitStack
 from pathlib import Path
 import subprocess
 import tempfile
 import sys
 import time
+import termios
 import numpy as np
 import zmq
 from interface.commands import RuntimeClient, h2_reference, smpl_reference, vr_reference
@@ -19,19 +22,26 @@ ROOT = Path(__file__).resolve().parents[2]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--planner', action='store_true', help='also run the downloaded planner model')
+    parser.add_argument('--start-key', choices=[']', 's'], default='s', help='exercise either runtime start key')
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix='sonic-runtime-') as temp, ExitStack() as stack:
         temp = Path(temp)
         endpoints = {key: f'ipc://{temp}/{key}' for key in ('body', 'head', 'hands', 'state', 'planner', 'planned')}
         log = stack.enter_context((temp / 'runtime.log').open('w+'))
+        master, slave = pty.openpty()
+        stack.callback(os.close, master)
+        stack.callback(os.close, slave)
+        terminal_before = termios.tcgetattr(slave)
         process = subprocess.Popen([str(ROOT / 'build/runtime/bin/sonic_h2_runtime'),
             '--dry-run', '--model-dir', str(ROOT / 'models/sonic_h2_released'),
             '--command-bind', endpoints['body'], '--head-bind', endpoints['head'],
-            '--hands-bind', endpoints['hands'], '--state-bind', endpoints['state']], cwd=temp, stdout=log, stderr=log)
+            '--hands-bind', endpoints['hands'], '--state-bind', endpoints['state']],
+            cwd=temp, stdin=slave, stdout=log, stderr=log, start_new_session=True)
         def stop():
+            if process.poll() is not None: return
             process.terminate()
             try: process.wait(timeout=10)
-            except subprocess.TimeoutExpired: process.kill(); process.wait()
+            except subprocess.TimeoutExpired: process.kill(); process.wait(timeout=3)
         stack.callback(stop)
         sub = zmq.Context.instance().socket(zmq.SUB)
         sub.setsockopt(zmq.LINGER, 0); sub.setsockopt_string(zmq.SUBSCRIBE, '')
@@ -48,11 +58,18 @@ def main():
                     if predicate(latest): return latest
             log.seek(0)
             raise AssertionError(f'Timed out; latest={latest}\n{log.read()[-2000:]}')
-        expect(lambda s: s['body_kind'] == 'stand', timeout=180)
+        expect(lambda s: s['phase'] == 'initializing' and not s['policy_enabled'], timeout=180)
+        os.write(master, args.start_key.encode())  # An early start must be discarded.
+        expect(lambda s: s['phase'] == 'ready' and not s['policy_enabled'])
         body = stack.enter_context(RuntimeClient('test_body', endpoints['body']))
         head = stack.enter_context(RuntimeClient('test_head', endpoints['head']))
         hands = stack.enter_context(RuntimeClient('test_hands', endpoints['hands']))
         reference = standing_g1()
+        body.send('g1', reference)
+        time.sleep(.1)
+        expect(lambda s: s['phase'] == 'ready' and s['body_kind'] == 'stand')
+        os.write(master, args.start_key.encode())  # No newline: test the actual terminal input.
+        expect(lambda s: s['phase'] == 'running' and s['policy_enabled'] and s['body_kind'] == 'stand')
         def all_three():
             body.send('g1', reference)
             head.send('head', {'pitch': .3, 'yaw': -.2})
@@ -127,7 +144,15 @@ def main():
                 planner_control.send('planner', {'mode': 0, 'movement': [0, 0, 0], 'facing': [1, 0, 0], 'speed': 0, 'height': -1})
             expect(lambda s: s['source'] == 'planner' and s['body_kind'] == 'g1', request_planning, timeout=300)
             expect(lambda s: s['body_kind'] == 'stand', timeout=4)
-        print('PASS: startup stand, G1/VR/SMPL/token, expiry, ownership, independent head/hands, teleoperation adapter' + (', planner inference' if args.planner else ''))
+        os.write(master, b'o')
+        assert process.wait(timeout=5) == 0, 'runtime did not stop cleanly on o'
+        assert termios.tcgetattr(slave) == terminal_before, 'runtime did not restore terminal settings'
+        log.seek(0)
+        output = log.read()
+        assert '[STOPPED]' in output and '[READY]' in output and 'Start ignored' in output
+        print('PASS: manual policy start (' + args.start_key + '), early-key discard, pre-start command discard, '
+              'stop on o, terminal restoration, G1/H2/VR/SMPL/token, expiry, ownership, independent head/hands, '
+              'teleoperation adapter' + (', planner inference' if args.planner else ''))
 
 
 if __name__ == '__main__':

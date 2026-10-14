@@ -45,10 +45,10 @@ bash scripts/run_h2_paper_sim.sh
 Terminal 2 — SONIC policy runtime:
 
 ```bash
-bash scripts/run_runtime.sh sim
+bash scripts/run_sonic_h2_runtime.sh sim
 ```
 
-The runtime transitions from the measured initial pose to the default pose over three seconds, then runs the standing policy while waiting for inputs. Both processes use loopback DDS domain 0; set the same `DDS_DOMAIN` in both terminals to change it. Once the standing policy is running, click the simulator window and press **9** to release the elastic support. Observe unsupported standing before sending motion commands.
+The runtime transitions from the measured initial pose to the configured standing pose over three seconds, then prints **[READY]** and holds that pose with PD control. In **terminal 2**, press **]** or **s** to enable policy control; no Enter is needed. Start keys pressed before initialization finishes are discarded. Press **o** to stop with damping; this stop is latched and requires restarting the runtime. Both processes use loopback DDS domain 0; set the same `DDS_DOMAIN` in both terminals to change it. Once the standing policy is running, click the simulator window and press **9** to release the elastic support. Observe unsupported standing before sending motion commands.
 
 Terminal 3 — interactive motion replay:
 
@@ -67,6 +67,14 @@ bash scripts/run_planner.sh --keyboard
 This terminal runs the TensorRT planner worker and its keyboard panel. **1 / 2 / 3** selects slow walk / walk / run; **0** selects idle. **W/S** moves forward/backward, **A/D** strafes, **Q/E** changes heading, and **+/-** adjusts speed. **Space** returns to standing; **Esc** or **Ctrl+C** closes the panel and planner worker. Full controls, including all planner modes, are in the [interface guide](../src/interface/README.md#planner-keyboard-control).
 
 Both input panels wait for fresh runtime state before sending motion. Replay does not automatically resume after a state interruption, and planner keyboard commands are cleared. Closing an input panel leaves the simulator and policy runtime running. The planner environment/model must be installed separately; first engine construction may take several minutes. See [planner setup](PLANNER.md) and [validation records](REPRODUCIBILITY.md).
+
+### Standing pose and runtime keys
+
+Keep elastic support engaged during initialization and the **[READY]** PD hold. This hold positions the joints; balance control begins only after **]** or **s** enables the policy. Keys act in the runtime terminal without Enter. **o** sets position gains to zero and damping to 8, stops control, and requires a runtime restart. An unsupported robot can fall after this stop.
+
+The standing reference is configured in [`config/runtime/standing_pose.json`](../config/runtime/standing_pose.json). Both legs use hip pitch **−0.10 rad**, knee **0.25 rad** (about **14°**), and ankle pitch **−0.15 rad**. The preset reduces knee flexion while retaining a slight bend. It is used during initialization, PD waiting, and policy standing when no body input is active. The simulator's reset pose matches this preset. Head commands remain independent.
+
+To use another reference, pass `--standing-pose /absolute/path/to/standing_pose.json`. Angles are in radians. This changes the reference supplied to the policy, preserving the decoder's trained joint offsets and action scales. Validate adjusted references in simulation before hardware use.
 
 ### Runtime startup troubleshooting
 
@@ -140,11 +148,11 @@ These conditions apply in addition to the staged validation above. Resolve any u
 Set the robot interface, DDS domain, hand backend and joint gain scales in [`h2_deploy.env`](../config/h2_deploy.env). Prepare robot support and emergency stop before enabling control.
 
 ```bash
-bash scripts/run_runtime.sh real --print-command
-bash scripts/run_runtime.sh real
+bash scripts/run_sonic_h2_runtime.sh real --print-command
+bash scripts/run_sonic_h2_runtime.sh real
 ```
 
-The launcher prints the target interface and requires `RUN` before starting. The robot moves to its default standing pose automatically. Start replay or another producer separately using the same commands as simulation. Gain settings affect initialization and policy control; damping on shutdown is unchanged. `HAND_BACKEND=none` disables hand DDS, `inspire` connects to the robot's Inspire service, and `dex3` uses Unitree Dex3.
+The launcher prints the target interface and requires `RUN` before starting. The robot moves to its configured standing pose, then waits at **[READY]**. Press **]** or **s** in the runtime terminal to enable policy; **o** stops with damping and requires a runtime restart. Start replay or another producer separately using the same commands as simulation. Gain settings affect initialization and policy control; damping on shutdown is unchanged. `HAND_BACKEND=none` disables hand DDS, `inspire` connects to the robot's Inspire service, and `dex3` uses Unitree Dex3.
 
 For Inspire hands, install the included `tools/robot_services/inspire_hands/` service on H2 PC2 first. Follow the [robot hand service guide](INSPIRE_HANDS.md) for serial mapping, autostart, watchdog setup and read-only checks. This service runs independently of the body policy.
 
@@ -217,4 +225,4 @@ source scripts/setup_env.sh
 .venv_planner/bin/python tools/validation/check_runtime.py --planner
 ```
 
-The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests startup standing, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](REPRODUCIBILITY.md) for the scope of completed checks.
+The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests manual policy activation, rejection of early start keys and queued body commands, stopping with o, terminal restoration, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](REPRODUCIBILITY.md) for the scope of completed checks.
