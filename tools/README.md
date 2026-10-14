@@ -6,6 +6,7 @@ Tools prepare assets, generate offline content, install robot support services a
 |---|---|
 | `model_download/` | Download and verify the shared G1 planner |
 | `setup/` | Prepare native dependency build sources |
+| `demos/` | Interactive MuJoCo replay and planner demos, launched by `scripts/demo_sim.sh` |
 | `validation/` | Release checks, model validation and integration checks |
 | `text2motion_offline/echo_g/` | Generate speech and G1 motion before playback |
 | `robot_services/inspire_hands/` | H2 PC2 Inspire DDS-to-RS-485 service, client and systemd configuration |

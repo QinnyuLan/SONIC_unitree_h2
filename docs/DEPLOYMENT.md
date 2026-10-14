@@ -34,6 +34,35 @@ Only install the environments you use. No Python training framework is needed fo
 
 ## Sim2Sim
 
+### Interactive demos
+
+After building the runtime and installing `sim2sim`, run either demo from a terminal on the local graphical desktop:
+
+```bash
+# G1 reference motion tracked by the H2 policy
+bash scripts/demo_sim.sh replay
+# G1 planner: walk forward at 0.3 m/s for 12 seconds (requires the planner environment/model)
+bash scripts/demo_sim.sh planner
+```
+
+Each command starts the simulator, policy runtime and its independent input process. The launcher prepares TensorRT engines before starting simulation; first use may take several minutes. Once the terminal reports that the standing policy is running, click the MuJoCo window and press **9** to release the elastic support. Observe unsupported standing, then return to the terminal and press **Enter** to begin motion. The launcher checks that the support has been released. Motion ends with a return to standing; three seconds later the demo closes. `Ctrl+C` stops the demo and its child processes.
+
+The demos use loopback DDS domain **220** and private command sockets. Run one at a time, or select an unused domain with `--domain`. Logs, runtime states and physics diagnostics are saved under `outputs/demos/`. Completion confirms command delivery and return to standing; inspect motion quality in the viewer and diagnostics before treating a clip as validated for tracking.
+
+```bash
+# Select an H2 or SMPL clip through the same replay entry point
+bash scripts/demo_sim.sh replay --motion motions/example_h2_replay/squat_001__A359
+# Change planner speed and duration
+bash scripts/demo_sim.sh planner --speed 0.2 --seconds 8
+# Check files and motion data without launching GPU inference, DDS or a viewer
+bash scripts/demo_sim.sh replay --check
+bash scripts/demo_sim.sh planner --check
+```
+
+If GPU access or engine preparation fails, inspect `gpu.log` or `warmup.log` in the printed output directory. The demo exits on startup timeout or a failed component. A GPU process that remains blocked after a kill signal requires host-level recovery before retrying; it is not evidence of a policy tracking failure. See [validation status](REPRODUCIBILITY.md#current-simulation-demo-checks).
+
+### Separate processes
+
 Terminal 1 — simulator:
 
 ```bash

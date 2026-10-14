@@ -34,6 +34,35 @@ python3 tools/validation/verify_release.py
 
 ## Sim2Sim
 
+### 一键演示
+
+编译 runtime 并安装 `sim2sim` 环境后，在本机图形桌面的终端执行以下任一命令：
+
+```bash
+# H2 policy 跟踪 G1 参考动作
+bash scripts/demo_sim.sh replay
+# G1 planner：以 0.3 m/s 向前行走 12 秒（需安装 planner 环境并下载模型）
+bash scripts/demo_sim.sh planner
+```
+
+脚本会启动仿真器、policy runtime 和独立的输入进程。TensorRT 引擎在仿真开始前准备好，首次构建可能需要数分钟。终端提示站立策略已运行后，点击 MuJoCo 窗口并按 **9** 解除弹力带支撑；观察无支撑站立，再回到终端按 **Enter** 开始动作。脚本会检查支撑是否已解除。动作结束后回到站立，继续观察三秒后关闭演示。`Ctrl+C` 停止本次演示及其子进程。
+
+演示使用 loopback DDS domain **220** 和独立指令通道。建议依次运行两个 demo；需要并行时用 `--domain` 指定未使用的 domain。日志、runtime 状态和仿真物理数据保存在 `outputs/demos/`。脚本完成表示指令被接收并返回站立，动作跟踪质量仍需结合窗口表现和物理记录判断。
+
+```bash
+# 同一入口选择 H2 或 SMPL 动作
+bash scripts/demo_sim.sh replay --motion motions/example_h2_replay/squat_001__A359
+# 调整 planner 速度和行走时长
+bash scripts/demo_sim.sh planner --speed 0.2 --seconds 8
+# 仅检查文件与动作数据，不启动 GPU 推理、DDS 或窗口
+bash scripts/demo_sim.sh replay --check
+bash scripts/demo_sim.sh planner --check
+```
+
+GPU 访问或引擎准备失败时，查看脚本输出目录中的 `gpu.log` 或 `warmup.log`。启动超时或任一组件异常退出都会停止演示。如果 GPU 进程收到强制退出信号仍无法结束，需要先恢复主机 GPU 状态再重试，不能据此判断 policy 的跟踪质量。当前验证范围见[测试记录](REPRODUCIBILITY.md#current-simulation-demo-checks)。
+
+### 分进程启动
+
 终端 1 启动仿真：
 
 ```bash

@@ -145,6 +145,20 @@ python3 tools/validation/check_inspire_watchdog.py
 
 The watchdog tool requires a running systemd user manager and writes `outputs/validation/inspire_watchdog.json`. Full installation, autostart and device acceptance steps are in the [robot hand service guide](INSPIRE_HANDS.md) / [中文](INSPIRE_HANDS_CN.md).
 
+## Current simulation demo checks
+
+Checked on 2026-10-15, starting from revision `e02d270`, with the demo launcher and simulator error-propagation fix applied:
+
+- **Regression tests:** 85 Python simulation/command/replay tests, 53 subtests, 34 teleoperation tests, and 59 C++ controller/runtime tests passed. Replay checks cover all 36 bundled G1, H2 and SMPL clips.
+- **Released policy:** hashes, ONNX interfaces and finite CPU inference passed for all four input selectors. Full/compact H2 encoder outputs matched exactly in the comparison cases.
+- **MuJoCo and DDS:** a headless simulator with elastic support received synthetic PD commands on loopback domain 221. It completed 10.458 seconds of physics, published 10,458 finite LowState and odometry samples each, and followed a head-pitch command followed by a return to neutral. Realtime factor was 0.999994; maximum lag was 1.384 ms, below the existing 20 ms limit. This tests the simulator and DDS bridge, not the SONIC policy or unsupported balance.
+- **Planner CPU diagnostic:** the real G1 ONNX weight produced finite trajectories for idle, slow walking and walking requests. The Python context mapping, trajectory merge and ten-frame sparse conversion were exercised with a temporary ONNX Runtime CPU adapter. The released planner implementation remains TensorRT-only; this diagnostic does not validate its GPU engine or closed-loop H2 tracking.
+- **Demo launcher:** G1/H2/SMPL input checks, planner prerequisites and reading actual physics diagnostics passed. Injected GPU access failure and startup timeout both exited nonzero and cleaned up their child processes. Simulator exceptions now propagate to a nonzero process exit instead of being swallowed.
+
+**GPU closed-loop validation remains blocked on this host.** The earlier runtime process was still stuck at encoder loading with a pending SIGKILL; the earlier `nvidia-smi` process remained in an uninterruptible wait at `uvm_va_space_destroy`. No additional CUDA inference, GPU reset or host reboot was attempted. Unsupported standing, replay tracking, TensorRT planner control and the graphical viewer have **not** passed the current validation. Recover GPU access, then run both [interactive demos](DEPLOYMENT.md#interactive-demos) to complete those checks.
+
+Local reports are `outputs/validation/simulation_demo_check.json`, `outputs/validation/sim_dds_current/result.json`, and `outputs/validation/planner_cpu_current.json`. Demo logs are under `outputs/demos/`. No physical robot was connected.
+
 ## Saving validation reports
 
 Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:

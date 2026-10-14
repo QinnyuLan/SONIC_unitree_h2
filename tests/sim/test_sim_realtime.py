@@ -20,6 +20,16 @@ class FakeClock:
 
 
 class RealtimeTests(unittest.TestCase):
+    def test_launcher_propagates_simulation_failure(self):
+        from sim.factory import SimulatorFactory
+        from unittest.mock import Mock
+
+        simulator = Mock()
+        simulator.start.side_effect = RealtimeOverrun("simulation fell behind wall clock")
+        with self.assertRaisesRegex(RealtimeOverrun, "fell behind"):
+            SimulatorFactory.start_simulator(simulator, as_thread=False)
+        simulator.close.assert_called_once_with()
+
     def test_oversleep_does_not_accumulate(self):
         clock = FakeClock(.0005)
         pacer = RealtimePacer(.001, clock=clock, sleep=clock.sleep)

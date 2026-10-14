@@ -90,6 +90,7 @@ class SimulatorFactory:
                 print("+++++Simulator interrupted by user.")
             except Exception as e:
                 print(f"++++error in simulator: {e} ++++")
+                raise
             finally:
                 print("++++closing simulator ++++")
                 simulator.close()
