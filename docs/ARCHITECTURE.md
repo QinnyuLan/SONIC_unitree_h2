@@ -21,9 +21,9 @@ flowchart LR
   F --> K[Dex3 / Inspire DDS]
 ```
 
-`runtime/` owns the complete C++ execution path: standing, reference sampling, encoder/decoder inference, command arbitration and H2 output. Its headers, TensorRT wrapper, Unitree SDK and build configuration are contained in this directory. The executable has no planner, motion-file reader, PICO device code or text-generation model. Motion readers and kinematics used by regression tests are isolated under `runtime/tests/`.
+`src/runtime/` owns the complete C++ execution path: standing, reference sampling, encoder/decoder inference, command arbitration and H2 output. Its headers, TensorRT wrapper, Unitree SDK and build configuration are contained in this directory. The executable has no planner, motion-file reader, PICO device code or text-generation model. Motion readers and kinematics used by regression tests are isolated under `src/runtime/tests/`.
 
-`gear_sonic/sources/` contains Python producers and the planner service. `gear_sonic/planner/` implements context preparation, resampling and trajectory blending in NumPy. `gear_sonic/inference/tensorrt.py` calls the TensorRT Python API directly. Models live under `models/`, replay examples under `motions/`, and deployment settings under `config/`. See the [repository layout](LAYOUT.md).
+`src/interface/` contains Python producers and the planner service. `src/interface/planner/` implements context preparation, resampling and trajectory blending in NumPy. `src/interface/planner/engine.py` calls the TensorRT Python API directly. Models live under `models/`, replay examples under `motions/`, and deployment settings under `config/`. `src/sim/` contains the independent MuJoCo simulator and DDS bridge. Shared robot resources live under `assets/`. See the [repository layout](LAYOUT.md).
 
 | Component | Language | Model execution |
 |---|---|---|
@@ -94,7 +94,7 @@ Head data is `{"pitch": number, "yaw": number}`. It controls only H2 DDS joints 
 Hand data contains `left` and/or `right`, each a seven-value Dex3-compatible target. Missing sides do not reuse a previous command. Expiry stops hand publishing. Inspire converts targets to closure and retains its release-before-close input gate. Use the backend's measured state to interpret actual finger position; the runtime's `hands_active` flag reports command freshness.
 
 ```python
-from gear_sonic.commands import RuntimeClient
+from interface.commands import RuntimeClient
 
 with RuntimeClient("head_demo", "tcp://127.0.0.1:5562") as client:
     client.send("head", {"pitch": 0.3, "yaw": 0.0})

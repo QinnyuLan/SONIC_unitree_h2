@@ -14,6 +14,8 @@ The policy runtime starts in the default standing pose and accepts commands from
 | Sim2Real | Whole-body motion tracking on Unitree H2 | [Hardware deployment](docs/DEPLOYMENT.md#sim2real) |
 | VR teleoperation | PICO head-and-hand tracking with XRoboToolkit | [Teleoperation](docs/DEPLOYMENT.md#vr-teleoperation) |
 
+Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy), [`src/interface/`](src/interface/README.md) (Python command producers), and [`src/sim/`](src/sim/README.md) (simulator).
+
 ## Getting Started
 
 ```bash

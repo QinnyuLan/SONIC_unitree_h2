@@ -9,9 +9,9 @@ import sys
 import time
 import numpy as np
 import zmq
-from gear_sonic.commands import RuntimeClient, smpl_reference, vr_reference
-from gear_sonic.commands.protocol import token_command
-from gear_sonic.sources.teleop import standing_g1
+from interface.commands import RuntimeClient, smpl_reference, vr_reference
+from interface.commands.protocol import token_command
+from interface.teleop.bridge import standing_g1
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -24,7 +24,7 @@ def main():
         temp = Path(temp)
         endpoints = {key: f'ipc://{temp}/{key}' for key in ('body', 'head', 'hands', 'state', 'planner', 'planned')}
         log = stack.enter_context((temp / 'runtime.log').open('w+'))
-        process = subprocess.Popen([str(ROOT / 'runtime/build/bin/sonic_h2_runtime'),
+        process = subprocess.Popen([str(ROOT / 'build/runtime/bin/sonic_h2_runtime'),
             '--dry-run', '--model-dir', str(ROOT / 'models/released'),
             '--command-bind', endpoints['body'], '--head-bind', endpoints['head'],
             '--hands-bind', endpoints['hands'], '--state-bind', endpoints['state']], cwd=temp, stdout=log, stderr=log)
@@ -82,12 +82,12 @@ def main():
         rival.stand()
         expect(lambda s: s['body_kind'] == 'stand')
         # Run the actual teleoperation adapter against synthetic PICO wire packets.
-        from gear_sonic.utils.teleop.zmq.zmq_planner_sender import pack_pose_message, build_head_pose_message
+        from interface.teleop.transport.packets import pack_pose_message, build_head_pose_message
         tracking_endpoint = f'ipc://{temp}/tracking'
         tracking = zmq.Context.instance().socket(zmq.PUB)
         tracking.setsockopt(zmq.LINGER, 0); tracking.bind(tracking_endpoint)
         stack.callback(tracking.close)
-        bridge = subprocess.Popen([sys.executable, '-m', 'gear_sonic.sources.teleop',
+        bridge = subprocess.Popen([sys.executable, '-m', 'interface.teleop.bridge',
             '--tracking', tracking_endpoint, '--runtime', endpoints['body'],
             '--head', endpoints['head'], '--hands', endpoints['hands'],
             '--planner-input', endpoints['planner'], '--planner-output', endpoints['planned']],
@@ -110,7 +110,7 @@ def main():
         expect(lambda s: s['body_kind'] == 'stand' and not s['head_active'] and not s['hands_active'])
         if args.planner:
             planner_log = stack.enter_context((temp / 'planner.log').open('w+'))
-            planner = subprocess.Popen([str(ROOT / '.venv_planner/bin/python'), '-m', 'gear_sonic.sources.planner',
+            planner = subprocess.Popen([str(ROOT / '.venv_planner/bin/python'), '-m', 'interface.planner.service',
                 '--model', str(ROOT / 'models/planner/planner_sonic.onnx'),
                 '--input-bind', endpoints['planner'], '--output-bind', endpoints['planned'],
                 '--runtime', endpoints['body'], '--state', endpoints['state']], cwd=temp, stdout=planner_log, stderr=planner_log)

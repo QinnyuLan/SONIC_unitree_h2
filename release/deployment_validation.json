@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14",
-  "scope": "Consolidated C++ runtime layout, Python input services and planner, TensorRT inference",
+  "date": "2026-10-15",
+  "scope": "src/runtime C++ policy, src/interface Python producers, src/sim MuJoCo simulator",
   "environment": {
     "python": "3.10.20",
     "cuda": "12.6",
@@ -39,7 +39,8 @@
     "teleop_preflight": "passed",
     "model_checksums": "passed",
     "planner_checksum": "passed",
-    "planner_environment": "passed"
+    "planner_environment": "passed",
+    "root_editable_install_all_environments": "passed"
   },
   "launch_previews": [
     "sim",
@@ -51,12 +52,13 @@
   "limitations": [
     "No physical robot validation",
     "No live PICO validation",
-    "MuJoCo smoke test retained elastic support"
+    "MuJoCo smoke test retained elastic support",
+    "Latest DDS closed-loop attempt was blocked by unresponsive GPU initialization; the system GPU query also blocked"
   ],
   "layout": {
-    "native_build_entry": "runtime/CMakeLists.txt",
-    "runtime_binary": "runtime/build/bin/sonic_h2_runtime",
-    "native_sdk": "runtime/third_party/unitree_sdk2",
+    "native_build_entry": "src/runtime/CMakeLists.txt",
+    "runtime_binary": "build/runtime/bin/sonic_h2_runtime",
+    "native_sdk": "src/runtime/third_party/unitree_sdk2",
     "planner_model": "models/planner/planner_sonic.onnx",
     "configuration": "config/",
     "replay_examples": "motions/example/",
@@ -64,6 +66,19 @@
     "vendored_sdk_unchanged": true,
     "planner_download_reuses_verified_file": true,
     "clean_checkout_preflight": true,
-    "clean_checkout_production_cmake": true
+    "clean_checkout_production_cmake": true,
+    "python_packages": [
+      "interface",
+      "sim"
+    ],
+    "python_source_root": "src/",
+    "shared_assets": "assets/",
+    "simulator_config": "config/sim/h2.yaml",
+    "python_test_root": "tests/",
+    "independent_python_imports": true,
+    "assets_load_outside_checkout": true,
+    "all_module_entry_points": true,
+    "clean_checkout_python_install": true,
+    "clean_checkout_offline_simulator": true
   }
 }

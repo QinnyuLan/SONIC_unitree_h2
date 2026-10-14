@@ -62,10 +62,10 @@ bash scripts/run_planner.sh
 ```bash
 # 与启动脚本等价；需要先配置原生库路径
 source scripts/setup_env.sh
-.venv_planner/bin/python -m gear_sonic.sources.planner
+.venv_planner/bin/python -m interface.planner.service
 ```
 
-程序调用入口为 `gear_sonic.planner.motion.G1Planner`：`initialize(h2_joints)` 接收 31 维 H2 DDS 关节状态，`update(trajectory, cursor, command)` 生成后续轨迹。`Trajectory.sparse(cursor)` 输出与 replay 相同的 G1 稀疏参考。指令字段和端口见 [架构文档](ARCHITECTURE_CN.md)。
+程序调用入口为 `interface.planner.motion.G1Planner`：`initialize(h2_joints)` 接收 31 维 H2 DDS 关节状态，`update(trajectory, cursor, command)` 生成后续轨迹。`Trajectory.sparse(cursor)` 输出与 replay 相同的 G1 稀疏参考。指令字段和端口见 [架构文档](ARCHITECTURE_CN.md)。
 
 运行实际模型与通信集成检查：
 

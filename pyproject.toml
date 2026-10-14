@@ -1,8 +1,40 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "SONIC_unitree_h2"
+version = "0.1.0"
+description = "Unitree H2 command interfaces and MuJoCo simulator"
+requires-python = ">=3.10,<3.12"
+license = {text = "Apache-2.0"}
+dependencies = ["numpy==1.26.4", "scipy==1.15.3"]
+
+[project.optional-dependencies]
+inputs = ["pyzmq==27.1.0"]
+planner = ["pyzmq==27.1.0", "cuda-bindings==12.9.4"]
+sim = [
+    "mujoco==3.10.0", "tyro==1.0.15", "pyyaml==6.0.3",
+    "pyzmq==27.1.0", "msgpack==1.2.1", "msgpack-numpy==0.4.8",
+    "opencv-python==4.11.0.86", "loguru==0.7.3", "termcolor==3.1.0",
+]
+teleop = [
+    "torch==2.8.0", "pin==2.7.0", "pyzmq==27.1.0",
+    "msgpack==1.2.1", "loguru==0.7.3",
+    "pyvista==0.48.4; platform_machine != 'aarch64'",
+]
+joystick = ["pygame==2.6.1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["interface*", "sim*"]
+namespaces = false
+
 [tool.pytest.ini_options]
-testpaths = ["gear_sonic/tests"]
-pythonpath = ["."]
+testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-exclude = ["external_dependencies", "runtime/third_party"]
+exclude = ["external_dependencies", "src/runtime/third_party"]

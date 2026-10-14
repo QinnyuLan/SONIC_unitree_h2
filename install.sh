@@ -15,7 +15,7 @@ if [[ ! -x "$ENV_DIR/bin/python" ]]; then
 fi
 # Teleoperation uses CPU pose mathematics; model inference uses TensorRT.
 uv pip install --python "$ENV_DIR/bin/python" --torch-backend=cpu \
-  -c "$ROOT/requirements/$EXTRA.lock" -e "$ROOT/gear_sonic[$EXTRA]"
+  -c "$ROOT/requirements/$EXTRA.lock" -e "$ROOT[$EXTRA]"
 if [[ "$ENV_KIND" == planner ]]; then
   # Use the Python bindings shipped with the same TensorRT SDK as the C++ runtime.
   source "$ROOT/scripts/setup_env.sh"

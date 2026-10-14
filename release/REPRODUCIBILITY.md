@@ -24,9 +24,9 @@ Run the Python regression suites in their respective environments:
 
 ```bash
 uv pip install --python .venv_sim/bin/python -r requirements/test.txt
-.venv_sim/bin/python -m pytest gear_sonic/tests/sim gear_sonic/tests/commands -q
+.venv_sim/bin/python -m pytest tests/sim tests/interface/commands -q
 uv pip install --python .venv_teleop/bin/python -r requirements/test.txt
-.venv_teleop/bin/python -m pytest gear_sonic/tests/teleop -q
+.venv_teleop/bin/python -m pytest tests/interface/teleop -q
 ```
 
 Build and run the C++ tests:
@@ -35,7 +35,7 @@ Build and run the C++ tests:
 sudo apt install libgtest-dev zlib1g-dev
 export TensorRT_ROOT="$HOME/TensorRT"
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir runtime/build --output-on-failure
+ctest --test-dir build/runtime --output-on-failure
 ```
 
 For ONNX graph, interface, checksum, and CPU inference checks:
@@ -48,13 +48,13 @@ uv pip install --python .venv_model_validation/bin/python -r requirements/model_
 
 ## Deployment validation
 
-These checks were repeated after consolidating the C++ build, inference wrapper, headers and Unitree SDK under `runtime/`. The runtime was compiled from an empty build directory; replay, planner, configuration and launcher paths were checked in the new layout. A clean checkout of the release files passed preflight, launcher previews, and CMake configuration with tests disabled; it contained neither local planner weights nor build products.
+On 2026-10-15, source code was separated into `src/runtime/`, `src/interface/`, and `src/sim/`. All four Python environments were installed from the root project, and the previous package registration was removed. The C++ runtime was compiled from an empty build directory. Module entry points, independent imports, and G1/H2/human asset loading passed from outside the checkout. A clean checkout passed a fresh minimal Python installation, motion replay, offline simulation and native CMake configuration with tests disabled.
 
 - 45 shared C++ regression tests and 12 runtime/protocol tests passed. These cover the unchanged model contract, native joint mappings, history order, sparse sampling, quaternion handling, ownership, expiry and separate head input.
 - 27 simulator tests (53 additional subtests), 32 command/planner/replay/adapter tests and 34 teleoperation tests passed.
 - The minimal `.venv_inputs` and dedicated `.venv_planner` installations passed. CSV replay validation and producer command-line parsing passed. Simulator/teleoperation preflight and all released model hashes passed.
 - `tools/check_runtime.py --planner` ran the actual FP32 full encoder, decoder and G1 planner from an empty working directory using synthetic robot state and private IPC sockets. Startup standing, G1/VR/SMPL/token input, timeout-to-standing, producer takeover, head/hand independence, synthetic PICO packet conversion and planner inference all passed. DDS was not initialized by this check.
-- A separate 10-second MuJoCo/runtime test used DDS domain 211 on loopback, with elastic support enabled. The runtime completed its initialization ramp and published 334 finite running-state frames in standing mode. This is a connection/control-loop smoke test, not a free-standing stability or motion-tracking benchmark.
+- The latest DDS closed-loop attempt did not complete: runtime encoder initialization and a separate system GPU query both became unresponsive. The simulator initialized its relocated assets and DDS bridge, then stopped on its realtime-lag guard. The previous 2026-10-14 check completed ten seconds on loopback DDS domain 211 with elastic support and 334 finite standing-state frames; that historical result is retained separately and does not validate the current closed loop. No free-standing stability or motion-tracking benchmark was performed.
 - Sim, real and PICO launcher previews passed. Hardware control was not started; no real robot or PICO device was connected during validation.
 - Published ONNX bytes are unchanged. The prior CPU and GPU model-comparison records remain applicable to those model files; they are not evidence of live hardware performance.
 

@@ -15,7 +15,7 @@ Use a PICO 4/4 Pro headset, two controllers, and two ankle motion trackers. Conn
 
 ```bash
 ./install.sh teleop
-.venv_teleop/bin/python gear_sonic/scripts/pico_manager_thread_server.py --help
+.venv_teleop/bin/python -m interface.teleop.pico --help
 ```
 
 The installer builds the included XRoboToolkit binding for the local Python environment. The PC Service and PICO application remain separate device software.
@@ -28,4 +28,4 @@ The default VR mapper uses G1 kinematics, matching the shared SONIC planner. The
 
 Start the runtime, PICO tracking process and teleoperation adapter separately. Add the independent [planner](PLANNER.md) service for joystick locomotion, as shown in the [deployment guide](DEPLOYMENT.md#vr-teleoperation). Use the PICO manager controls for tracking calibration. First-time device calibration and robot enabling require the operator at the robot.
 
-For direct serial Inspire hands, the optional tools `h2_inspire_hand_serial_bridge.py` and `inspire_hand_serial_command.py` in `scripts/` expose their device and communication options through `--help`.
+For direct serial Inspire hands, run `.venv_teleop/bin/python -m interface.peripherals.serial_bridge --help` or `.venv_teleop/bin/python -m interface.peripherals.serial_command --help` for device and communication options.

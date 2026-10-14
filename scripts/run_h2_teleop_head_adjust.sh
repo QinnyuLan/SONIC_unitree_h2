@@ -7,10 +7,10 @@ cd "$ROOT"
 source "$ROOT/config/h2_head_adjust.env"
 case "$ROLE" in
   deploy) exec bash "$ROOT/scripts/run_runtime.sh" real "$@" ;;
-  bridge) exec "$ROOT/.venv_teleop/bin/python" -m gear_sonic.sources.teleop "$@" ;;
+  bridge) exec "$ROOT/.venv_teleop/bin/python" -m interface.teleop.bridge "$@" ;;
   planner) exec bash "$ROOT/scripts/run_planner.sh" --publish-only "$@" ;;
   pico)
-    COMMAND=("$ROOT/.venv_teleop/bin/python" "$ROOT/gear_sonic/scripts/pico_manager_thread_server.py"
+    COMMAND=("$ROOT/.venv_teleop/bin/python" -m interface.teleop.pico
       --manager --vr3pt-robot-profile g1 --smpl-wrist-source g1
       --head-control "$HEAD_CONTROL" --head-yaw-deg "$HEAD_YAW_DEG"
       --head-pitch-deg "$HEAD_PITCH_DEG" --head-pitch-rate-deg-s "$HEAD_PITCH_RATE_DEG_S"

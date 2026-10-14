@@ -7,6 +7,6 @@ for command_name in cmake g++ make; do
 done
 [[ -n "${TensorRT_ROOT:-}" ]] || { echo "Set TensorRT_ROOT to a TensorRT 10.x installation." >&2; exit 1; }
 [[ -f "$TensorRT_ROOT/include/NvInfer.h" ]] || { echo "TensorRT headers not found under $TensorRT_ROOT" >&2; exit 1; }
-[[ -f "$ROOT/runtime/third_party/unitree_sdk2/CMakeLists.txt" ]]
-[[ -f "$ROOT/runtime/include/observations.hpp" ]]
+[[ -f "$ROOT/src/runtime/third_party/unitree_sdk2/CMakeLists.txt" ]]
+[[ -f "$ROOT/src/runtime/include/observations.hpp" ]]
 echo "Native prerequisites: PASS"

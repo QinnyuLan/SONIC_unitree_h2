@@ -49,6 +49,6 @@ source scripts/setup_env.sh
 bash scripts/build_controller.sh
 ```
 
-The build produces `runtime/build/bin/sonic_h2_runtime`; the planner is a Python module. Build and launch scripts do not install system packages or edit shell startup files.
+The build produces `build/runtime/bin/sonic_h2_runtime`; the planner is a Python module. Build and launch scripts do not install system packages or edit shell startup files.
 
-For offline C++ tests, additionally install `libgtest-dev zlib1g-dev`, build with `-DBUILD_TESTING=ON`, then run `ctest --test-dir runtime/build --output-on-failure`.
+For offline C++ tests, additionally install `libgtest-dev zlib1g-dev`, build with `-DBUILD_TESTING=ON`, then run `ctest --test-dir build/runtime --output-on-failure`.

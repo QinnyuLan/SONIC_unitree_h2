@@ -16,7 +16,7 @@ bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-编译生成 `runtime/build/bin/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
+编译生成 `build/runtime/bin/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
 
 安装 [uv](https://docs.astral.sh/uv/getting-started/installation/) 后，按需选择 Python 环境：
 
@@ -48,7 +48,7 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 终端 3 发送一个 G1 动作：
 
 ```bash
-.venv_sim/bin/python -m gear_sonic.sources.motion_replay \
+.venv_sim/bin/python -m interface.replay \
   motions/example/walking_quip_360_R_002__A428
 ```
 
@@ -68,8 +68,8 @@ runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略
 CSV 读取 `joint_pos.csv`、可选的 `joint_vel.csv` 和 `body_quat.csv` 中的第一个四元数，默认 50 Hz，其他帧率用 `--fps` 指定。关节顺序见 [协议](ARCHITECTURE.md#joint-order)。
 
 ```bash
-.venv_inputs/bin/python -m gear_sonic.sources.motion_replay generated_motion.npz --inspect
-.venv_inputs/bin/python -m gear_sonic.sources.motion_replay generated_motion.npz
+.venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
+.venv_inputs/bin/python -m interface.replay generated_motion.npz
 ```
 
 `--speed` 同时调整播放速度与关节速度。`--loop` 仅适用于首尾连续的动作。所有 G1 回放均发送未来 `0.0, 0.1, …, 0.9` 秒的稀疏 10 帧。离线 text2motion 结果需先导出为 G1 动作，本仓库不运行文本生成模型。
@@ -108,7 +108,7 @@ bash scripts/run_planner.sh
 再开终端发送规划请求：
 
 ```bash
-.venv_inputs/bin/python -m gear_sonic.sources.planner_command \
+.venv_inputs/bin/python -m interface.planner.client \
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
@@ -134,8 +134,8 @@ bash scripts/run_h2_teleop_head_adjust.sh planner
 ## 独立头部和手部控制
 
 ```bash
-.venv_inputs/bin/python -m gear_sonic.sources.peripherals head --pitch 0.3 --yaw -0.2
-.venv_inputs/bin/python -m gear_sonic.sources.peripherals hands --left '[0,0,0,0,0,0,0]'
+.venv_inputs/bin/python -m interface.peripherals.client head --pitch 0.3 --yaw -0.2
+.venv_inputs/bin/python -m interface.peripherals.client hands --left '[0,0,0,0,0,0,0]'
 ```
 
 头部单位为 rad，指令经过关节限位和速度限制，超时缓慢回中。手部采用 7 维 Dex3 兼容目标；Inspire 将其映射为手指闭合度，须先松开扳机再允许闭合。手部超时停止发布，不生成新的开合动作。身体来源切换不会覆盖头手指令。
@@ -145,7 +145,7 @@ bash scripts/run_h2_teleop_head_adjust.sh planner
 ```bash
 sudo apt install libgtest-dev zlib1g-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir runtime/build --output-on-failure
+ctest --test-dir build/runtime --output-on-failure
 source scripts/setup_env.sh
 .venv_sim/bin/python tools/check_runtime.py
 ./install.sh planner

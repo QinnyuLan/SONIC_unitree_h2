@@ -16,7 +16,7 @@ bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-The build produces `runtime/build/bin/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
+The build produces `build/runtime/bin/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
 
 Install the Python environment needed for each process using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
@@ -48,7 +48,7 @@ The runtime transitions from the measured initial pose to the default pose over 
 Terminal 3 — choose a G1 motion clip:
 
 ```bash
-.venv_sim/bin/python -m gear_sonic.sources.motion_replay \
+.venv_sim/bin/python -m interface.replay \
   motions/example/walking_quip_360_R_002__A428
 ```
 
@@ -68,8 +68,8 @@ Both use the same replay executable. Input is either one SONIC CSV clip director
 CSV input uses `joint_pos.csv`, optional `joint_vel.csv`, and the first quaternion in `body_quat.csv`. CSV defaults to 50 Hz; specify `--fps` for other rates. Joint names and ordering are in [the protocol](ARCHITECTURE.md#joint-order).
 
 ```bash
-.venv_inputs/bin/python -m gear_sonic.sources.motion_replay generated_motion.npz --inspect
-.venv_inputs/bin/python -m gear_sonic.sources.motion_replay generated_motion.npz
+.venv_inputs/bin/python -m interface.replay generated_motion.npz --inspect
+.venv_inputs/bin/python -m interface.replay generated_motion.npz
 ```
 
 `--speed` changes playback speed and scales velocity consistently. `--loop` requires a clip with a continuous boundary. All replay sources send ten samples at offsets `0.0, 0.1, …, 0.9` seconds. Offline text-to-motion output must be exported as a G1 motion before replay; this repository does not run a text-generation model.
@@ -108,7 +108,7 @@ bash scripts/run_planner.sh
 Send a request from a third terminal:
 
 ```bash
-.venv_inputs/bin/python -m gear_sonic.sources.planner_command \
+.venv_inputs/bin/python -m interface.planner.client \
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
@@ -135,9 +135,9 @@ Head settings belong to [`h2_head_adjust.env`](../config/h2_head_adjust.env); th
 
 ```bash
 # Radians; this changes only the two head joints.
-.venv_inputs/bin/python -m gear_sonic.sources.peripherals head --pitch 0.3 --yaw -0.2
+.venv_inputs/bin/python -m interface.peripherals.client head --pitch 0.3 --yaw -0.2
 # Seven Dex3-compatible values; Inspire maps this representation to finger closure.
-.venv_inputs/bin/python -m gear_sonic.sources.peripherals hands --left '[0,0,0,0,0,0,0]'
+.venv_inputs/bin/python -m interface.peripherals.client hands --left '[0,0,0,0,0,0,0]'
 ```
 
 Each process refreshes its own command until interrupted. Head targets are clamped and slew-limited; expiry returns the head to neutral. Expired hand input stops hand publishing without generating a new grip command. Inspire requires a released trigger before accepting closure. Body-source changes do not reset these independent channels.
@@ -147,7 +147,7 @@ Each process refreshes its own command until interrupted. Head targets are clamp
 ```bash
 sudo apt install libgtest-dev zlib1g-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir runtime/build --output-on-failure
+ctest --test-dir build/runtime --output-on-failure
 source scripts/setup_env.sh
 .venv_sim/bin/python tools/check_runtime.py
 ./install.sh planner

@@ -44,14 +44,19 @@ def main() -> int:
     print(f"SONIC_unitree_h2: {ROOT}")
     print(f"platform: {platform.system()} {platform.machine()} Python {platform.python_version()}")
     required = [
-        "gear_sonic/scripts/run_sim_loop.py",
-        "gear_sonic/scripts/pico_manager_thread_server.py",
+        "pyproject.toml",
+        "assets/robots/h2/H2_loop.xml",
+        "assets/robots/h2/H2_loop.urdf",
+        "assets/robots/g1/g1_29dof_with_hand.urdf",
+        "assets/human/human_joints_info.pkl",
+        "src/sim/__main__.py",
+        "src/interface/teleop/pico.py",
         "scripts/build_controller.sh",
-        "gear_sonic/utils/mujoco_sim/wbc_configs/h2_native_sonic_unitree_ros_loop.yaml",
+        "config/sim/h2.yaml",
         "scripts/run_h2_teleop_head_adjust.sh",
-        "runtime/CMakeLists.txt",
-        "runtime/src/inference/InferenceEngine.cpp",
-        "runtime/third_party/unitree_sdk2/CMakeLists.txt",
+        "src/runtime/CMakeLists.txt",
+        "src/runtime/src/inference/InferenceEngine.cpp",
+        "src/runtime/third_party/unitree_sdk2/CMakeLists.txt",
         "config/h2_deploy.env",
         "scripts/run_runtime.sh",
         "models/released/model_encoder_full.onnx",
@@ -59,13 +64,13 @@ def main() -> int:
         "models/released/model_decoder.onnx",
         "models/released/SHA256SUMS",
         "models/released/deployment_manifest.json",
-        "runtime/src/main.cpp",
-        "runtime/include/observations.hpp",
-        "gear_sonic/sources/motion_replay.py",
-        "gear_sonic/sources/teleop.py",
-        "gear_sonic/sources/planner.py",
-        "gear_sonic/planner/motion.py",
-        "gear_sonic/inference/tensorrt.py",
+        "src/runtime/src/main.cpp",
+        "src/runtime/include/observations.hpp",
+        "src/interface/replay.py",
+        "src/interface/teleop/bridge.py",
+        "src/interface/planner/service.py",
+        "src/interface/planner/motion.py",
+        "src/interface/planner/engine.py",
     ]
     good = all([check_file(ROOT / path) for path in required])
     # Use the same destination and pinned checksum as the download command.
@@ -93,11 +98,12 @@ def main() -> int:
             print(f"[WARN   ] not executable: {script.relative_to(ROOT)}")
     if args.imports:
         checks = [
-            ("gear_sonic", "gear_sonic"),
+            ("command interfaces", "interface"),
+            ("simulator", "sim"),
             ("mujoco", "mujoco"),
             ("numpy", "numpy"),
             ("pyzmq", "zmq"),
-            ("Unitree DDS bridge", "gear_sonic.utils.mujoco_sim.unitree_sdk2py_bridge"),
+            ("Unitree DDS bridge", "sim.dds"),
         ]
         for label, module in checks:
             try:
@@ -111,8 +117,8 @@ def main() -> int:
         try:
             import mujoco
             import numpy as np
-            from gear_sonic.utils.mujoco_sim.configs import SimLoopConfig
-            from gear_sonic.utils.mujoco_sim.base_sim import DefaultEnv
+            from sim.config import SimLoopConfig
+            from sim.environment import DefaultEnv
             config = SimLoopConfig(enable_onscreen=False).load_wbc_yaml()
             env = DefaultEnv(config, onscreen=False, offscreen=False)
             assert env.unitree_bridge is None
@@ -127,9 +133,9 @@ def main() -> int:
     if args.teleop:
         try:
             import xrobotoolkit_sdk  # Import only; do not initialize devices.
-            from gear_sonic.scripts.pico_manager_thread_server import ThreePointPose
-            from gear_sonic.data.robot_model.instantiation.g1 import instantiate_g1_robot_model
-            from gear_sonic.data.robot_model.instantiation.h2 import instantiate_h2_robot_model
+            from interface.teleop.pico import ThreePointPose
+            from interface.kinematics.g1 import instantiate_g1_robot_model
+            from interface.kinematics.h2 import instantiate_h2_robot_model
             instantiate_g1_robot_model()
             instantiate_h2_robot_model()
             print("[OK     ] VR mapper, XR binding, and G1/H2 kinematics")

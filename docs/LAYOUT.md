@@ -1,35 +1,45 @@
 # Repository Layout
 
-This repository contains the runtime for H2 simulation, hardware deployment, and VR teleoperation.
+Source code is split into three components:
+
+```text
+src/
+├── runtime/       # C++ SONIC policy execution and Unitree DDS output
+├── interface/     # Python upstream inference and command producers
+└── sim/           # Python MuJoCo simulator and DDS bridge
+```
 
 | Path | Contents |
 |---|---|
-| `runtime/` | C++ policy runtime and its CMake build entry |
-| `runtime/include/` | Command handling, observations, policy execution, H2 parameters, head and hand control |
-| `runtime/src/` | Runtime main loop and TensorRT C++ inference |
-| `runtime/third_party/` | Unitree C++ SDK and DDS libraries |
-| `runtime/tests/` | Runtime and numerical regression tests, test-only readers and fixtures |
-| `gear_sonic/planner/` | Python planner context, resampling and blending |
-| `gear_sonic/inference/` | TensorRT Python engine, cache and CUDA buffers |
-| `gear_sonic/commands/` | Python command protocol and client |
-| `gear_sonic/sources/` | Motion replay, planner service/requests, teleoperation and head/hand senders |
-| `models/released/` | H2 ONNX models, interface manifest, and checksums |
-| `models/planner/` | Local G1 planner weight and generated TensorRT cache |
-| `motions/` | Optional G1 replay examples and format documentation |
-| `config/` | H2 hardware, hand backend and teleoperation settings |
-| `gear_sonic/` | MuJoCo/DDS simulator, PICO input, pose mathematics, and runtime robot assets |
-| `external_dependencies/` | Unitree Python SDK and XRoboToolkit binding sources/libraries |
-| `scripts/` | Independent runtime/planner/simulator launchers and native build |
-| `tools/` | Offline release and ONNX checks |
-| `requirements/` | Pinned Python deployment environments and optional download/validation dependencies |
-| `docs/` | Installation and operation guides |
-| `release/` | Release inventory and validation records |
-| `legal/` | Third-party license notices |
+| `src/runtime/` | Encoder/decoder inference, observations, command arbitration, head/hand output, native SDK and CMake build |
+| `src/interface/commands/` | Message schema, validation and Python command client |
+| `src/interface/replay.py` | Offline G1 motion and text-to-motion replay |
+| `src/interface/planner/` | Planner service, request client, TensorRT engine and trajectory processing |
+| `src/interface/teleop/` | PICO input, SMPL/VR adapter, calibration, tracking transport and visualization |
+| `src/interface/peripherals/` | Head/hand command client and optional Inspire serial tools |
+| `src/interface/kinematics/` | G1/H2 kinematics used by teleoperation |
+| `src/interface/math/` | Pose and rotation mathematics |
+| `src/sim/` | Simulation loop, physics, motor response and Unitree DDS bridge |
+| `src/sim/rendering/` | Viewer presentation and camera publishing |
+| `src/sim/diagnostics/` | Simulation diagnostics and logging |
+| `assets/` | Shared G1/H2 URDF, MJCF, meshes and human joint data |
+| `models/released/` | H2 ONNX models, interface manifest and checksums |
+| `models/planner/` | Optional local G1 planner weight and TensorRT cache |
+| `motions/` | G1 replay examples and format documentation |
+| `config/` | Hardware, teleoperation and simulator settings |
+| `scripts/` | Environment setup, native build and process launchers |
+| `tests/` | Python interface and simulator regression tests |
+| `src/runtime/tests/` | C++ regression tests and fixtures |
+| `external_dependencies/` | Unitree Python SDK and XRoboToolkit binding |
+| `build/runtime/` | Generated native binaries and CMake files |
+| `requirements/` | Dependency locks for each Python environment |
+| `tools/` | Offline checks and integration validation |
+| `docs/`, `release/`, `legal/` | Guides, validation records and licenses |
 
-The retained robot assets are the H2 closed-loop MJCF/URDF and their mesh dependencies, plus G1 kinematics needed by the VR mapper. `motions/example/` supplies optional replay clips; `runtime/tests/fixtures/` supplies numerical regression data. Shared Python pose mathematics lives under `gear_sonic/utils/math/`.
+`runtime` accepts commands from `interface` through ZeroMQ. `sim` exchanges robot state and motor targets with `runtime` through DDS. The simulator does not import the Python input services, and the input services do not import the simulator. Both read shared robot resources from `assets/`.
 
-Build the native runtime with `bash scripts/build_controller.sh`. Its only CMake entry is `runtime/CMakeLists.txt`, and the executable is `runtime/build/bin/sonic_h2_runtime`. All C++ policy execution code and native dependencies live under `runtime/`; Python input services communicate through the command protocol. See the [runtime build guide](../runtime/README.md).
+Python packages `interface` and `sim` are installed from the root `pyproject.toml` using `./install.sh`. The installer uses an editable installation, so resources resolve against this checkout even when a process starts from another working directory. Keep `assets/`, `config/` and `models/` with the checkout.
 
-Training frameworks, MotionBricks, Isaac environments, VLA/data collection, historical checkpoints, experimental motion sets, and inherited documentation-site tooling are outside this repository's scope.
+Build the C++ runtime with `bash scripts/build_controller.sh`; the executable is `build/runtime/bin/sonic_h2_runtime`. See the [runtime guide](../src/runtime/README.md), [interface guide](../src/interface/README.md), and [simulator guide](../src/sim/README.md).
 
-The planner is downloaded to `models/planner/planner_sonic.onnx` and ignored by Git. Python environments, native builds, TensorRT engines, logs, and recordings are generated locally. See [Planner](PLANNER.md) and [Reproducibility](../release/REPRODUCIBILITY.md).
+The planner weight at `models/planner/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](../release/REPRODUCIBILITY.md).

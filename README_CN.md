@@ -14,6 +14,8 @@ policy runtime 启动后以默认姿态站立，接收独立 motion replay、pla
 | Sim2Real | Unitree H2 实机全身动作跟踪 | [实机部署](docs/DEPLOYMENT_CN.md#sim2real) |
 | VR 遥操作 | 基于 PICO 与 XRoboToolkit 的头部、双手三点遥操作 | [遥操作](docs/DEPLOYMENT_CN.md#vr-遥操作) |
 
+源码分为 [`src/runtime/`](src/runtime/README.md)（C++ policy）、[`src/interface/`](src/interface/README.md)（Python 上游推理与指令发送）、[`src/sim/`](src/sim/README.md)（仿真器）。
+
 ## 快速开始
 
 ```bash
