@@ -3,4 +3,4 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "assets"
-PLANNER_MODEL = ROOT / "models/planner/planner_sonic.onnx"
+PLANNER_MODEL = ROOT / "models/motion_planner_g1/planner_sonic.onnx"

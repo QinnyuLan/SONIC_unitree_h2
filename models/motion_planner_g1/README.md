@@ -1,6 +1,6 @@
 # G1 Planner
 
-The optional Python planner service loads `models/planner/planner_sonic.onnx`. The downloader and service use this same default path. The weight and generated TensorRT engines are ignored by Git.
+The optional Python planner service loads `models/motion_planner_g1/planner_sonic.onnx`. The downloader and service use this same default path. The weight and generated TensorRT engines are ignored by Git.
 
 From the repository root:
 

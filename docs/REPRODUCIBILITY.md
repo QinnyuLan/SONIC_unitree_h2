@@ -1,6 +1,6 @@
 # Reproducibility
 
-The release contains the H2 runtime for MuJoCo, hardware deployment, and PICO VR teleoperation. The independent policy runtime loads `models/released`; producers connect through the documented command channels. The model interface is documented in the [model README](../models/released/README.md).
+The release contains the H2 runtime for MuJoCo, hardware deployment, and PICO VR teleoperation. The independent policy runtime loads `models/sonic_h2_released`; producers connect through the documented command channels. The model interface is documented in the [model README](../models/sonic_h2_released/README.md).
 
 ## Validated environment
 
@@ -115,4 +115,4 @@ Package these reports for attachment to the corresponding GitHub release:
 tar -czf outputs/validation-reports.tar.gz -C outputs/validation .
 ```
 
-Reports describe the environment and revision in which they were produced; rerun the relevant checks for a new release. Keep model interface manifests and checksums with the models under `models/released/`. Source provenance is documented in [Acknowledgments](ACKNOWLEDGMENTS.md); Git records the source files and pinned submodules.
+Reports describe the environment and revision in which they were produced; rerun the relevant checks for a new release. Keep model interface manifests and checksums with the models under `models/sonic_h2_released/`. Source provenance is documented in [Acknowledgments](ACKNOWLEDGMENTS.md); Git records the source files and pinned submodules.

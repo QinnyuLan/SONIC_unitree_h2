@@ -97,7 +97,7 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python download_from_hf.py --planner-only
 ```
 
-模型下载到 `models/planner/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
+模型下载到 `models/motion_planner_g1/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
 
 执行 `./install.sh planner` 安装 planner 环境。安装脚本使用 `$TensorRT_ROOT/python` 中与 C++ SDK 配套的 TensorRT Python wheel；文件位于其他位置时设置 `TENSORRT_WHEEL`。
 

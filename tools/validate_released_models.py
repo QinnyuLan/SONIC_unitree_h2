@@ -114,7 +114,7 @@ def validate(model_dir: Path, comparisons: list[Path]) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model-dir", type=Path, default=ROOT / "models/released")
+    parser.add_argument("--model-dir", type=Path, default=ROOT / "models/sonic_h2_released")
     parser.add_argument("--compare", type=Path, action="append", default=[])
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()

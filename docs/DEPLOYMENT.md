@@ -97,7 +97,7 @@ uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python download_from_hf.py --planner-only
 ```
 
-The model is downloaded to `models/planner/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
+The model is downloaded to `models/motion_planner_g1/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
 
 Install its environment with `./install.sh planner`. The installer uses the TensorRT Python wheel from `$TensorRT_ROOT/python`, matching the native SDK; set `TENSORRT_WHEEL` if the wheel is stored elsewhere.
 

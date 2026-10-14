@@ -62,11 +62,11 @@ def main() -> int:
         "src/runtime/third_party/unitree_sdk2/CMakeLists.txt",
         "config/h2_deploy.env",
         "scripts/run_runtime.sh",
-        "models/released/model_encoder_full.onnx",
-        "models/released/model_encoder.onnx",
-        "models/released/model_decoder.onnx",
-        "models/released/SHA256SUMS",
-        "models/released/deployment_manifest.json",
+        "models/sonic_h2_released/model_encoder_full.onnx",
+        "models/sonic_h2_released/model_encoder.onnx",
+        "models/sonic_h2_released/model_decoder.onnx",
+        "models/sonic_h2_released/SHA256SUMS",
+        "models/sonic_h2_released/deployment_manifest.json",
         "src/runtime/src/main.cpp",
         "src/runtime/include/observations.hpp",
         "src/interface/replay.py",
@@ -99,7 +99,7 @@ def main() -> int:
         print("G1 planner is downloaded separately; see docs/PLANNER.md.")
         print("  python3 download_from_hf.py --planner-only")
     good = good and planner_ok
-    sums = ROOT / "models/released/SHA256SUMS"
+    sums = ROOT / "models/sonic_h2_released/SHA256SUMS"
     if sums.is_file():
         for line in sums.read_text().splitlines():
             expected, name = line.split(maxsplit=1)

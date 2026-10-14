@@ -23,8 +23,8 @@ src/
 | `src/sim/rendering/` | Viewer presentation and camera publishing |
 | `src/sim/diagnostics/` | Simulation diagnostics and logging |
 | `assets/` | Shared G1/H2 URDF, MJCF, meshes and human joint data |
-| `models/released/` | H2 ONNX models, interface manifest and checksums |
-| `models/planner/` | Optional local G1 planner weight and TensorRT cache |
+| `models/sonic_h2_released/` | H2 ONNX models, interface manifest and checksums |
+| `models/motion_planner_g1/` | Optional local G1 planner weight and TensorRT cache |
 | `motions/` | G1 replay examples and format documentation |
 | `config/` | Hardware, teleoperation and simulator settings |
 | `scripts/` | Environment setup, native build and process launchers |
@@ -44,4 +44,4 @@ Python packages `interface` and `sim` are installed from the root `pyproject.tom
 
 Build the C++ runtime with `bash scripts/build_controller.sh`; the executable is `build/runtime/bin/sonic_h2_runtime`. See the [runtime guide](../src/runtime/README.md), [interface guide](../src/interface/README.md), and [simulator guide](../src/sim/README.md).
 
-The planner weight at `models/planner/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](REPRODUCIBILITY.md).
+The planner weight at `models/motion_planner_g1/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](REPRODUCIBILITY.md).

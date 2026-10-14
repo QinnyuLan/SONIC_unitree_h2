@@ -1,6 +1,6 @@
 # Released H2 Models
 
-These directly fine-tuned weights are shared by Sim2Sim, Sim2Real, and VR teleoperation. No adapter merge is required. The runtime loads this directory with `--model-dir models/released`.
+These directly fine-tuned weights are shared by Sim2Sim, Sim2Real, and VR teleoperation. No adapter merge is required. The runtime loads this directory with `--model-dir models/sonic_h2_released`.
 
 All tensors are float32 with batch size 1.
 

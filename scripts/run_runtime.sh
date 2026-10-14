@@ -13,7 +13,7 @@ for ARG in "$@"; do
   if [[ "$ARG" == --print-command ]]; then PRINT_ONLY=true; else EXTRA+=("$ARG"); fi
 done
 cd "$ROOT"
-COMMAND=("$ROOT/build/runtime/bin/sonic_h2_runtime" --model-dir "$ROOT/models/released")
+COMMAND=("$ROOT/build/runtime/bin/sonic_h2_runtime" --model-dir "$ROOT/models/sonic_h2_released")
 if [[ "$MODE" == real ]]; then
   source "${H2_DEPLOY_CONFIG:-$ROOT/config/h2_deploy.env}"
   COMMAND+=(--network "$NETWORK_INTERFACE" --domain "$DDS_DOMAIN" --hand-backend "$HAND_BACKEND"

@@ -1,13 +1,13 @@
 # G1 planner 下载与本地测试
 
-独立 planner 服务使用 SONIC 的共享 G1 kinematic planner。正式 H2 控制器位于 `models/released/`，本下载操作仅补齐 planner。
+独立 planner 服务使用 SONIC 的共享 G1 kinematic planner。正式 H2 控制器位于 `models/sonic_h2_released/`，本下载操作仅补齐 planner。
 
 ## 本地路径与 Git
 
 下载脚本和 planner 服务使用相同路径；也可将已有权重放入此位置：
 
 ```text
-models/planner/planner_sonic.onnx
+models/motion_planner_g1/planner_sonic.onnx
 ```
 
 此文件已加入根目录 `.gitignore`，不会随普通 `git add` / `git push` 上传。新克隆的仓库不含该权重。文件大小为 773,952,989 字节（约 738 MiB）。runtime、离线动作回放和原地 SMPL/VR 遥操作不依赖 planner；摇杆行走需要启动独立 planner 服务。
@@ -44,7 +44,7 @@ SHA256:   39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea
 
 ```bash
 # 确认文件被 Git 忽略
-git check-ignore models/planner/planner_sonic.onnx
+git check-ignore models/motion_planner_g1/planner_sonic.onnx
 # 校验发布模型与 planner，不连接机器人
 python3 tools/verify_release.py --require-planner
 # 安装 TensorRT Python planner 环境

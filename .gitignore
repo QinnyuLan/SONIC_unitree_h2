@@ -38,5 +38,5 @@ MUJOCO_LOG.TXT
 xrobotoolkit_sdk.cpython-*-*-*.so
 
 # Shared SONIC planner: downloaded locally for the optional planner service.
-/models/planner/planner_sonic.onnx
-/models/planner/.planner_sonic.onnx.*.part
+/models/motion_planner_g1/planner_sonic.onnx
+/models/motion_planner_g1/.planner_sonic.onnx.*.part

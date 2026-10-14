@@ -3,9 +3,9 @@
 #include "h2_native_contract.hpp"
 
 namespace {
-constexpr auto kFull = "models/released/model_encoder_full.onnx";
-constexpr auto kCompact = "models/released/model_encoder.onnx";
-constexpr auto kDecoder = "models/released/model_decoder.onnx";
+constexpr auto kFull = "models/sonic_h2_released/model_encoder_full.onnx";
+constexpr auto kCompact = "models/sonic_h2_released/model_encoder.onnx";
+constexpr auto kDecoder = "models/sonic_h2_released/model_decoder.onnx";
 constexpr auto kOrientation = "sonic_full_root_relative_v0";
 }
 

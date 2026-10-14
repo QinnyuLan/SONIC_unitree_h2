@@ -24,14 +24,14 @@ cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```
 
-按照[部署指南](docs/DEPLOYMENT_CN.md)安装依赖、编译控制器并运行仿真。H2 模型位于 [`models/released/`](models/released/)，需要行走规划时，可另行下载并运行 [SONIC planner](docs/DEPLOYMENT_CN.md#planner)。
+按照[部署指南](docs/DEPLOYMENT_CN.md)安装依赖、编译控制器并运行仿真。H2 模型位于 [`models/sonic_h2_released/`](models/sonic_h2_released/)，需要行走规划时，可另行下载并运行 [SONIC planner](docs/DEPLOYMENT_CN.md#planner)。
 
 ## 文档
 
 - [架构与指令协议](docs/ARCHITECTURE_CN.md)：独立 runtime、稀疏参考、头部和手部通道。
 - [工程结构](docs/LAYOUT.md)：C++ runtime、Python 服务、模型、配置与动作示例。
 - [安装与部署](docs/DEPLOYMENT_CN.md)：环境配置、Sim2Sim、Sim2Real 和 VR 遥操作。
-- [发布模型说明](models/released/README.md)：输入输出接口与文件校验。
+- [发布模型说明](models/sonic_h2_released/README.md)：输入输出接口与文件校验。
 - [复现记录](docs/REPRODUCIBILITY.md)：模型验证、推理检查与测试结果。
 - [文档索引](docs/README.md)：配置、故障排查与开发说明。
 

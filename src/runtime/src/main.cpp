@@ -27,7 +27,7 @@ namespace {
 volatile std::sig_atomic_t interrupted = 0;
 void Signal(int) { interrupted = 1; }
 struct Options {
-  std::string network = "lo", model = "models/released";
+  std::string network = "lo", model = "models/sonic_h2_released";
   std::string body = "tcp://127.0.0.1:5558", state = "tcp://127.0.0.1:5559";
   std::string head = "tcp://127.0.0.1:5562", hands = "tcp://127.0.0.1:5563";
   int domain = 0;
