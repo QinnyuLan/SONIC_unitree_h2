@@ -7,6 +7,10 @@
 
 论文 [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999) 的 Unitree H2 部署官方实现。
 
+![基于 TRACE 的 SONIC Unitree H2 部署及多种动作与指令接口](docs/images/deployment_overview.png)
+
+基于 TRACE，本项目以较低的额外训练成本将 SONIC 预训练全身控制策略迁移至 Unitree H2。部署框架提供统一的多本体参考动作与多模态指令接口，支持 G1、H2 和 SMPL 动作回放、运动规划、离线文本动作生成及 VR 遥操作，并预留直接 token 输入接口，以便后续接入 VLA/VLN。
+
 ## 项目概览
 
 policy runtime 启动后以默认姿态站立，接收独立 motion replay、planner 和遥操作进程的指令。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。输入端与 planner 统一使用 Python，实时 policy runtime 使用 C++，policy 与 planner 推理使用 TensorRT。可选的 ECHO-G 生成器离线生成语音和 G1 手势，再通过 motion replay 展示。

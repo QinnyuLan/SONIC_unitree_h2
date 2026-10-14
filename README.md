@@ -7,6 +7,10 @@
 
 Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999).
 
+![SONIC deployment on Unitree H2 with TRACE and multiple motion and command interfaces](docs/images/deployment_overview.png)
+
+TRACE transfers the pretrained SONIC whole-body policy to Unitree H2 with low additional training cost. This deployment provides unified command interfaces for G1, H2, and SMPL reference motions, supporting motion replay, motion planning, offline text-to-motion, and VR teleoperation. A direct token interface is reserved for future VLA/VLN integration.
+
 ## Overview
 
 The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. Policy and planner inference use TensorRT. The optional ECHO-G generator prepares speech and G1 gestures offline for motion replay.
