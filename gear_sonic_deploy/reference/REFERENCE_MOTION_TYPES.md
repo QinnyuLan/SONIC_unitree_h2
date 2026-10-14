@@ -20,14 +20,4 @@ Supported types and universal encoder selectors:
 | `smpl` | 2 | SMPL joints and root quaternion |
 | `g1` | 3 | native G1 `joint_pos.csv`, `joint_vel.csv` (29D) |
 
-The non-v1.1 full release uses `model_encoder_full.onnx`. Planner output is
-native G1 reference data and uses selector 3 by default; no G1-to-H2 reference
-projection is performed in that mode. The H2-only `model_encoder.onnx` accepts only
-`reference_type: h2` and cannot run planner/G1/SMPL references.
-
-For an explicit non-v1.1 comparison, `--planner-g1-to-h2` projects every sampled
-planner q/qdot frame through the legacy G1-to-H2 linear map and uses selector 0.
-It requires the full encoder and an enabled planner. The stored planner trajectory
-remains G1, and preloaded demo types are unchanged. VR 3-point control still uses
-selector 1; leaving it restores selector 0 for this comparison. Omit the flag to
-restore the default native G1 selector 3 workflow.
+The default `model_encoder_full.onnx` accepts all four selectors. Planner output is native G1 reference data and uses selector 3. VR three-point control uses selector 1. The compact `model_encoder.onnx` accepts only H2 references and requires `policy/release/observation_config_h2_compact.yaml`.

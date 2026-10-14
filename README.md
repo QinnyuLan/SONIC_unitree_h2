@@ -17,7 +17,7 @@ The release supports motion tracking and VR teleoperation on Unitree H2, with a 
 ## Getting Started
 
 ```bash
-git clone https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```

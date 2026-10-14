@@ -15,10 +15,10 @@ Use an Ubuntu workstation with an NVIDIA GPU. The Python environments use Python
 | TensorRT | 10.13.3.9 |
 | ONNX Runtime C++ | 1.16.3 |
 
-Python dependencies are defined in [`gear_sonic/pyproject.toml`](../gear_sonic/pyproject.toml). Native deployment dependencies and platform notes are listed in [requirements](../requirements/README.md) and the [deployment installation reference](source/getting_started/installation_deploy.md).
+Python dependencies are defined in [`gear_sonic/pyproject.toml`](../gear_sonic/pyproject.toml). Native deployment dependencies and platform notes are listed in [requirements](../requirements/README.md) and the [deployment installation reference](NATIVE_SETUP.md).
 
 ```bash
-git clone https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```
@@ -31,7 +31,8 @@ On Ubuntu, install the build dependencies:
 
 ```bash
 sudo apt update
-sudo apt install build-essential cmake pkg-config libzmq3-dev     libeigen3-dev libmsgpack-dev libgtest-dev zlib1g-dev
+sudo apt install build-essential cmake pkg-config libzmq3-dev \
+  libeigen3-dev libmsgpack-dev libyaml-cpp-dev nlohmann-json3-dev cppzmq-dev zlib1g-dev
 ```
 
 Then build the controller:
@@ -39,12 +40,7 @@ Then build the controller:
 ```bash
 export TensorRT_ROOT="$HOME/TensorRT"
 ./verify_deploy.sh
-cd gear_sonic_deploy
-source scripts/setup_env.sh
-export HAS_ROS2=0
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j4
-cd ..
+bash scripts/build_controller.sh
 ```
 
 The three workflows below use this controller. TensorRT engines are built on the target machine from the ONNX files. Set `TensorRT_ROOT` in each terminal that runs the controller.
@@ -56,7 +52,7 @@ Install the simulation environment:
 ```bash
 ./install.sh sim2sim
 source .venv_sim/bin/activate
-python3 tools/verify_release.py --imports
+python3 tools/verify_release.py --imports --sim
 ```
 
 Start the simulator in terminal 1, from the repository root:
@@ -104,7 +100,7 @@ The downloader writes `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onn
 
 ## VR Teleoperation
 
-Complete the controller build and planner download first. Install the Python environment, then set up the XRoboToolkit PC Service and pair the PICO headset using the [VR setup guide](source/getting_started/vr_teleop_setup.md).
+Complete the controller build and planner download first. Install the Python environment, then set up the XRoboToolkit PC Service and pair the PICO headset using the [VR setup guide](VR_SETUP.md).
 
 ```bash
 ./install.sh teleop
@@ -138,8 +134,9 @@ python3 tools/verify_release.py
 # Require and validate the planner as well.
 python3 tools/verify_release.py --require-planner
 # After building, run the C++ tests from their expected working directory.
-cd gear_sonic_deploy
-./target/release/run_tests
+sudo apt install libgtest-dev
+bash scripts/build_controller.sh -DBUILD_TESTING=ON
+ctest --test-dir gear_sonic_deploy/build --output-on-failure
 ```
 
-The [reproducibility record](../release/REPRODUCIBILITY.md) documents CPU/GPU inference and C++ test results. These checks do not establish real-time tracking performance or hardware stability for a new setup. Optional assets and download exclusions are described in the [repository maintenance guide](GIT_WORKFLOW.md).
+The [reproducibility record](../release/REPRODUCIBILITY.md) documents CPU/GPU inference and C++ test results. These checks do not establish real-time tracking performance or hardware stability for a new setup. The [repository layout](LAYOUT.md) describes the runtime components and local build artifacts.

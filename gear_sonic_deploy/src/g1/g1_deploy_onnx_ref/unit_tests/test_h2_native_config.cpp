@@ -29,33 +29,9 @@ TEST(H2NativeConfig, SeparatesPolicyAndEncoderObservations) {
   EXPECT_EQ(config.encoder.encoder_modes[3].name, "g1");
 }
 
-TEST(H2NativeConfig, V11UsesHeadingNormalizedUniversalLayout) {
-  const auto config = ObservationConfigParser::ParseFullConfig(
-      "policy/release/observation_config_h2_native_v1_1.yaml");
-
-  ASSERT_EQ(config.observations.size(), 6u);
-  ASSERT_EQ(config.encoder.encoder_observations.size(), 10u);
-  EXPECT_EQ(config.encoder.encoder_observations[0].name, "encoder_index");
-  EXPECT_EQ(config.encoder.encoder_observations[1].name, "h2_native_reference");
-  EXPECT_EQ(config.encoder.encoder_observations[2].name, "motion_anchor_ori_heading");
-  EXPECT_EQ(
-      config.encoder.encoder_observations[3].name,
-      "motion_anchor_ori_heading_mf_nonflat");
-  EXPECT_EQ(
-      config.encoder.encoder_observations[8].name,
-      "smpl_root_ori_heading_multi_future");
-  ASSERT_EQ(config.encoder.encoder_modes.size(), 3u);
-  EXPECT_EQ(
-      config.encoder.encoder_modes[0].required_observations.back(),
-      "motion_anchor_ori_heading_mf_nonflat");
-  EXPECT_EQ(
-      config.encoder.encoder_modes[2].required_observations[2],
-      "smpl_root_ori_heading_multi_future");
-}
-
 TEST(H2NativeConfig, H2OnlyUsesCompact640DLayout) {
   const auto config = ObservationConfigParser::ParseFullConfig(
-      "policy/release/observation_config_h2_native_single.yaml");
+      "policy/release/observation_config_h2_compact.yaml");
 
   ASSERT_EQ(config.observations.size(), 6u);
   ASSERT_EQ(config.encoder.encoder_observations.size(), 2u);

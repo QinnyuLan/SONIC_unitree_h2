@@ -1,4 +1,0 @@
-Static SMPL Arm References
-==========================
-- arms_overhead_straight: 300 frames, encoder_mode=2
-- arms_forward_straight: 300 frames, encoder_mode=2

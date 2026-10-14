@@ -1,1 +1,0 @@
-Static SMPL mode-2 reference: arms_forward_straight

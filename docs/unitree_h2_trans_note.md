@@ -1,4 +1,0 @@
-unitree g1和h2主要的区别：
-1. h2多了head两个自由度，这个不要用policy控制，训练和验证阶段直接输出默认角度控制
-2. h2两个hip关节的pitch和roll是有耦合的（非垂直）而g1的hip两个关节的pitch和roll接近垂直
-3. ankle的roll和pitch，g1和h2在模型中的顺序不同

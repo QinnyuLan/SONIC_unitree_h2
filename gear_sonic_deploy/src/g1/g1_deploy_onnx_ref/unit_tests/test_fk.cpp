@@ -12,7 +12,7 @@ TEST(FK, TestFKAndGlobalVelocities) {
     MotionDataReader motion_reader;
     motion_reader.ReadFromCSV("reference/bones_072925_test/");
 
-    RobotFK fk("g1/g1_29dof.xml");
+    RobotFK fk("src/g1/g1_deploy_onnx_ref/unit_tests/fixtures/g1_kinematics.xml");
 
     auto num_bodies = motion_reader.motions[0]->GetNumBodies();
     auto num_joints = motion_reader.motions[0]->GetNumJoints();

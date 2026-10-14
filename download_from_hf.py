@@ -1,106 +1,16 @@
 #!/usr/bin/env python3
-"""
-Download GEAR-SONIC model checkpoints and training data from Hugging Face Hub.
-
-Repository: https://huggingface.co/nvidia/GEAR-SONIC
-
-Usage:
-    python download_from_hf.py                    # ONNX models for deployment
-    python download_from_hf.py --training          # PyTorch checkpoint + SMPL data
-    python download_from_hf.py --sample            # Sample data only (quick start)
-    python download_from_hf.py --output-dir /path  # custom output directory
-    python download_from_hf.py --no-planner        # skip planner model
-    python download_from_hf.py --planner-only      # planner model only
-"""
-
+"""Download and verify the shared SONIC G1 planner used by H2 VR deployment."""
 import argparse
 import hashlib
 import os
-import shutil
-import subprocess
-import sys
-import tempfile
 from pathlib import Path
+import shutil
+import tempfile
 
 REPO_ID = "nvidia/GEAR-SONIC"
-
-# (filename in HF repo, local destination relative to output_dir)
-POLICY_FILES = [
-    ("model_encoder.onnx", "policy/release/model_encoder.onnx"),
-    ("model_decoder.onnx", "policy/release/model_decoder.onnx"),
-    ("observation_config.yaml", "policy/release/observation_config.yaml"),
-]
-
 PLANNER_FILE = ("planner_sonic.onnx", "planner/target_vel/V2/planner_sonic.onnx")
 PLANNER_REVISION = "72935a37d3860204617ebaaf6c855a1c5aff7b8c"
 PLANNER_SHA256 = "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea"
-
-TRAINING_FILES = [
-    ("sonic_release/last.pt", "sonic_release/last.pt"),
-    ("sonic_release/config.yaml", "sonic_release/config.yaml"),
-]
-
-SMPL_TAR_PARTS_PREFIX = "bones_seed_smpl/bones_seed_smpl.tar.part_"
-SMPL_TAR_PARTS = [f"{SMPL_TAR_PARTS_PREFIX}a{c}" for c in "abcdefg"]
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Download GEAR-SONIC checkpoints from Hugging Face Hub"
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=None,
-        help=(
-            "Directory to save files. "
-            "Defaults to gear_sonic_deploy/ (deploy) or repo root (training)."
-        ),
-    )
-    parser.add_argument(
-        "--no-planner",
-        action="store_true",
-        help="Skip downloading the kinematic planner ONNX model",
-    )
-    parser.add_argument(
-        "--planner-only",
-        action="store_true",
-        help="Download only the kinematic planner ONNX model",
-    )
-    parser.add_argument(
-        "--training",
-        action="store_true",
-        help="Download training checkpoint + SMPL motion data (~30 GB)",
-    )
-    parser.add_argument(
-        "--sample",
-        action="store_true",
-        help="Download sample motion data only (1 walking sequence, ~4 MB)",
-    )
-    parser.add_argument(
-        "--no-smpl",
-        action="store_true",
-        help="With --training, skip SMPL data download (checkpoint only)",
-    )
-    parser.add_argument(
-        "--token",
-        default=None,
-        help="Hugging Face token (or set HF_TOKEN env var / run `hf auth login`)",
-    )
-    args = parser.parse_args()
-    if args.planner_only and (args.no_planner or args.training or args.sample):
-        parser.error("--planner-only cannot be combined with --no-planner, --training, or --sample")
-    return args
-
-
-def _ensure_huggingface_hub():
-    try:
-        from huggingface_hub import hf_hub_download, snapshot_download
-        return hf_hub_download, snapshot_download
-    except ImportError:
-        print("huggingface_hub is not installed. Install it with:")
-        print("  pip install huggingface_hub")
-        sys.exit(1)
 
 
 def _sha256_file(path, chunk_size=8 * 1024 * 1024):
@@ -158,144 +68,23 @@ def download_file(
     print(f"  -> {local_dest}")
 
 
-def download_and_extract_smpl(hf_hub_download, repo_id, output_dir, token=None):
-    """Download split tar parts and extract SMPL data."""
-    parts_dir = output_dir / "bones_seed_smpl"
-    parts_dir.mkdir(parents=True, exist_ok=True)
-
-    print(f"  Downloading {len(SMPL_TAR_PARTS)} parts (~30 GB total) ...", flush=True)
-    part_paths = []
-    for hf_filename in SMPL_TAR_PARTS:
-        local_name = Path(hf_filename).name
-        local_dest = parts_dir / local_name
-        if local_dest.exists():
-            print(f"  (cached) {local_name}")
-            part_paths.append(local_dest)
-            continue
-        cached = hf_hub_download(repo_id=repo_id, filename=hf_filename, token=token)
-        shutil.copy2(cached, local_dest)
-        part_paths.append(local_dest)
-        print(f"  Downloaded {local_name}")
-
-    # Reassemble and extract
-    data_dir = output_dir / "data"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    print(f"  Extracting to {data_dir}/smpl_filtered/ ...", flush=True)
-
-    # cat parts | tar xf - -C data/
-    cat_cmd = f"cat {parts_dir}/bones_seed_smpl.tar.part_*"
-    tar_cmd = f"tar xf - -C {data_dir}"
-    result = subprocess.run(
-        f"{cat_cmd} | {tar_cmd}",
-        shell=True,
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
-        print(f"  ERROR: Extraction failed: {result.stderr}")
-        sys.exit(1)
-
-    # Count extracted files
-    smpl_dir = data_dir / "smpl_filtered"
-    if smpl_dir.exists():
-        n_files = sum(1 for f in smpl_dir.iterdir() if f.suffix == ".pkl")
-        print(f"  -> {smpl_dir} ({n_files} PKL files)")
-    else:
-        print(f"  WARNING: Expected {smpl_dir} but directory not found")
-
-    # Clean up tar parts
-    print("  Cleaning up tar parts ...")
-    shutil.rmtree(parts_dir)
-
-
-def download_sample_data(snapshot_download, repo_id, output_dir, token=None):
-    """Download sample motion data (1 walking sequence)."""
-    print("  Downloading sample data ...", flush=True)
-    snapshot_download(
-        repo_id=repo_id,
-        allow_patterns="sample_data/*",
-        local_dir=str(output_dir),
-        token=token,
-    )
-    sample_dir = output_dir / "sample_data"
-    if sample_dir.exists():
-        n_files = sum(1 for _ in sample_dir.rglob("*.pkl"))
-        print(f"  -> {sample_dir} ({n_files} PKL files)")
-
 
 def main():
-    args = parse_args()
-    # A copied and verified planner needs neither network access nor Hub dependencies.
-    if args.planner_only:
-        output_dir = args.output_dir or Path(__file__).resolve().parent / "gear_sonic_deploy"
-        local_dest = output_dir / PLANNER_FILE[1]
-        if local_dest.is_file() and _sha256_file(local_dest) == PLANNER_SHA256:
-            print(f"Already verified G1 planner: {local_dest}")
-            return
-    hf_hub_download, snapshot_download = _ensure_huggingface_hub()
-
-    repo_root = Path(__file__).resolve().parent
-
-    if args.training or args.sample:
-        output_dir = args.output_dir if args.output_dir else repo_root
-    else:
-        output_dir = args.output_dir if args.output_dir else repo_root / "gear_sonic_deploy"
-
-    print("=" * 60)
-    print("  GEAR-SONIC — Hugging Face Model Downloader")
-    print(f"  Repository : {REPO_ID}")
-    print(f"  Output dir : {output_dir}")
-    if args.training:
-        print(f"  Mode       : training (checkpoint + SMPL data)")
-    elif args.sample:
-        print(f"  Mode       : sample data (quick start)")
-    elif args.planner_only:
-        print(f"  Mode       : planner only (pinned ONNX model)")
-    else:
-        print(f"  Mode       : deployment (ONNX models)")
-    print("=" * 60)
-
-    if args.sample:
-        print("\n[Sample Data]")
-        download_sample_data(snapshot_download, REPO_ID, output_dir, token=args.token)
-
-    elif args.training:
-        print("\n[Checkpoint]")
-        for hf_filename, local_rel in TRAINING_FILES:
-            download_file(
-                hf_hub_download, REPO_ID, hf_filename,
-                output_dir / local_rel, token=args.token,
-            )
-
-        if not args.no_smpl:
-            print("\n[SMPL Motion Data]")
-            download_and_extract_smpl(hf_hub_download, REPO_ID, output_dir, token=args.token)
-        else:
-            print("\n[SMPL Motion Data] Skipped (--no-smpl)")
-
-    else:
-        if not args.planner_only:
-            print("\n[Policy]")
-            for hf_filename, local_rel in POLICY_FILES:
-                download_file(
-                    hf_hub_download, REPO_ID, hf_filename,
-                    output_dir / local_rel, token=args.token,
-                )
-
-        if not args.no_planner:
-            print("\n[Planner]")
-            hf_filename, local_rel = PLANNER_FILE
-            download_file(
-                hf_hub_download, REPO_ID, hf_filename,
-                output_dir / local_rel, token=args.token,
-                revision=PLANNER_REVISION,
-                expected_sha256=PLANNER_SHA256,
-            )
-
-    print("\n" + "=" * 60)
-    print("  Done! Files saved under:")
-    print(f"  {output_dir}")
-    print("=" * 60)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--planner-only", action="store_true", help="download the planner (the default and only mode)")
+    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent / "gear_sonic_deploy",
+                        help="deployment root; planner is stored under planner/target_vel/V2")
+    args = parser.parse_args()
+    destination = args.output_dir / PLANNER_FILE[1]
+    if destination.is_file() and _sha256_file(destination) == PLANNER_SHA256:
+        print(f"Already verified G1 planner: {destination}")
+        return
+    try:
+        from huggingface_hub import hf_hub_download
+    except ImportError:
+        parser.exit(1, "Install download dependencies: python -m pip install -r requirements/download.txt\n")
+    download_file(hf_hub_download, REPO_ID, PLANNER_FILE[0], destination,
+                  revision=PLANNER_REVISION, expected_sha256=PLANNER_SHA256)
 
 
 if __name__ == "__main__":

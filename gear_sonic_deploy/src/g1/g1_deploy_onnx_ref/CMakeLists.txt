@@ -139,38 +139,6 @@ endif()
 # Add ZMQ to main executable
 message(STATUS "✅ ZMQ support enabled for main executable")
 
-# Build ZMQ tests
-if(ZMQ_INCLUDE_DIR AND ZMQ_LIBRARY)
-  add_executable(zmq_pose_subscriber_test
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/zmq_pose_subscriber_test.cpp)
-  target_include_directories(zmq_pose_subscriber_test PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${ZMQ_INCLUDE_DIR})
-  target_link_libraries(zmq_pose_subscriber_test PRIVATE ${ZMQ_LIBRARY})
-  set_target_properties(zmq_pose_subscriber_test PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF)
-  message(STATUS "✅ Added zmq_pose_subscriber_test (ZMQ found)")
-  
-  # Test for connecting to Python pose estimation server
-  add_executable(zmq_python_sender_test
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/zmq_python_sender_test.cpp)
-  target_include_directories(zmq_python_sender_test PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${ZMQ_INCLUDE_DIR})
-  target_link_libraries(zmq_python_sender_test PRIVATE ${ZMQ_LIBRARY})
-  set_target_properties(zmq_python_sender_test PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF)
-  message(STATUS "✅ Added zmq_python_sender_test (ZMQ found)")
-else()
-  message(WARNING "⚠️  libzmq not found - skipping zmq_pose_subscriber_test")
-endif()
-
 find_package(Eigen3 REQUIRED)
 
 set(EXE_INCLUDES
@@ -216,52 +184,6 @@ set_target_properties(
              CXX_STANDARD_REQUIRED ON
              CXX_EXTENSIONS OFF)
 
-add_executable(h2_pr_mapping_diag
-  ${CMAKE_CURRENT_SOURCE_DIR}/tools/h2_pr_mapping_diag.cpp)
-target_link_libraries(h2_pr_mapping_diag PRIVATE ${PROJECT_NAME} unitree_sdk2)
-target_include_directories(h2_pr_mapping_diag PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
-set_target_properties(
-  h2_pr_mapping_diag
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-             OUTPUT_NAME h2_pr_mapping_diag
-             CXX_STANDARD 20
-             CXX_STANDARD_REQUIRED ON
-             CXX_EXTENSIONS OFF)
-
-add_executable(h2_static_hold_diag
-  ${CMAKE_CURRENT_SOURCE_DIR}/tools/h2_static_hold_diag.cpp)
-target_link_libraries(h2_static_hold_diag PRIVATE ${PROJECT_NAME} unitree_sdk2)
-target_include_directories(h2_static_hold_diag PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
-set_target_properties(
-  h2_static_hold_diag
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-             OUTPUT_NAME h2_static_hold_diag
-             CXX_STANDARD 20
-             CXX_STANDARD_REQUIRED ON
-             CXX_EXTENSIONS OFF)
-
-add_executable(h2_state_reader
-  ${CMAKE_CURRENT_SOURCE_DIR}/tools/h2_state_reader.cpp)
-target_link_libraries(h2_state_reader PRIVATE ${PROJECT_NAME} unitree_sdk2)
-set_target_properties(
-  h2_state_reader
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-             OUTPUT_NAME h2_state_reader
-             CXX_STANDARD 20
-             CXX_STANDARD_REQUIRED ON
-             CXX_EXTENSIONS OFF)
-
-add_executable(h2_ankle_endpoint_diag
-  ${CMAKE_CURRENT_SOURCE_DIR}/tools/h2_ankle_endpoint_diag.cpp)
-target_link_libraries(h2_ankle_endpoint_diag PRIVATE ${PROJECT_NAME} unitree_sdk2)
-set_target_properties(
-  h2_ankle_endpoint_diag
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-             OUTPUT_NAME h2_ankle_endpoint_diag
-             CXX_STANDARD 20
-             CXX_STANDARD_REQUIRED ON
-             CXX_EXTENSIONS OFF)
-
 # Optional ROS2 support for main executable and tests
 if(rclcpp_FOUND AND std_msgs_FOUND)
   # Load ROS2 configuration (handles both main executable and tests)
@@ -278,36 +200,17 @@ else()
   message(STATUS "ROS2 not found - building without ROS2InputHandler support")
 endif()
 
-# test executable:
-include(FetchContent)
-
-# Use the vendored copy in a release checkout. A source download remains as a
-# fallback for development checkouts that do not carry SONIC_unitree_h2/third_party.
-set(TRACE_GTEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../third_party/googletest")
-if(EXISTS "${TRACE_GTEST_DIR}/CMakeLists.txt")
-  FetchContent_Declare(googletest SOURCE_DIR "${TRACE_GTEST_DIR}")
-else()
-  FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-  )
+# Offline regression tests are opt-in; the runtime has no GTest dependency.
+if(BUILD_TESTING)
+  find_package(GTest REQUIRED)
+  file(GLOB_RECURSE TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/unit_tests/*.cpp)
+  add_executable(run_tests ${TEST_SRCS})
+  target_link_directories(run_tests PRIVATE ${CUDA_LINK_DIRS})
+  target_link_libraries(run_tests GTest::GTest GTest::Main ${EXE_LIBS})
+  target_include_directories(run_tests PUBLIC ${EXE_INCLUDES})
+  set_target_properties(run_tests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
+    CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON CXX_EXTENSIONS OFF)
+  add_test(NAME controller_tests COMMAND run_tests)
+  set_tests_properties(controller_tests PROPERTIES WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}")
 endif()
-FetchContent_MakeAvailable(googletest)
-
-find_package(GTest REQUIRED)
-
-file(GLOB_RECURSE TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/unit_tests/*.cpp)
-
-add_executable(run_tests ${TEST_SRCS})
-target_link_directories(run_tests PRIVATE ${CUDA_LINK_DIRS})
-target_link_libraries(run_tests GTest::GTest GTest::Main ${EXE_LIBS})
-target_include_directories(run_tests PUBLIC ${EXE_INCLUDES})
-
-# Setting our output directory and C++ standard
-set_target_properties(
-  run_tests
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/target/release/"
-             OUTPUT_NAME run_tests
-             CXX_STANDARD 20
-             CXX_STANDARD_REQUIRED ON
-             CXX_EXTENSIONS OFF)

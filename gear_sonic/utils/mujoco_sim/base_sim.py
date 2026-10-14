@@ -1,4 +1,4 @@
-"""MuJoCo simulation environment and loop for the G1 (and H1) humanoid robots.
+"""MuJoCo simulation environment and loop for the released Unitree H2.
 
 DefaultEnv owns the MuJoCo model/data, computes PD torques from Unitree SDK
 commands, steps physics, and publishes observations back via the SDK bridge.

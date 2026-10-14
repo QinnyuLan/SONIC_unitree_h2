@@ -1,3 +1,0 @@
-# Teleoperation API
-
-Coming soon...

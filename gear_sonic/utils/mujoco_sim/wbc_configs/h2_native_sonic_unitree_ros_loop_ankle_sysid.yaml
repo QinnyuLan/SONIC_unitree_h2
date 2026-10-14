@@ -1,4 +1,0 @@
-# Experimental unloaded ankle-pitch response; other native asset parameters
-# and PD gains come unchanged from h2_native_sonic_unitree_ros_loop.yaml.
-# Embedded custom text is consumed by SONIC-H2's ankle_response runtime.
-ROBOT_SCENE: gear_sonic/data/assets/robot_description/h2_ankle_sysid/H2_loop_ankle_sysid.xml

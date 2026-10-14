@@ -1,76 +1,614 @@
 {
-  "tests": 47,
+  "tests": 46,
   "failures": 0,
   "disabled": 0,
   "errors": 0,
-  "time": "0.388s",
-  "status": "passed",
-  "model": "released",
+  "timestamp": "2026-10-14T20:03:55Z",
+  "time": "0.418s",
+  "name": "AllTests",
   "testsuites": [
     {
       "name": "FK",
       "tests": 1,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0.003s",
+      "testsuite": [
+        {
+          "name": "TestFKAndGlobalVelocities",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_fk.cpp",
+          "line": 9,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0.003s",
+          "classname": "FK"
+        }
+      ]
     },
     {
       "name": "H2HeadControl",
       "tests": 4,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "ClampsToUrdfJointLimits",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_head_control.cpp",
+          "line": 5,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2HeadControl"
+        },
+        {
+          "name": "SlewLimitsEachControlTick",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_head_control.cpp",
+          "line": 11,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2HeadControl"
+        },
+        {
+          "name": "SlewSettlesAtDesiredTarget",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_head_control.cpp",
+          "line": 17,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2HeadControl"
+        },
+        {
+          "name": "MergeReplacesOnlyPolicyHeadTargets",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_head_control.cpp",
+          "line": 23,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2HeadControl"
+        }
+      ]
     },
     {
       "name": "H2LoraObservation",
       "tests": 6,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "ReplacesNewestActionFrameAndPreservesGravity",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_lora_observation.cpp",
+          "line": 33,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2LoraObservation"
+        },
+        {
+          "name": "RejectsHistorySmallerThanOneFrame",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_lora_observation.cpp",
+          "line": 68,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2LoraObservation"
+        },
+        {
+          "name": "RejectsHistoryOutsideInputBuffer",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_lora_observation.cpp",
+          "line": 78,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2LoraObservation"
+        },
+        {
+          "name": "AlignsSmplRootHeadingBeforeBodyDifference",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_lora_observation.cpp",
+          "line": 88,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2LoraObservation"
+        },
+        {
+          "name": "ComputesDifferenceFromNonIdentityRobotBase",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_lora_observation.cpp",
+          "line": 106,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2LoraObservation"
+        },
+        {
+          "name": "V11HeadingExtractionIgnoresRobotTilt",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_lora_observation.cpp",
+          "line": 122,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2LoraObservation"
+        }
+      ]
     },
     {
       "name": "H2NativeConfig",
-      "tests": 3,
-      "failures": 0
+      "tests": 2,
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "SeparatesPolicyAndEncoderObservations",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_config.cpp",
+          "line": 7,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeConfig"
+        },
+        {
+          "name": "H2OnlyUsesCompact640DLayout",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_config.cpp",
+          "line": 32,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeConfig"
+        }
+      ]
     },
     {
       "name": "H2NativePolicy",
       "tests": 5,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "ProfileSelectionIsIndependentFromLegacyLora",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 5,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativePolicy"
+        },
+        {
+          "name": "PolicyMappingIsNameConsistent",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 17,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativePolicy"
+        },
+        {
+          "name": "UsesOfficialH2GainsAndActionScale",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 29,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativePolicy"
+        },
+        {
+          "name": "PlannerReferenceMapsOnceIntoH2PhysicalSpace",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 207,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativePolicy"
+        },
+        {
+          "name": "ProjectedPlannerVelocityMatchesPositionDerivative",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 229,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativePolicy"
+        }
+      ]
     },
     {
       "name": "H2NativeKpScales",
       "tests": 6,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "DefaultsPreserveEveryJointAndDampingCommand",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 43,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeKpScales"
+        },
+        {
+          "name": "FourIndependentScalesSelectOnlyNamedOutputJoints",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 55,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeKpScales"
+        },
+        {
+          "name": "IndependentAnklesAndKneesOverridePairedScaleWithoutCompounding",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 106,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeKpScales"
+        },
+        {
+          "name": "NewJointScalesRejectInvalidValues",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 132,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeKpScales"
+        },
+        {
+          "name": "IndependentAnkleRollOverridesPairedScale",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 149,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeKpScales"
+        },
+        {
+          "name": "RejectsInvalidValuesBeforeControlStarts",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 179,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeKpScales"
+        }
+      ]
     },
     {
       "name": "H2NativeGainScales",
       "tests": 1,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "AnklePitchKdIsIndependentAndLeavesShutdownUnchanged",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_native_policy.cpp",
+          "line": 82,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0s",
+          "classname": "H2NativeGainScales"
+        }
+      ]
     },
     {
       "name": "H2ReleasedContract",
       "tests": 5,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:55Z",
+      "time": "0.412s",
+      "testsuite": [
+        {
+          "name": "AcceptsDirectFullEncoderAndDecoder",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_released_contract.cpp",
+          "line": 12,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0.218s",
+          "classname": "H2ReleasedContract"
+        },
+        {
+          "name": "AcceptsDirectCompactEncoderAndDecoder",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_released_contract.cpp",
+          "line": 16,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0.034s",
+          "classname": "H2ReleasedContract"
+        },
+        {
+          "name": "RejectsSwappedEncoderAndDecoder",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_released_contract.cpp",
+          "line": 20,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0.024s",
+          "classname": "H2ReleasedContract"
+        },
+        {
+          "name": "RejectsIncompatibleOrientation",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_released_contract.cpp",
+          "line": 25,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:55Z",
+          "time": "0.117s",
+          "classname": "H2ReleasedContract"
+        },
+        {
+          "name": "RejectsIncorrectRoleEvenWhenDimensionsMatch",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2_released_contract.cpp",
+          "line": 30,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0.016s",
+          "classname": "H2ReleasedContract"
+        }
+      ]
     },
     {
       "name": "H2LoraPlannerAdapter",
       "tests": 6,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:56Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "SemanticAndMujocoOrderRoundTrip",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2lora_planner_adapter.cpp",
+          "line": 5,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "H2LoraPlannerAdapter"
+        },
+        {
+          "name": "H2DefaultPoseMapsToG1PlannerContext",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2lora_planner_adapter.cpp",
+          "line": 16,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "H2LoraPlannerAdapter"
+        },
+        {
+          "name": "PolicyActionMapsBackToH2PhysicalSpace",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2lora_planner_adapter.cpp",
+          "line": 32,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "H2LoraPlannerAdapter"
+        },
+        {
+          "name": "PlannerReferenceUsesTargetRoundTrip",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2lora_planner_adapter.cpp",
+          "line": 48,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "H2LoraPlannerAdapter"
+        },
+        {
+          "name": "ProjectedReferenceHasExactRawInverse",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2lora_planner_adapter.cpp",
+          "line": 61,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "H2LoraPlannerAdapter"
+        },
+        {
+          "name": "IdleBlendConvergesInProjectedPolicySpace",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_h2lora_planner_adapter.cpp",
+          "line": 76,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "H2LoraPlannerAdapter"
+        }
+      ]
     },
     {
       "name": "HandBackend",
       "tests": 1,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:56Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "ParsesEverySupportedBackend",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 50,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "HandBackend"
+        }
+      ]
     },
     {
       "name": "HandInputAvailability",
       "tests": 1,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:56Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "MissingSideDoesNotReuseCachedTarget",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 60,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "HandInputAvailability"
+        }
+      ]
     },
     {
       "name": "InspireHands",
       "tests": 7,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:56Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "MapsCurrentVrOpenAndClosedTargets",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 77,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        },
+        {
+          "name": "ProjectsIntermediateDex3TargetsContinuously",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 101,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        },
+        {
+          "name": "RequiresReleaseBeforePressAndRearmsAfterReset",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 112,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        },
+        {
+          "name": "RejectsInvalidOrStaleInput",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 136,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        },
+        {
+          "name": "ComposesRightThenLeftAndHoldsUnarmedSide",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 154,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        },
+        {
+          "name": "RequiresTwelveFiniteOnlineStateValues",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 176,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        },
+        {
+          "name": "IgnoresNonFiniteCloseRatio",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_inspire_hands.cpp",
+          "line": 195,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0s",
+          "classname": "InspireHands"
+        }
+      ]
     },
     {
       "name": "StreamedMotionMerger",
       "tests": 1,
-      "failures": 0
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-14T20:03:56Z",
+      "time": "0.001s",
+      "testsuite": [
+        {
+          "name": "PreservesSmplRootQuaternion",
+          "file": "\/home\/qingyul\/workspace\/SONIC_unitree_h2\/gear_sonic_deploy\/src\/g1\/g1_deploy_onnx_ref\/unit_tests\/test_streamed_motion_smpl_root.cpp",
+          "line": 6,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-14T20:03:56Z",
+          "time": "0.001s",
+          "classname": "StreamedMotionMerger"
+        }
+      ]
     }
   ]
 }

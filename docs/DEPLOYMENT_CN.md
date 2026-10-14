@@ -15,10 +15,10 @@
 | TensorRT | 10.13.3.9 |
 | ONNX Runtime C++ | 1.16.3 |
 
-Python 依赖定义在 [`gear_sonic/pyproject.toml`](../gear_sonic/pyproject.toml)。原生部署依赖和平台要求见[依赖说明](../requirements/README.md)及[部署安装参考](source/getting_started/installation_deploy.md)。
+Python 依赖定义在 [`gear_sonic/pyproject.toml`](../gear_sonic/pyproject.toml)。原生部署依赖和平台要求见[依赖说明](../requirements/README.md)及[部署安装参考](NATIVE_SETUP.md)。
 
 ```bash
-git clone https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```
@@ -31,7 +31,8 @@ Ubuntu 编译依赖：
 
 ```bash
 sudo apt update
-sudo apt install build-essential cmake pkg-config libzmq3-dev     libeigen3-dev libmsgpack-dev libgtest-dev zlib1g-dev
+sudo apt install build-essential cmake pkg-config libzmq3-dev \
+  libeigen3-dev libmsgpack-dev libyaml-cpp-dev nlohmann-json3-dev cppzmq-dev zlib1g-dev
 ```
 
 编译控制器：
@@ -39,12 +40,7 @@ sudo apt install build-essential cmake pkg-config libzmq3-dev     libeigen3-dev 
 ```bash
 export TensorRT_ROOT="$HOME/TensorRT"
 ./verify_deploy.sh
-cd gear_sonic_deploy
-source scripts/setup_env.sh
-export HAS_ROS2=0
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j4
-cd ..
+bash scripts/build_controller.sh
 ```
 
 下述三个流程均使用该控制器。TensorRT engine 会在目标机器上根据 ONNX 模型生成。每个启动控制器的终端都需要设置 `TensorRT_ROOT`。
@@ -56,7 +52,7 @@ cd ..
 ```bash
 ./install.sh sim2sim
 source .venv_sim/bin/activate
-python3 tools/verify_release.py --imports
+python3 tools/verify_release.py --imports --sim
 ```
 
 终端 1，在仓库根目录启动仿真：
@@ -108,7 +104,7 @@ python3 tools/verify_release.py --require-planner
 
 ## VR 遥操作
 
-先完成控制器编译与 planner 下载，再安装 Python 环境，并按照 [VR 设备设置指南](source/getting_started/vr_teleop_setup.md)启动 XRoboToolkit PC Service、配对 PICO 头显。
+先完成控制器编译与 planner 下载，再安装 Python 环境，并按照 [VR 设备设置指南](VR_SETUP.md)启动 XRoboToolkit PC Service、配对 PICO 头显。
 
 ```bash
 ./install.sh teleop
@@ -142,8 +138,9 @@ python3 tools/verify_release.py
 # 同时要求 planner 存在且校验通过。
 python3 tools/verify_release.py --require-planner
 # 编译后，从测试所需的工作目录执行 C++ 测试。
-cd gear_sonic_deploy
-./target/release/run_tests
+sudo apt install libgtest-dev
+bash scripts/build_controller.sh -DBUILD_TESTING=ON
+ctest --test-dir gear_sonic_deploy/build --output-on-failure
 ```
 
-CPU/GPU 推理及 C++ 测试结果见[复现记录](../release/REPRODUCIBILITY.md)。这些检查不替代新环境中的实时仿真和实机稳定性验证。可选资源与下载排除项见[仓库维护说明](GIT_WORKFLOW.md)。
+CPU/GPU 推理及 C++ 测试结果见[复现记录](../release/REPRODUCIBILITY.md)。这些检查不替代新环境中的实时仿真和实机稳定性验证。可选资源与下载排除项见[仓库维护说明](LAYOUT.md)。

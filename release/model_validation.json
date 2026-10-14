@@ -93,23 +93,7 @@
       }
     }
   },
-  "previous_interface_matches": {
-    "baseline_1": {
-      "model_encoder_full": true,
-      "model_encoder": true,
-      "model_decoder": true
-    },
-    "baseline_2": {
-      "model_encoder_full": true,
-      "model_encoder": true,
-      "model_decoder": true
-    },
-    "baseline_3": {
-      "model_encoder_full": true,
-      "model_encoder": true,
-      "model_decoder": true
-    }
-  },
+  "previous_interface_matches": {},
   "status": "passed",
   "cpu_trials_per_selector": 5,
   "cpu_finite_selectors": [
@@ -120,49 +104,5 @@
   ],
   "full_vs_compact_max_abs_error": 0.0,
   "onnx_version": "1.23.2",
-  "onnxruntime_version": "1.23.2",
-  "training_configuration": {
-    "method": "full_finetune",
-    "lora_enabled": false,
-    "encoder_lora_enabled": false,
-    "native_adapters_enabled": false
-  },
-  "runtime_configuration_matches": {
-    "baseline_1": {
-      "manager_env.observations.policy": true,
-      "manager_env.actions": true,
-      "manager_env.config.h2_asset": true,
-      "manager_env.config.direct_joint_defaults": true,
-      "manager_env.config.policy_action_dim": true,
-      "manager_env.config.actor_prop_history_length": true,
-      "manager_env.config.actor_actions_history_length": true,
-      "manager_env.config.actor_observation_contract": true,
-      "manager_env.config.reference_orientation_contract": true,
-      "algo.config.actor.backbone.proprioception_features": true
-    },
-    "baseline_2": {
-      "manager_env.observations.policy": true,
-      "manager_env.actions": true,
-      "manager_env.config.h2_asset": true,
-      "manager_env.config.direct_joint_defaults": true,
-      "manager_env.config.policy_action_dim": true,
-      "manager_env.config.actor_prop_history_length": true,
-      "manager_env.config.actor_actions_history_length": true,
-      "manager_env.config.actor_observation_contract": true,
-      "manager_env.config.reference_orientation_contract": true,
-      "algo.config.actor.backbone.proprioception_features": true
-    },
-    "baseline_3": {
-      "manager_env.observations.policy": true,
-      "manager_env.actions": true,
-      "manager_env.config.h2_asset": true,
-      "manager_env.config.direct_joint_defaults": true,
-      "manager_env.config.policy_action_dim": true,
-      "manager_env.config.actor_prop_history_length": true,
-      "manager_env.config.actor_actions_history_length": true,
-      "manager_env.config.actor_observation_contract": true,
-      "manager_env.config.reference_orientation_contract": true,
-      "algo.config.actor.backbone.proprioception_features": true
-    }
-  }
+  "onnxruntime_version": "1.23.2"
 }

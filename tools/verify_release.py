@@ -11,7 +11,6 @@ import hashlib
 import json
 import os
 import platform
-import shutil
 import sys
 from pathlib import Path
 
@@ -36,7 +35,9 @@ def check_file(path: Path, required: bool = True) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--imports", action="store_true", help="also import the simulation and teleop packages")
+    parser.add_argument("--imports", action="store_true", help="also import the simulation packages")
+    parser.add_argument("--sim", action="store_true", help="load H2 and run 100 headless physics steps without DDS")
+    parser.add_argument("--teleop", action="store_true", help="load the VR mapper, XR binding, and G1/H2 kinematics without devices")
     parser.add_argument("--require-planner", action="store_true", help="require the separately downloaded G1 planner (VR deployment)")
     args = parser.parse_args()
 
@@ -44,6 +45,8 @@ def main() -> int:
     print(f"platform: {platform.system()} {platform.machine()} Python {platform.python_version()}")
     required = [
         "gear_sonic/scripts/run_sim_loop.py",
+        "gear_sonic/scripts/pico_manager_thread_server.py",
+        "scripts/build_controller.sh",
         "gear_sonic/utils/mujoco_sim/wbc_configs/h2_native_sonic_unitree_ros_loop.yaml",
         "gear_sonic_deploy/deploy.sh",
         "gear_sonic_deploy/scripts/run_h2_sim2sim.sh",
@@ -56,7 +59,6 @@ def main() -> int:
         "models/released/SHA256SUMS",
         "models/released/deployment_manifest.json",
         "gear_sonic_deploy/reference/example/h2_lora_reference_manifest.json",
-        "gear_sonic_deploy/reference/example_h2/deploy/h2_lora_reference_manifest.json",
     ]
     good = all([check_file(ROOT / path) for path in required])
     # Use the same destination and pinned checksum as the download command.
@@ -88,6 +90,7 @@ def main() -> int:
             ("mujoco", "mujoco"),
             ("numpy", "numpy"),
             ("pyzmq", "zmq"),
+            ("Unitree DDS bridge", "gear_sonic.utils.mujoco_sim.unitree_sdk2py_bridge"),
         ]
         for label, module in checks:
             try:
@@ -97,10 +100,39 @@ def main() -> int:
                 print(f"[FAIL   ] import {label}: {exc}")
             else:
                 print(f"[OK     ] import {label}")
+    if args.sim:
+        try:
+            import mujoco
+            import numpy as np
+            from gear_sonic.utils.mujoco_sim.configs import SimLoopConfig
+            from gear_sonic.utils.mujoco_sim.base_sim import DefaultEnv
+            config = SimLoopConfig(enable_onscreen=False).load_wbc_yaml()
+            env = DefaultEnv(config, onscreen=False, offscreen=False)
+            assert env.unitree_bridge is None
+            assert env.num_body_dof == 31
+            for _ in range(100):
+                mujoco.mj_step(env.mj_model, env.mj_data)
+            assert np.isfinite(env.mj_data.qpos).all()
+            print("[OK     ] H2 assets and 100 offline physics steps")
+        except Exception as exc:
+            good = False
+            print(f"[FAIL   ] simulator: {exc}")
+    if args.teleop:
+        try:
+            import xrobotoolkit_sdk  # Import only; do not initialize devices.
+            from gear_sonic.scripts.pico_manager_thread_server import ThreePointPose
+            from gear_sonic.data.robot_model.instantiation.g1 import instantiate_g1_robot_model
+            from gear_sonic.data.robot_model.instantiation.h2 import instantiate_h2_robot_model
+            instantiate_g1_robot_model()
+            instantiate_h2_robot_model()
+            print("[OK     ] VR mapper, XR binding, and G1/H2 kinematics")
+        except Exception as exc:
+            good = False
+            print(f"[FAIL   ] teleoperation: {exc}")
     manifest = ROOT / "release/source_manifest.json"
     if manifest.is_file():
         data = json.loads(manifest.read_text())
-        print(f"manifest: {data.get('copied_files')} files, {data.get('copied_bytes')} bytes")
+        print(f"manifest: {data.get('file_count')} files, {data.get('total_bytes')} bytes")
     print("preflight: PASS" if good else "preflight: FAIL")
     return 0 if good else 1
 

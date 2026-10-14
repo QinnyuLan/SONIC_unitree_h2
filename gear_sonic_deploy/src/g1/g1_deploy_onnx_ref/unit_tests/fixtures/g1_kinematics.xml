@@ -1,0 +1,95 @@
+<!-- Kinematic tree derived from the Unitree G1 MJCF bundled with SONIC. -->
+<mujoco model="g1_kinematics">
+  <worldbody>
+    <body name="pelvis" pos="0 0 0.793">
+      <joint name="floating_base_joint" type="free" limited="false" actuatorfrclimited="false" />
+      <body name="left_hip_pitch_link" pos="0 0.064452 -0.1027">
+        <joint name="left_hip_pitch_joint" pos="0 0 0" axis="0 1 0" range="-2.5307 2.8798" actuatorfrcrange="-88 88" />
+        <body name="left_hip_roll_link" pos="0 0.052 -0.030465" quat="0.996179 0 -0.0873386 0">
+          <joint name="left_hip_roll_joint" pos="0 0 0" axis="1 0 0" range="-0.5236 2.9671" actuatorfrcrange="-88 88" />
+          <body name="left_hip_yaw_link" pos="0.025001 0 -0.12412">
+            <joint name="left_hip_yaw_joint" pos="0 0 0" axis="0 0 1" range="-2.7576 2.7576" actuatorfrcrange="-88 88" />
+            <body name="left_knee_link" pos="-0.078273 0.0021489 -0.17734" quat="0.996179 0 0.0873386 0">
+              <joint name="left_knee_joint" pos="0 0 0" axis="0 1 0" range="-0.087267 2.8798" actuatorfrcrange="-139 139" />
+              <body name="left_ankle_pitch_link" pos="0 -9.4445e-05 -0.30001">
+                <joint name="left_ankle_pitch_joint" pos="0 0 0" axis="0 1 0" range="-0.87267 0.5236" actuatorfrcrange="-50 50" />
+                <body name="left_ankle_roll_link" pos="0 0 -0.017558">
+                  <joint name="left_ankle_roll_joint" pos="0 0 0" axis="1 0 0" range="-0.2618 0.2618" actuatorfrcrange="-50 50" />
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="right_hip_pitch_link" pos="0 -0.064452 -0.1027">
+        <joint name="right_hip_pitch_joint" pos="0 0 0" axis="0 1 0" range="-2.5307 2.8798" actuatorfrcrange="-88 88" />
+        <body name="right_hip_roll_link" pos="0 -0.052 -0.030465" quat="0.996179 0 -0.0873386 0">
+          <joint name="right_hip_roll_joint" pos="0 0 0" axis="1 0 0" range="-2.9671 0.5236" actuatorfrcrange="-88 88" />
+          <body name="right_hip_yaw_link" pos="0.025001 0 -0.12412">
+            <joint name="right_hip_yaw_joint" pos="0 0 0" axis="0 0 1" range="-2.7576 2.7576" actuatorfrcrange="-88 88" />
+            <body name="right_knee_link" pos="-0.078273 -0.0021489 -0.17734" quat="0.996179 0 0.0873386 0">
+              <joint name="right_knee_joint" pos="0 0 0" axis="0 1 0" range="-0.087267 2.8798" actuatorfrcrange="-139 139" />
+              <body name="right_ankle_pitch_link" pos="0 9.4445e-05 -0.30001">
+                <joint name="right_ankle_pitch_joint" pos="0 0 0" axis="0 1 0" range="-0.87267 0.5236" actuatorfrcrange="-50 50" />
+                <body name="right_ankle_roll_link" pos="0 0 -0.017558">
+                  <joint name="right_ankle_roll_joint" pos="0 0 0" axis="1 0 0" range="-0.2618 0.2618" actuatorfrcrange="-50 50" />
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="waist_yaw_link">
+        <joint name="waist_yaw_joint" pos="0 0 0" axis="0 0 1" range="-2.618 2.618" actuatorfrcrange="-88 88" />
+        <body name="waist_roll_link" pos="-0.0039635 0 0.035">
+          <joint name="waist_roll_joint" pos="0 0 0" axis="1 0 0" range="-0.52 0.52" actuatorfrcrange="-50 50" />
+          <body name="torso_link" pos="0 0 0.019">
+            <joint name="waist_pitch_joint" pos="0 0 0" axis="0 1 0" range="-0.52 0.52" actuatorfrcrange="-50 50" />
+            <body name="left_shoulder_pitch_link" pos="0.0039563 0.10022 0.23778" quat="0.990264 0.139201 1.38722e-05 -9.86868e-05">
+              <joint name="left_shoulder_pitch_joint" pos="0 0 0" axis="0 1 0" range="-3.0892 2.6704" actuatorfrcrange="-25 25" />
+              <body name="left_shoulder_roll_link" pos="0 0.038 -0.013831" quat="0.990268 -0.139172 0 0">
+                <joint name="left_shoulder_roll_joint" pos="0 0 0" axis="1 0 0" range="-1.5882 2.2515" actuatorfrcrange="-25 25" />
+                <body name="left_shoulder_yaw_link" pos="0 0.00624 -0.1032">
+                  <joint name="left_shoulder_yaw_joint" pos="0 0 0" axis="0 0 1" range="-2.618 2.618" actuatorfrcrange="-25 25" />
+                  <body name="left_elbow_link" pos="0.015783 0 -0.080518">
+                    <joint name="left_elbow_joint" pos="0 0 0" axis="0 1 0" range="-1.0472 2.0944" actuatorfrcrange="-25 25" />
+                    <body name="left_wrist_roll_link" pos="0.1 0.00188791 -0.01">
+                      <joint name="left_wrist_roll_joint" pos="0 0 0" axis="1 0 0" range="-1.97222 1.97222" actuatorfrcrange="-25 25" />
+                      <body name="left_wrist_pitch_link" pos="0.038 0 0">
+                        <joint name="left_wrist_pitch_joint" pos="0 0 0" axis="0 1 0" range="-1.61443 1.61443" actuatorfrcrange="-5 5" />
+                        <body name="left_wrist_yaw_link" pos="0.046 0 0">
+                          <joint name="left_wrist_yaw_joint" pos="0 0 0" axis="0 0 1" range="-1.61443 1.61443" actuatorfrcrange="-5 5" />
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+            <body name="right_shoulder_pitch_link" pos="0.0039563 -0.10021 0.23778" quat="0.990264 -0.139201 1.38722e-05 9.86868e-05">
+              <joint name="right_shoulder_pitch_joint" pos="0 0 0" axis="0 1 0" range="-3.0892 2.6704" actuatorfrcrange="-25 25" />
+              <body name="right_shoulder_roll_link" pos="0 -0.038 -0.013831" quat="0.990268 0.139172 0 0">
+                <joint name="right_shoulder_roll_joint" pos="0 0 0" axis="1 0 0" range="-2.2515 1.5882" actuatorfrcrange="-25 25" />
+                <body name="right_shoulder_yaw_link" pos="0 -0.00624 -0.1032">
+                  <joint name="right_shoulder_yaw_joint" pos="0 0 0" axis="0 0 1" range="-2.618 2.618" actuatorfrcrange="-25 25" />
+                  <body name="right_elbow_link" pos="0.015783 0 -0.080518">
+                    <joint name="right_elbow_joint" pos="0 0 0" axis="0 1 0" range="-1.0472 2.0944" actuatorfrcrange="-25 25" />
+                    <body name="right_wrist_roll_link" pos="0.1 -0.00188791 -0.01">
+                      <joint name="right_wrist_roll_joint" pos="0 0 0" axis="1 0 0" range="-1.97222 1.97222" actuatorfrcrange="-25 25" />
+                      <body name="right_wrist_pitch_link" pos="0.038 0 0">
+                        <joint name="right_wrist_pitch_joint" pos="0 0 0" axis="0 1 0" range="-1.61443 1.61443" actuatorfrcrange="-5 5" />
+                        <body name="right_wrist_yaw_link" pos="0.046 0 0">
+                          <joint name="right_wrist_yaw_joint" pos="0 0 0" axis="0 0 1" range="-1.61443 1.61443" actuatorfrcrange="-5 5" />
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,70 @@
+absl-py==2.5.1
+    # via mujoco
+click==8.5.0
+    # via rich-click
+cyclonedds==0.10.2
+    # via unitree-sdk2py (external_dependencies/unitree_sdk2_python/setup.py)
+docstring-parser==0.18.0
+    # via tyro
+etils==1.13.0
+    # via mujoco
+fsspec==2026.9.0
+    # via etils
+glfw==2.10.2
+    # via mujoco
+importlib-resources==7.1.0
+    # via etils
+loguru==0.7.3
+    # via gear-sonic (gear_sonic/pyproject.toml)
+markdown-it-py==4.2.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
+msgpack==1.2.1
+    # via
+    #   gear-sonic (gear_sonic/pyproject.toml)
+    #   msgpack-numpy
+msgpack-numpy==0.4.8
+    # via gear-sonic (gear_sonic/pyproject.toml)
+mujoco==3.10.0
+    # via gear-sonic (gear_sonic/pyproject.toml)
+numpy==1.26.4
+    # via
+    #   unitree-sdk2py (external_dependencies/unitree_sdk2_python/setup.py)
+    #   gear-sonic (gear_sonic/pyproject.toml)
+    #   msgpack-numpy
+    #   mujoco
+    #   opencv-python
+    #   scipy
+opencv-python==4.11.0.86
+    # via
+    #   unitree-sdk2py (external_dependencies/unitree_sdk2_python/setup.py)
+    #   gear-sonic (gear_sonic/pyproject.toml)
+pygments==2.21.0
+    # via rich
+pyopengl==3.1.10
+    # via mujoco
+pyyaml==6.0.3
+    # via gear-sonic (gear_sonic/pyproject.toml)
+pyzmq==27.1.0
+    # via gear-sonic (gear_sonic/pyproject.toml)
+rich==15.0.0
+    # via rich-click
+rich-click==1.9.9
+    # via cyclonedds
+scipy==1.15.3
+    # via gear-sonic (gear_sonic/pyproject.toml)
+termcolor==3.1.0
+    # via gear-sonic (gear_sonic/pyproject.toml)
+typeguard==4.6.0
+    # via tyro
+typing-extensions==4.16.0
+    # via
+    #   etils
+    #   rich-click
+    #   typeguard
+    #   tyro
+tyro==1.0.15
+    # via gear-sonic (gear_sonic/pyproject.toml)
+zipp==4.1.1
+    # via etils

@@ -7,7 +7,7 @@
 - **TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments.** Qingyu Lan, Zhihao Tian, Zifan Wang, and Junwei Liang, 2026. [Paper](https://arxiv.org/abs/2610.17999) · [Project](https://bfm-trace.github.io/).
 - **SONIC: Supersizing Motion Tracking for Natural Humanoid Whole-Body Control.** Zhengyi Luo et al., 2025. TRACE builds on SONIC's pretrained motion representation and whole-body controller. [Paper](https://arxiv.org/abs/2511.07820) · [Code](https://github.com/NVlabs/GR00T-WholeBodyControl) · [Models](https://huggingface.co/nvidia/GEAR-SONIC).
 
-The project citation is provided in [references.bib](references.bib) and [CITATION.cff](../CITATION.cff). The original SONIC citation is retained in [README.upstream.md](../README.upstream.md#citation).
+The project citation is provided in [references.bib](references.bib) and [CITATION.cff](../CITATION.cff).
 
 ## Software and Assets
 
@@ -21,4 +21,4 @@ The project citation is provided in [references.bib](references.bib) and [CITATI
 | NVIDIA TensorRT | GPU inference for the exported ONNX models | [Project](https://developer.nvidia.com/tensorrt) |
 | ONNX Runtime | ONNX inference and model validation | [Repository](https://github.com/microsoft/onnxruntime) |
 
-The original upstream overview is retained in [README.upstream.md](../README.upstream.md). Source provenance is recorded in [source_manifest.json](../release/source_manifest.json). Vendored libraries and assets retain their original copyright and license notices; see [LICENSE](../LICENSE) and [legal/](../legal/).
+Source provenance is recorded in [source_manifest.json](../release/source_manifest.json). Vendored libraries and assets retain their original copyright and license notices; see [LICENSE](../LICENSE) and [legal/](../legal/).

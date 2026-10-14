@@ -22,6 +22,10 @@ include(CheckLanguage)
 
 # Optional builds
 option(BUILD_SRCS "Build sources" ON)
+option(BUILD_TESTING "Build offline controller tests" OFF)
+if(BUILD_TESTING)
+  enable_testing()
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 

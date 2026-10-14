@@ -35,7 +35,7 @@ from scipy.spatial.transform import Rotation as sRot
 import torch
 import zmq
 
-from gear_sonic.trl.utils.torch_transform import (
+from gear_sonic.utils.math.torch_transform import (
     angle_axis_to_quaternion,
     compute_human_joints,
     quat_apply,
@@ -86,9 +86,9 @@ except ImportError:
 
 
 try:
-    from gear_sonic.isaac_utils.rotations import remove_smpl_base_rot, smpl_root_ytoz_up
+    from gear_sonic.utils.math.rotations import remove_smpl_base_rot, smpl_root_ytoz_up
 except ImportError:
-    print("Warning: gear_sonic.isaac_utils.rotations not available.")
+    print("Warning: gear_sonic.utils.math.rotations not available.")
     remove_smpl_base_rot = None
     smpl_root_ytoz_up = None
 

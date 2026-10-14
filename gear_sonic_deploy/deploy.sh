@@ -2,9 +2,9 @@
 set -e
 
 # ============================================================================
-# G1 Deploy - Deployment Script
+# H2 Deployment Script
 # ============================================================================
-# This script handles the complete setup and deployment process for g1_deploy
+# This script handles the launch of the released H2 controller
 # Following the steps from the README.md
 #
 # Usage: ./deploy.sh [sim|real|<interface_name>|<ip_address>]
@@ -204,26 +204,22 @@ show_usage() {
     echo ""
     echo "Options:"
     echo "  -h, --help              Show this help message"
-    echo "  --cp, --checkpoint PATH Set the checkpoint path (default: policy/checkpoints/example/model_step_000000)"
+    echo "  --cp, --checkpoint PATH Set the checkpoint path (default: ../models/released/model)"
     echo "  --robot, --robot-profile NAME"
-    echo "                            Select robot profile: g1, h2_lora, h2_native, or h2_native_v1_1 (default: h2_native)"
+    echo "                            Robot profile: h2_native (released H2 controller)"
     echo "  --decoder-file PATH      Set decoder ONNX directly (overrides --checkpoint suffix)"
     echo "  --encoder-file PATH      Set encoder ONNX directly (overrides --checkpoint suffix)"
-    echo "  --obs-config PATH       Set the observation config file (default: policy/configs/example.yaml)"
+    echo "  --obs-config PATH       Set the observation config file (default: policy/release/observation_config_h2_native.yaml)"
     echo "  --planner PATH          Set the planner model path"
-    echo "                          default: $PLANNER_DEFAULT (G1 and H2LoRA sim)"
+    echo "                          default: disabled; VR launcher supplies the shared SONIC planner"
     echo "  --no-planner            Disable the planner"
     echo "  --motion-data PATH      Set the motion data path"
-    echo "                          g1 default: reference/example/"
-    echo "                          h2_lora default: reference/example_h2/deploy/"
-    echo "                          h2_native default: reference/example_h2/deploy/"
-        echo "                          H2 profiles require a typed reference manifest (h2/g1/smpl)"
-    echo "  --input-type TYPE       Set the input type (default: zmq_manager)"
-    echo "  --output-type TYPE      Set the output type (default: ros2)"
+    echo "                          H2 profiles require a typed reference manifest (h2/g1/smpl)"
+    echo "  --input-type TYPE       Set the input type (default: keyboard)"
+    echo "  --output-type TYPE      Set the output type (default: zmq)"
     echo "  --zmq-host HOST         Set the ZMQ host (default: localhost)"
     echo "  --h2-vr-head-control    Merge independent VR head pitch/yaw into H2 LowCmd"
-    echo "  --hand-backend NAME     Select hand backend: dex3, inspire, or none (default: dex3)"
-    echo "  --planner-g1-to-h2      H2-native release comparison: project planner q/qdot to H2 selector 0"
+    echo "  --hand-backend NAME     Select hand backend: dex3, inspire, or none (default: none)"
     echo "  --h2-waist-pitch-kp-scale S  Waist pitch Kp multiplier (default: 1)"
     echo "  --h2-waist-roll-kp-scale S   Waist roll Kp multiplier (default: 1)"
     echo "  --h2-ankle-pitch-kp-scale S  Both ankle pitch Kp multiplier (default: 1)"
@@ -263,13 +259,13 @@ show_usage() {
 INTERFACE_MODE="real"
 
 # Default configuration values (can be overridden by command line)
-CHECKPOINT_DEFAULT="policy/release/model"
-OBS_CONFIG_DEFAULT="policy/release/observation_config.yaml"
+CHECKPOINT_DEFAULT="../models/released/model"
+OBS_CONFIG_DEFAULT="policy/release/observation_config_h2_native.yaml"
 PLANNER_DEFAULT="planner/target_vel/V2/planner_sonic.onnx"
 MOTION_DATA_DEFAULT="reference/example/"
-H2_LORA_MOTION_DATA_DEFAULT="reference/example_h2/deploy"
-INPUT_TYPE_DEFAULT="zmq_manager"
-OUTPUT_TYPE_DEFAULT="all"
+H2_MOTION_DATA_DEFAULT="reference/example"
+INPUT_TYPE_DEFAULT="keyboard"
+OUTPUT_TYPE_DEFAULT="zmq"
 ZMQ_HOST_DEFAULT="localhost"
 # H2-native is the default deployment profile.  Its profile block below
 # selects the four-branch full encoder when it is available.
@@ -295,9 +291,8 @@ ENABLE_CSV_LOGS=false
 LOGS_DIR=""
 ENABLE_H2_VR_HEAD_CONTROL=false
 DISABLE_DEX3=false
-HAND_BACKEND="dex3"
+HAND_BACKEND="none"
 HAND_BACKEND_SET=false
-PROJECT_H2_NATIVE_PLANNER_REFERENCE=false
 H2_GAIN_SCALE_ARGS=()
 
 # Parse arguments
@@ -361,10 +356,6 @@ while [[ $# -gt 0 ]]; do
         --no-planner)
             PLANNER=""
             PLANNER_SET=true
-            shift
-            ;;
-        --planner-g1-to-h2)
-            PROJECT_H2_NATIVE_PLANNER_REFERENCE=true
             shift
             ;;
         --h2-waist-pitch-kp-scale|--h2-waist-roll-kp-scale|--h2-ankle-pitch-kp-scale|--h2-ankle-roll-kp-scale|--h2-ankle-pitch-kd-scale|--h2-left-ankle-pitch-kp-scale|--h2-right-ankle-pitch-kp-scale|--h2-left-knee-pitch-kp-scale|--h2-right-knee-pitch-kp-scale|--h2-left-ankle-roll-kp-scale|--h2-right-ankle-roll-kp-scale)
@@ -475,7 +466,7 @@ fi
 
 echo -e "${CYAN}"
 echo "╔══════════════════════════════════════════════════════════════════════╗"
-echo "║                         G1 DEPLOY LAUNCHER                           ║"
+echo "║                         H2 DEPLOY LAUNCHER                           ║"
 echo "╚══════════════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -484,35 +475,6 @@ echo -e "${NC}"
 # ============================================================================
 
 case "$ROBOT_PROFILE" in
-    g1)
-        ;;
-    h2_lora|h2lora|h2)
-        ROBOT_PROFILE="h2_lora"
-        if [[ "$CHECKPOINT_SET" == false && -z "$DECODER_FILE" ]]; then
-            CHECKPOINT="../sonic_h2lora_release/exported/model"
-        fi
-        if [[ "$OBS_CONFIG_SET" == false ]]; then
-            OBS_CONFIG="policy/release/observation_config_h2_lora.yaml"
-        fi
-        if [[ "$PLANNER_SET" == false ]]; then
-            # The G1-to-H2 planner bridge is accepted in simulation first.
-            # Real H2 deployments must opt in with --planner.
-            PLANNER=""
-        fi
-        if [[ "$MOTION_DATA_SET" == false ]]; then
-            MOTION_DATA="$H2_LORA_MOTION_DATA_DEFAULT"
-        fi
-        if [[ -z "$DECODER_FILE" ]]; then
-            DECODER_FILE="../sonic_h2lora_release/exported/model_decoder_latest.onnx"
-        fi
-        if [[ -z "$ENCODER_FILE" ]]; then
-            if [[ -f "../sonic_h2lora_release/exported/model_encoder.onnx" ]]; then
-                ENCODER_FILE="../sonic_h2lora_release/exported/model_encoder.onnx"
-            else
-                ENCODER_FILE="../sonic_h2lora_release/exported/model_encoder_merged.onnx"
-            fi
-        fi
-        ;;
     h2_native|h2-native)
         ROBOT_PROFILE="h2_native"
         if [[ "$CHECKPOINT_SET" == false && -z "$DECODER_FILE" ]]; then
@@ -522,49 +484,24 @@ case "$ROBOT_PROFILE" in
             OBS_CONFIG="policy/release/observation_config_h2_native.yaml"
         fi
         if [[ "$PLANNER_SET" == false ]]; then
-            # The G1 planner bridge is enabled by default in simulation only.
-            # Real H2 deployments must opt in with --planner.
+            # VR explicitly supplies the shared planner; playback does not need it.
             PLANNER=""
         fi
         if [[ "$MOTION_DATA_SET" == false ]]; then
-            MOTION_DATA="$H2_LORA_MOTION_DATA_DEFAULT"
+            MOTION_DATA="$H2_MOTION_DATA_DEFAULT"
         fi
         if [[ -z "$DECODER_FILE" ]]; then
-            DECODER_FILE="../models/released/model_decoder.onnx"
+            DECODER_FILE="${CHECKPOINT}_decoder.onnx"
         fi
         if [[ -z "$ENCODER_FILE" ]]; then
-            if [[ -f "../models/released/model_encoder_full.onnx" ]]; then
-                ENCODER_FILE="../models/released/model_encoder_full.onnx"
+            if [[ -f "${CHECKPOINT}_encoder_full.onnx" ]]; then
+                ENCODER_FILE="${CHECKPOINT}_encoder_full.onnx"
             else
-                ENCODER_FILE="../models/released/model_encoder.onnx"
+                ENCODER_FILE="${CHECKPOINT}_encoder.onnx"
             fi
         fi
         ;;
-    h2_native_v1_1|h2-native-v1-1)
-        ROBOT_PROFILE="h2_native_v1_1"
-        if [[ "$CHECKPOINT_SET" == false && -z "$DECODER_FILE" ]]; then
-            CHECKPOINT="../sonic_h2_native_v1_1_release/exported/model"
-        fi
-        if [[ "$OBS_CONFIG_SET" == false ]]; then
-            OBS_CONFIG="policy/release/observation_config_h2_native_v1_1.yaml"
-        fi
-        if [[ "$PLANNER_SET" == false ]]; then
-            PLANNER=""
-        fi
-        if [[ "$MOTION_DATA_SET" == false ]]; then
-            MOTION_DATA="$H2_LORA_MOTION_DATA_DEFAULT"
-        fi
-        if [[ -z "$DECODER_FILE" ]]; then
-            DECODER_FILE="../sonic_h2_native_v1_1_release/exported/model_decoder.onnx"
-        fi
-        if [[ -z "$ENCODER_FILE" ]]; then
-            ENCODER_FILE="../sonic_h2_native_v1_1_release/exported/model_encoder.onnx"
-        fi
-        ;;
-    *)
-        echo -e "${RED}Error: unsupported robot profile '$ROBOT_PROFILE'. Use g1, h2_lora, h2_native, or h2_native_v1_1.${NC}" >&2
-        exit 1
-        ;;
+    *) echo "Only the released h2_native profile is supported." >&2; exit 2 ;;
 esac
 
 # A planner-disabled reference-motion run cannot use zmq_manager: that
@@ -589,10 +526,7 @@ echo "Requested mode: $INTERFACE_MODE"
 
 resolve_interface "$INTERFACE_MODE"
 
-if [[ ("$ROBOT_PROFILE" == "h2_lora" || "$ROBOT_PROFILE" == "h2_native" || "$ROBOT_PROFILE" == "h2_native_v1_1") &&
-      "$PLANNER_SET" == false && "$ENV_TYPE" == "sim" ]]; then
-    PLANNER="$PLANNER_DEFAULT"
-fi
+
 
 echo -e "Resolved interface: ${GREEN}$TARGET${NC}"
 echo -e "Environment type:   ${GREEN}$ENV_TYPE${NC}"
@@ -641,18 +575,11 @@ if [[ -n "$LOGS_DIR" ]]; then
     EXTRA_ARGS="${EXTRA_ARGS:+$EXTRA_ARGS }--logs-dir $LOGS_DIR"
 fi
 if [[ "$ENABLE_H2_VR_HEAD_CONTROL" == true ]]; then
-    if [[ "$ROBOT_PROFILE" != "h2_lora" && "$ROBOT_PROFILE" != "h2_native" && "$ROBOT_PROFILE" != "h2_native_v1_1" ]]; then
+    if [[ "$ROBOT_PROFILE" != "h2_native" ]]; then
         echo -e "${RED}Error: --h2-vr-head-control requires an H2 robot profile${NC}" >&2
         exit 1
     fi
     EXTRA_ARGS="${EXTRA_ARGS:+$EXTRA_ARGS }--h2-vr-head-control"
-fi
-if [[ "$PROJECT_H2_NATIVE_PLANNER_REFERENCE" == true ]]; then
-    if [[ "$ROBOT_PROFILE" != "h2_native" || -z "$PLANNER" ]]; then
-        echo "Error: --planner-g1-to-h2 requires --robot-profile h2_native and an enabled planner" >&2
-        exit 1
-    fi
-    EXTRA_ARGS="${EXTRA_ARGS:+$EXTRA_ARGS }--planner-g1-to-h2"
 fi
 # ============================================================================
 # Step 1: Check Prerequisites
@@ -698,7 +625,7 @@ if [[ -n "$PLANNER" ]]; then
     if ! check_file "$PLANNER"; then
         MISSING_FILES=$((MISSING_FILES + 1))
         if [[ "$PLANNER_SET" == true ||
-              (("$ROBOT_PROFILE" == "h2_lora" || "$ROBOT_PROFILE" == "h2_native" || "$ROBOT_PROFILE" == "h2_native_v1_1") && "$ENV_TYPE" == "sim") ]]; then
+              (("$ROBOT_PROFILE" == "h2_native") && "$ENV_TYPE" == "sim") ]]; then
             echo -e "${RED}Planner was requested but is unavailable.${NC}" >&2
             echo "   Download it with: python ../download_from_hf.py --planner-only" >&2
             FATAL_CONFIG=1
@@ -715,92 +642,25 @@ else
     MISSING_FILES=$((MISSING_FILES + 1))
 fi
 
-if [[ "$ROBOT_PROFILE" == "h2_lora" || "$ROBOT_PROFILE" == "h2_native" || "$ROBOT_PROFILE" == "h2_native_v1_1" ]]; then
-    H2_LORA_REFERENCE_MANIFEST="$MOTION_DATA/h2_lora_reference_manifest.json"
-    if [[ "$MOTION_DATA" == "reference/example" || "$MOTION_DATA" == "reference/example/" || "$MOTION_DATA" == */reference/example || "$MOTION_DATA" == */reference/example/ ]] && [[ "$ROBOT_PROFILE" != "h2_native" ]]; then
-        echo -e "${RED}❌ H2 profiles cannot use the G1 example reference directory: $MOTION_DATA${NC}"
-        echo "   Export H2 MotionLib references with:"
-        echo "   python ../scripts/export_h2lora_deploy_reference.py --motion-key walk_forward_loop_002__A036"
-        FATAL_CONFIG=1
-    elif [[ ! -f "$H2_LORA_REFERENCE_MANIFEST" ]]; then
-        echo -e "${RED}❌ Missing H2 reference manifest: $H2_LORA_REFERENCE_MANIFEST${NC}"
-        echo "   H2LoRA deploy reference must be exported from H2 MotionLib data."
-        echo "   Example:"
-        echo "   python ../scripts/export_h2lora_deploy_reference.py \\"
-        echo "     --motion-key walk_forward_loop_002__A036 \\"
-        echo "     --motion-key jog_forward_loop_003__A029_M \\"
-        echo "     --motion-key turn_walk_270_002__A095 \\"
-        echo "     --output-dir gear_sonic_deploy/$H2_LORA_MOTION_DATA_DEFAULT"
-        FATAL_CONFIG=1
-    else
-        echo -e "${GREEN}✅ Typed reference manifest: $H2_LORA_REFERENCE_MANIFEST${NC}"
-    fi
+REFERENCE_MANIFEST="$MOTION_DATA/h2_lora_reference_manifest.json"
+if [[ ! -f "$REFERENCE_MANIFEST" ]]; then
+    echo "Missing typed reference manifest: $REFERENCE_MANIFEST" >&2
+    FATAL_CONFIG=1
 fi
-
-if [ $MISSING_FILES -gt 0 ]; then
-    echo -e "${YELLOW}⚠️  Some files are missing. Make sure you have pulled the model files.${NC}"
-    echo "   You may need to run: git lfs pull"
-fi
-
-if [ $FATAL_CONFIG -gt 0 ]; then
-    echo -e "${RED}Fatal H2 configuration error. Aborting before build/deploy.${NC}" >&2
+if (( MISSING_FILES > 0 || FATAL_CONFIG > 0 )); then
+    echo "Missing deployment files; see docs/DEPLOYMENT.md." >&2
     exit 1
 fi
 
 echo ""
 
 # ============================================================================
-# Step 2: Install Dependencies (if needed)
-# ============================================================================
-
-echo -e "${BLUE}[Step 2/4]${NC} Checking/Installing dependencies..."
-
-# Check if just is installed
-if ! command -v just &> /dev/null; then
-    echo "Installing dependencies (just not found)..."
-    chmod +x scripts/install_deps.sh
-    ./scripts/install_deps.sh
-else
-    echo -e "${GREEN}✅ just is already installed${NC}"
-fi
-
-# Check if other essential tools are available
-DEPS_OK=true
-for cmd in cmake clang git; do
-    if ! command -v $cmd &> /dev/null; then
-        echo -e "${YELLOW}⚠️  $cmd not found, will run install_deps.sh${NC}"
-        DEPS_OK=false
-        break
-    fi
-done
-
-if [ "$DEPS_OK" = false ]; then
-    echo "Installing missing dependencies..."
-    chmod +x scripts/install_deps.sh
-    ./scripts/install_deps.sh
-else
-    echo -e "${GREEN}✅ All essential tools are installed${NC}"
-fi
-
-echo ""
-
-# ============================================================================
-# Step 3: Setup Environment & Build
-# ============================================================================
-
-echo -e "${BLUE}[Step 3/4]${NC} Setting up environment and building..."
-
-# Source the environment setup script
-echo "Sourcing environment setup..."
-set +e  # Temporarily allow errors (for jetson_clocks on non-Jetson systems)
+# Load the native runtime environment and use the explicitly built controller.
 source scripts/setup_env.sh
-set -e  # Re-enable exit on error
-
-# Always build to ensure we have the latest version
-echo "Building the project..."
-just build
-
-echo ""
+if [[ ! -x target/release/g1_deploy_onnx_ref ]]; then
+    echo "Controller is not built. Run: bash scripts/build_controller.sh from the repository root." >&2
+    exit 1
+fi
 
 # ============================================================================
 # Step 4: Deploy
@@ -835,7 +695,7 @@ echo -e "${CYAN}═════════════════════�
 echo ""
 echo -e "${YELLOW}The following command will be executed:${NC}"
 echo ""
-echo -e "${BLUE}just run g1_deploy_onnx_ref $TARGET $CHECKPOINT_DECODER $MOTION_DATA \\${NC}"
+echo -e "${BLUE}./target/release/g1_deploy_onnx_ref $TARGET $CHECKPOINT_DECODER $MOTION_DATA \\${NC}"
 echo -e "${BLUE}    --obs-config $OBS_CONFIG \\${NC}"
 echo -e "${BLUE}    --encoder-file $CHECKPOINT_ENCODER \\${NC}"
 echo -e "${BLUE}    --robot-profile $ROBOT_PROFILE \\${NC}"
@@ -870,7 +730,7 @@ if [[ "$confirm" =~ ^[Yy]$ ]] || [[ -z "$confirm" ]]; then
     echo -e "${GREEN}🚀 Starting deployment...${NC}"
     echo ""
     
-    CMD=(just run g1_deploy_onnx_ref "$TARGET" "$CHECKPOINT_DECODER" "$MOTION_DATA"
+    CMD=(./target/release/g1_deploy_onnx_ref "$TARGET" "$CHECKPOINT_DECODER" "$MOTION_DATA"
         --obs-config "$OBS_CONFIG"
         --encoder-file "$CHECKPOINT_ENCODER"
         --robot-profile "$ROBOT_PROFILE"

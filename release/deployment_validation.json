@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-14",
+  "scope": "deployment-only",
+  "platform": "Linux x86_64",
+  "python": "3.10.20",
+  "fresh_environment_install": {
+    "sim": "passed",
+    "teleop": "passed",
+    "torch_backend": "CPU (teleop only)"
+  },
+  "simulation": {
+    "tests": 27,
+    "subtests": 53,
+    "failures": 0,
+    "offline_physics_steps": 100
+  },
+  "teleoperation": {
+    "tests": 34,
+    "failures": 0,
+    "xr_binding_import": "passed",
+    "g1_h2_kinematics": "passed"
+  },
+  "cpp": {
+    "tests": 46,
+    "failures": 0
+  },
+  "launch_preflight": {
+    "sim2sim": "passed",
+    "sim2real": "passed",
+    "vr": "passed"
+  },
+  "hardware_control_started": false,
+  "live_vr_tested": false,
+  "closed_loop_tracking_tested": false,
+  "exported_checkout_checks": {
+    "simulation": "passed",
+    "teleoperation": "passed",
+    "file_hashes": "passed",
+    "planner_excluded": true
+  }
+}

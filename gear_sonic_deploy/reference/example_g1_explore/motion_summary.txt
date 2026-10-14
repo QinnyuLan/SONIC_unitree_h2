@@ -1,9 +1,0 @@
-G1 exploration references: 7 motions, 50 Hz, reference_type=g1
-
-1. prayer_R_001__A430: 381 frames, 7.60 s — 单膝下跪祈祷后站起
-2. dejection_R_001__A430: 764 frames, 15.26 s — 双膝跪地后站起
-3. show_bicep_R_on_all_fours_360_start_R_idle_right_R_002__A474: 780 frames, 15.58 s — 站立、四足向后爬行、恢复站立（A474 采集者）
-4. jump_and_land_light_002__A001: 439 frames, 8.76 s — 站立、原地轻跳、落地站立
-5. broad_jump_002__A359: 264 frames, 5.26 s — 站立、立定跳远、落地站立
-6. jump_twice_R_002__A533: 165 frames, 3.28 s — 站立、连续向前两跳、站稳
-7. high_jump_R_opt_2_001__A477: 157 frames, 3.12 s — 站立、原地高跳、落地站立

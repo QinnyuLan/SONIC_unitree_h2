@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from gear_sonic.trl.utils.rotation_conversion import decompose_rotation_aa
+from gear_sonic.utils.math.rotation_conversion import decompose_rotation_aa
 
 H2_SEMANTIC_WRIST_INDICES = (23, 24, 25, 26, 27, 28)
 
