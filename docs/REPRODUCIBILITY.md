@@ -188,6 +188,14 @@ After host GPU access recovered, the runtime was rebuilt with manual policy acti
 
 Both DDS checks confirmed that **o** exited the runtime, restored terminal settings, and sent a final command with all position gains zero and damping 8. Detailed reports and local test harnesses are under `outputs/validation/standing_pose/`. These checks used no physical robot and no graphical viewer; hardware balance and tracking remain unvalidated.
 
+## Arms at sides standing
+
+The standing preset now uses shoulder pitch 0, mirrored shoulder roll ±0.10, and elbow 1.50 rad. Runtime initialization, idle policy references and simulator reset use the same pose. Static MuJoCo forward kinematics, with closed linkage constraints solved, placed each wrist 1.7 cm forward of the torso origin (previously 11.6 cm), with no arm contact penetration exceeding 1 mm.
+
+The rebuilt runtime passed the 64 C++ tests and three startup checks. Actual TensorRT inference with headless MuJoCo over loopback DDS completed 12.26 seconds of unsupported standing, then a separate 16.33-second unsupported run including six seconds of H2 walking replay and eight seconds back in standing. Minimum base heights were 0.943/0.949 m; maximum body tilts were 0.192/0.186 rad. Both runs stayed within the 20 ms simulation lag limit, restored terminal settings and sent damping commands on **o**. During the final five seconds of each run, mean wrist positions were approximately 5–6 cm forward and 23 cm to either side of the torso origin, showing a small policy tracking offset from the reference. No fall or non-finite state occurred.
+
+Local reports are `outputs/validation/standing_pose/closed_loop_044936/result.json`, `outputs/validation/standing_pose/replay_transition_045006/result.json`, and `outputs/validation/standing_pose/arms_at_sides.json`. These are simulation checks; this preset has not been tested on a physical robot.
+
 ## Saving validation reports
 
 Generated reports belong in `outputs/validation/`, which is ignored by Git. Record the tested revision alongside the results:

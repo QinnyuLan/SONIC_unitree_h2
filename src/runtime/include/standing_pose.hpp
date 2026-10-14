@@ -25,6 +25,22 @@ inline std::array<double, 31> LoadStandingPose(const std::string& path) {
     pose[side + 3] = leg.at("knee");
     pose[side + 5] = leg.at("ankle_pitch");
   }
+  if (config.contains("arm_joint_angles_rad")) {
+    const auto& arm = config.at("arm_joint_angles_rad");
+    Require(arm.is_object() && arm.size() == 3, "standing pose requires shoulder_pitch, shoulder_roll and elbow");
+    for (const auto* name : {"shoulder_pitch", "shoulder_roll", "elbow"}) {
+      const auto& value = arm.at(name);
+      Require(value.is_number() && std::isfinite(value.get<double>()) &&
+              std::abs(value.get<double>()) <= 3.141592653589793,
+              std::string("invalid standing angle in radians: ") + name);
+    }
+    for (int side : {15, 22}) {
+      pose[side] = arm.at("shoulder_pitch");
+      // A positive configured roll opens both arms away from the torso.
+      pose[side + 1] = (side == 15 ? 1.0 : -1.0) * arm.at("shoulder_roll").get<double>();
+      pose[side + 3] = arm.at("elbow");
+    }
+  }
   return pose;
 }
 

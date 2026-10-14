@@ -137,7 +137,10 @@ class Runtime {
     std::cout << "[WAITING] Waiting for robot state. Pose initialization takes 3 seconds.\n"
               << "[KEYS] After [READY]: ] or s starts policy; o stops with damping; Ctrl+C exits.\n"
               << "[POSE] Hip pitch " << standing_pose_[0] << ", knee " << standing_pose_[3]
-              << ", ankle pitch " << standing_pose_[5] << " rad (both legs)." << std::endl;
+              << ", ankle pitch " << standing_pose_[5] << " rad (both legs).\n"
+              << "[POSE] Shoulder pitch " << standing_pose_[15] << ", shoulder roll L/R "
+              << standing_pose_[16] << "/" << standing_pose_[23] << ", elbow "
+              << standing_pose_[18] << " rad (both arms)." << std::endl;
     const auto started = Clock::now();
     auto next = started;
     while (!interrupted && !stopped_ &&

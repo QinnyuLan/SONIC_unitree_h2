@@ -60,6 +60,10 @@ TEST(StandingPose, UprightReferenceDoesNotChangeDecoderTrainingOffsets) {
   ASSERT_LT(pose[3], H2DefaultAngleDds(3));
   ASSERT_GT(pose[3], 0);  // Retain knee flexion instead of locking the knees.
   EXPECT_EQ(pose[3], pose[9]);
+  EXPECT_EQ(pose[15], pose[22]);
+  EXPECT_EQ(pose[16], -pose[23]);
+  EXPECT_EQ(pose[18], pose[25]);
+  EXPECT_NE(pose[18], H2DefaultAngleDds(18));
   Observations observations(StandingBodyReference(pose));
   RobotState state; state.q = pose;
   const auto encoded = observations.Encoder(nullptr, state);
