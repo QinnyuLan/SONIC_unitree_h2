@@ -1,8 +1,8 @@
 # 独立 Git 管理
 
-工作目录：`~/workspace/SONIC_unitree_h2`。远端：`git@github.com:QinnyuLan/SONIC_unitree_h2.git`。默认分支：`main`。
+远端：`git@github.com:QinnyuLan/SONIC_unitree_h2.git`。默认分支：`main`。
 
-此目录有自己的 `.git`，提交、分支与远端同步独立于相邻的 `SONIC-H2` 工作区。所有发布启动入口使用 `models/released`。仓库使用普通 Git，不使用 Git LFS。
+所有发布启动入口使用 `models/released`。部署目录可自行选择。
 
 ## 克隆与验证
 
@@ -12,7 +12,7 @@ cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```
 
-正式 H2 模型随 Git 提供，检查脚本校验其 SHA256。VR 使用的 G1 planner 不上传 Git，新克隆工程需按 [Planner 下载说明](PLANNER.md) 单独获取，随后执行 `python3 tools/verify_release.py --require-planner`。本机工作目录已保留 planner，可直接测试。
+正式 H2 模型随 Git 提供，检查脚本校验其 SHA256。VR 使用的 G1 planner 不上传 Git，新克隆工程需按 [Planner 下载说明](PLANNER.md) 单独获取，随后执行 `python3 tools/verify_release.py --require-planner`。已有 planner 文件可放入相同路径复用。
 
 ## 日常同步
 
@@ -20,8 +20,8 @@ python3 tools/verify_release.py
 cd ~/workspace/SONIC_unitree_h2
 git status
 git pull --ff-only
-# 修改并验证之后
-git add <已检查的文件>
+# 修改并验证之后，暂存需要提交的文件，例如：
+git add -- README.md README_CN.md
 git commit -m "说明本次修改"
 git push origin main
 ```
@@ -39,6 +39,6 @@ git push origin main
 | `gear_sonic/data/robots/g1/g1_43dof_s3.usda` | 可选 G1 Isaac 训练资产；正式 H2 MuJoCo/实机/VR 入口不用它；需要训练时另行提供 |
 | `data/body_models/smplx/SMPLX_NEUTRAL.npz` | 可选 SMPL-X 训练/人体处理资产；三个默认部署入口不用它；使用相关训练工具时需自行取得对应人体模型并放回此路径 |
 
-原工作区四份可选 MotionBricks 训练权重只有未下载的指针，不纳入本仓库；MotionBricks 源码保留，使用其训练或独立演示需另行获取权重。源工程 `SONIC-H2` 中的本地资产未改动。
+原工作区四份可选 MotionBricks 训练权重只有未下载的指针，不纳入本仓库；MotionBricks 源码保留，使用其训练或独立演示需另行获取权重。
 
 GitHub Pages 文档工作流仅手动触发。`release/source_manifest.json` 的初始复制记录用于溯源；`release_artifacts` 中相同路径的 SHA256 是发布修改后的值。`standalone_repository` 记录独立仓库位置及未纳入 Git 的本地文件。

@@ -22897,24 +22897,59 @@
       "sha256": "0e4ba91a070e63363417b909ac3a51d476b44fe52a00b3b4f62514e4ee4f9774"
     },
     {
+      "path": "CITATION.cff",
+      "bytes": 2827,
+      "sha256": "09752524a4ccd02e168aa50806fa104b1671d23380272d8658e2a9862203c89e"
+    },
+    {
       "path": "README.md",
-      "bytes": 6554,
-      "sha256": "d833badaa3fff60739ec0d96078448a9db66f71ac411e44da08e0f426518655f"
+      "bytes": 4168,
+      "sha256": "d9253b3afc28800dbc22944c6e595a19aaa9eb451002dc2196cd56a6b33ad88f"
+    },
+    {
+      "path": "README_CN.md",
+      "bytes": 3914,
+      "sha256": "963f3075b7fd33c6bcdcc90ddfabe20bd6e113b3eb02fdd9b4faacaaa10ad036"
+    },
+    {
+      "path": "docs/ACKNOWLEDGMENTS.md",
+      "bytes": 2548,
+      "sha256": "b4066fe06a3e12e29f90bf94d582f4a5f7205396c911696a3a2be4f09fdf723d"
+    },
+    {
+      "path": "docs/DEPLOYMENT.md",
+      "bytes": 6234,
+      "sha256": "27047d2c9fbd605dbf7b429845eaf32facac844daf84b6bb9c14a5e2f1850175"
+    },
+    {
+      "path": "docs/DEPLOYMENT_CN.md",
+      "bytes": 5623,
+      "sha256": "61f1e9af3ef86589c36cc222346171bfb623d08e7726192210b33622a9d74063"
     },
     {
       "path": "docs/GIT_WORKFLOW.md",
-      "bytes": 2700,
-      "sha256": "aa0d13fd75a8b216cd2b9c57c70b8cdc020e5d4c25b09e46b2693ce9c3af2f83"
+      "bytes": 2525,
+      "sha256": "17998b3de9daf6aa1c62596e20ee6d2a7790515e2dc697b6f1c1028f1c7be5f4"
     },
     {
       "path": "docs/PLANNER.md",
-      "bytes": 2991,
-      "sha256": "ac1c56c49e837b53bc528d9db8304bcfff2df12ee1f3f135df12bb562eb2a7f3"
+      "bytes": 2979,
+      "sha256": "125001949268f3040e25663d2753a6416210154deff3d504878dc63b98f58951"
+    },
+    {
+      "path": "docs/README.md",
+      "bytes": 2056,
+      "sha256": "d82b69157ae032400c35fe12885ae8adf9e8254b6d68e1421a804aa1a328f1d8"
     },
     {
       "path": "docs/WORK_SUMMARY.md",
       "bytes": 3541,
       "sha256": "c150edcb54a685ea49ca0e58fa408f8fd7444789d0d72927d8ee1c1e475ffc24"
+    },
+    {
+      "path": "docs/references.bib",
+      "bytes": 952,
+      "sha256": "e9342d353c6c7e53c4bf5d2e424a58be4e48ed581d0fac6661dcd8cffa977a11"
     },
     {
       "path": "docs/report/h2_model_deployment_workflow_handoff.md",
@@ -22935,6 +22970,11 @@
       "path": "docs/source/references/decoupled_wbc.md",
       "bytes": 4298,
       "sha256": "c81f60b442694a317f1bd0285918d49515b729aa187641773b605c7cc12495bd"
+    },
+    {
+      "path": "docs/source/resources/citations.md",
+      "bytes": 1198,
+      "sha256": "4cd12a1459890e903c2cfb66ea2a2914bf7693ba5c0a13dd5b0d7688f93dc6f4"
     },
     {
       "path": "docs/source/user_guide/troubleshooting.md",
@@ -24327,8 +24367,8 @@
       "sha256": "08a4daf00933addc397eb091197e10f7f52bf317911c70740998b7bb409509d0"
     }
   ],
-  "release_artifacts_bytes": 149530754,
-  "release_artifacts_count": 289,
+  "release_artifacts_bytes": 149553533,
+  "release_artifacts_count": 297,
   "published_model": {
     "name": "released",
     "path": "models/released",

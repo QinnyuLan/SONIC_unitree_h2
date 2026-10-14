@@ -1,8 +1,18 @@
 # Citations
 
-If you use GEAR-SONIC in your research, please cite:
+If you use the H2 release in your research, please cite TRACE and the underlying SONIC work.
 
 ```bibtex
+@misc{lan2026traceefficienttransferlearning,
+  title={TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments},
+  author={Qingyu Lan and Zhihao Tian and Zifan Wang and Junwei Liang},
+  year={2026},
+  eprint={2610.17999},
+  archivePrefix={arXiv},
+  primaryClass={cs.RO},
+  url={https://arxiv.org/abs/2610.17999},
+}
+
 @article{luo2025sonic,
     title={SONIC: Supersizing Motion Tracking for Natural Humanoid Whole-Body Control},
     author={Luo, Zhengyi and Yuan, Ye and Wang, Tingwu and Li, Chenran and Chen, Sirui and Casta\~neda, Fernando and Cao, Zi-Ang and Li, Jiefeng and Minor, David and Ben, Qingwei and Da, Xingye and Ding, Runyu and Hogg, Cyrus and Song, Lina and Lim, Edy and Jeong, Eugene and He, Tairan and Xue, Haoru and Xiao, Wenli and Wang, Zi and Yuen, Simon and Kautz, Jan and Chang, Yan and Iqbal, Umar and Fan, Linxi and Zhu, Yuke},
@@ -10,3 +20,5 @@ If you use GEAR-SONIC in your research, please cite:
     year={2025}
 }
 ```
+
+[TRACE project page](https://bfm-trace.github.io/) · [SONIC source code](https://github.com/NVlabs/GR00T-WholeBodyControl)

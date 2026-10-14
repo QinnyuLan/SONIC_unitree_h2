@@ -1,74 +1,39 @@
 # Documentation
 
-This directory contains the source code for the GR00T-WholeBodyControl documentation website.
-
-## Building Locally
-
-### Prerequisites
-
-Install the required Python packages:
-
-```bash
-pip install sphinx sphinx-book-theme sphinx-design sphinxemoji \
-            autodocsumm sphinxcontrib-bibtex myst-parser \
-            sphinx-copybutton
-```
-
-### Build the Documentation
-
-```bash
-cd docs
-make html
-```
-
-The built documentation will be in `build/html/`. Open `build/html/index.html` in your browser.
-
-### Live Preview
-
-Start a local web server to preview:
-
-```bash
-cd build/html
-python -m http.server 8000
-```
-
-Then open http://localhost:8000
-
-### Clean Build
-
-To remove all built files and rebuild from scratch:
-
-```bash
-make clean
-make html
-```
+[English README](../README.md) · [中文首页](../README_CN.md)
 
 ## Deployment
 
-The documentation is automatically built and deployed to GitHub Pages when changes are pushed to the `main` branch via the GitHub Actions workflow at `.github/workflows/docs.yml`.
+| Topic | Documentation |
+|---|---|
+| Environment setup and controller build | [English](DEPLOYMENT.md#environment) · [中文](DEPLOYMENT_CN.md#环境配置) |
+| MuJoCo simulation | [English](DEPLOYMENT.md#sim2sim) · [中文](DEPLOYMENT_CN.md#sim2sim) |
+| H2 hardware deployment | [English](DEPLOYMENT.md#sim2real) · [中文](DEPLOYMENT_CN.md#sim2real) |
+| PICO VR teleoperation | [English](DEPLOYMENT.md#vr-teleoperation) · [中文](DEPLOYMENT_CN.md#vr-teleoperation) |
+| Planner download and checksum | [Planner](PLANNER.md) |
+| Device pairing and calibration | [VR setup](source/getting_started/vr_teleop_setup.md) |
+| Model interfaces and hashes | [Released model](../models/released/README.md) |
+| Validation and reproduction | [Release record](../release/REPRODUCIBILITY.md) |
+| Common errors | [Troubleshooting](source/user_guide/troubleshooting.md) |
 
-The live documentation will be available at:
-**https://nvlabs.github.io/GR00T-WholeBodyControl/**
+## Research and Development
 
-## Documentation Structure
+- [Upstream dependencies and acknowledgments](ACKNOWLEDGMENTS.md).
+- [BibTeX references](references.bib) and [citation metadata](../CITATION.cff).
+- [Repository maintenance and optional assets](GIT_WORKFLOW.md).
+- [Experiment reports](report/) and [source provenance](../release/source_manifest.json).
+- [Original upstream README](../README.upstream.md).
 
-- `source/` - All documentation source files
-  - `conf.py` - Sphinx configuration
-  - `index.rst` - Main landing page
-  - `_static/` - Static assets (CSS, images, logos)
-  - `tutorials/` - Tutorial pages
-  - `getting_started/` - Getting started guides
-  - `user_guide/` - User guide
-  - `api/` - API reference
-  - `resources/` - Additional resources
+The `source/` tree contains the extended documentation inherited from SONIC, including G1 and training workflows. Use the H2 deployment guides above for this release's launch commands and configuration.
 
-## Writing Documentation
+## Build the Extended Documentation
 
-- Use Markdown (`.md`) or reStructuredText (`.rst`) files
-- Markdown is recommended for simplicity
-- Place new files in the appropriate subdirectory
-- Update `index.rst` to add new sections to the navigation
+From the repository root:
 
-## Theme
+```bash
+python -m pip install -r docs/requirements.txt
+sphinx-build -b html docs/source docs/build/html
+python -m http.server 8000 --directory docs/build/html
+```
 
-The documentation uses the `sphinx_book_theme` with NVIDIA branding, matching the Isaac Lab documentation style.
+The Sphinx site is built from `source/`; the Markdown guides linked above are available directly in the repository. The GitHub Pages workflow in `.github/workflows/docs.yml` is triggered manually. The TRACE project page is [bfm-trace.github.io](https://bfm-trace.github.io/).

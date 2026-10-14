@@ -4,7 +4,7 @@ H2 VR 部署沿用 SONIC 的共享 G1 kinematic planner。正式 H2 控制器位
 
 ## 本地路径与 Git
 
-本机已经保留完整文件，可直接测试。下载脚本和 VR 启动脚本使用相同路径：
+下载脚本和 VR 启动脚本使用相同路径；也可将已有权重放入此位置：
 
 ```text
 gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
