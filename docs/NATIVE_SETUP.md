@@ -9,7 +9,7 @@ The validated workstation uses Ubuntu x86_64, CUDA 12.6, TensorRT 10.13.3.9, and
 ```bash
 sudo apt update
 sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
-  libeigen3-dev libmsgpack-dev libyaml-cpp-dev nlohmann-json3-dev zlib1g-dev \
+  libeigen3-dev nlohmann-json3-dev zlib1g-dev \
   libgl1 libglib2.0-0
 ```
 
@@ -46,6 +46,6 @@ From the repository root:
 bash scripts/build_controller.sh
 ```
 
-The controller is written to `gear_sonic_deploy/target/release/g1_deploy_onnx_ref`; the executable name is inherited from SONIC. The release launchers select the H2 profile. Build and launch scripts do not install system packages or edit shell startup files.
+The build produces `gear_sonic_deploy/target/release/sonic_h2_runtime` and `sonic_g1_planner`. Use `-DBUILD_PLANNER=OFF` to build only the policy runtime. Build and launch scripts do not install system packages or edit shell startup files.
 
 For offline C++ tests, additionally install `libgtest-dev`, build with `-DBUILD_TESTING=ON`, then run `ctest --test-dir gear_sonic_deploy/build --output-on-failure`.

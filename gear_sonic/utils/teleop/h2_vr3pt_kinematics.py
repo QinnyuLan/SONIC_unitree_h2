@@ -83,3 +83,14 @@ __all__ = [
     "h2_configuration_from_g1_compatible_feedback",
     "h2_local_joints_from_g1_compatible_feedback",
 ]
+
+
+def g1_feedback_from_runtime_state(dds_joints):
+    """Convert native H2 DDS measurements for the existing PICO FK calibration."""
+    dds = np.asarray(dds_joints, dtype=np.float64)
+    if dds.shape != (31,) or not np.isfinite(dds).all():
+        raise ValueError("expected 31 finite H2 DDS joints")
+    policy_to_dds = np.array([0, 6, 12, 1, 7, 13, 2, 8, 14, 3, 9, 15, 22, 5, 11,
+                              16, 23, 4, 10, 17, 24, 18, 25, 19, 26, 20, 27, 21, 28])
+    delta = dds[policy_to_dds] - H2_NATIVE_DEFAULT_ANGLES_POLICY
+    return delta[G1_FEEDBACK_POLICY_INDEX] + G1_FEEDBACK_DEFAULT_ANGLES

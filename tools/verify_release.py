@@ -38,7 +38,7 @@ def main() -> int:
     parser.add_argument("--imports", action="store_true", help="also import the simulation packages")
     parser.add_argument("--sim", action="store_true", help="load H2 and run 100 headless physics steps without DDS")
     parser.add_argument("--teleop", action="store_true", help="load the VR mapper, XR binding, and G1/H2 kinematics without devices")
-    parser.add_argument("--require-planner", action="store_true", help="require the separately downloaded G1 planner (VR deployment)")
+    parser.add_argument("--require-planner", action="store_true", help="require the separately downloaded G1 planner")
     args = parser.parse_args()
 
     print(f"SONIC_unitree_h2: {ROOT}")
@@ -58,7 +58,11 @@ def main() -> int:
         "models/released/model_decoder.onnx",
         "models/released/SHA256SUMS",
         "models/released/deployment_manifest.json",
-        "gear_sonic_deploy/reference/example/h2_lora_reference_manifest.json",
+        "runtime/src/main.cpp",
+        "runtime/include/observations.hpp",
+        "gear_sonic/sources/motion_replay.py",
+        "gear_sonic/sources/teleop.py",
+        "sources/planner/main.cpp",
     ]
     good = all([check_file(ROOT / path) for path in required])
     # Use the same destination and pinned checksum as the download command.

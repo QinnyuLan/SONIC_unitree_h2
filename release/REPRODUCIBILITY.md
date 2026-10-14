@@ -1,10 +1,10 @@
 # Reproducibility
 
-The release contains the H2 runtime for MuJoCo, hardware deployment, and PICO VR teleoperation. All three launchers load `models/released`. The model interface is documented in the [model README](../models/released/README.md).
+The release contains the H2 runtime for MuJoCo, hardware deployment, and PICO VR teleoperation. The independent policy runtime loads `models/released`; producers connect through the documented command channels. The model interface is documented in the [model README](../models/released/README.md).
 
 ## Validated environment
 
-Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and ONNX Runtime C++ 1.16.3. Python runtime dependencies are pinned in `requirements/sim.lock` and `requirements/teleop.lock`. The simulator and teleoperation environments were installed independently from empty environments.
+Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and ONNX Runtime C++ 1.16.3. Python runtime dependencies are pinned in `requirements/inputs.lock`, `requirements/sim.lock` and `requirements/teleop.lock`. The simulator and teleoperation environments were installed independently from empty environments.
 
 ## Offline checks
 
@@ -24,7 +24,7 @@ Run the Python regression suites in their respective environments:
 
 ```bash
 uv pip install --python .venv_sim/bin/python -r requirements/test.txt
-.venv_sim/bin/python -m pytest gear_sonic/tests/sim -q
+.venv_sim/bin/python -m pytest gear_sonic/tests/sim gear_sonic/tests/commands -q
 uv pip install --python .venv_teleop/bin/python -r requirements/test.txt
 .venv_teleop/bin/python -m pytest gear_sonic/tests/teleop -q
 ```
@@ -46,18 +46,24 @@ uv pip install --python .venv_model_validation/bin/python -r requirements/model_
 .venv_model_validation/bin/python tools/validate_released_models.py
 ```
 
-## Results
+## Runtime refactor validation
 
-- 46 C++ regression tests passed, including released model contracts, reference handling, head control, and Inspire hands.
-- 27 simulation tests passed, with 53 additional subtests; 34 teleoperation tests passed.
-- Headless H2 loading and physics stepping, XR binding loading, and G1/H2 kinematic loading passed in the separate environments and in an export containing only the files prepared for Git. Every exported file matched the inventory hash.
-- All three controller launchers passed configuration validation with execution declined at the launch prompt. PICO argument parsing and all launcher command previews passed.
-- All model hashes and ONNX graph/interface checks passed. Each of the four selectors completed five CPU encoder-to-decoder trials with finite outputs. Full/compact H2 encoder outputs matched exactly.
-- The previously recorded TensorRT FP32 check for the unchanged ONNX models produced finite outputs for all selectors, with token error 0 and maximum action error below `5e-6` against CPU inference.
+- 44 shared C++ regression tests and 12 runtime/protocol tests passed. These cover the unchanged model contract, native joint mappings, history order, sparse sampling, quaternion handling, ownership, expiry and separate head input.
+- 27 simulator tests (53 additional subtests), 12 command/replay/adapter tests and 34 teleoperation tests passed.
+- A new minimal `.venv_inputs` installed successfully. CSV replay validation and producer command-line parsing passed. Simulator/teleoperation preflight and all released model hashes passed.
+- `tools/check_runtime.py --planner` ran the actual FP32 full encoder, decoder and G1 planner from an empty working directory using synthetic robot state and private IPC sockets. Startup standing, G1/VR/SMPL/token input, timeout-to-standing, producer takeover, head/hand independence, synthetic PICO packet conversion and planner inference all passed. DDS was not initialized by this check.
+- A separate 10-second MuJoCo/runtime test used DDS domain 211 on loopback, with elastic support enabled. The runtime completed its initialization ramp and published 318 finite running-state frames in standing mode. This is a connection/control-loop smoke test, not a free-standing stability or motion-tracking benchmark.
+- Sim, real and PICO launcher previews passed. Hardware control was not started; no real robot or PICO device was connected during validation.
+- Published ONNX bytes are unchanged. The prior CPU and GPU model-comparison records remain applicable to those model files; they are not evidence of live hardware performance.
 
-Machine-readable records: [deployment checks](deployment_validation.json), [C++ tests](cpp_tests.json), [CPU model checks](model_validation.json), [GPU model checks](gpu_model_validation.json), and [planner checksum](planner_validation.json).
+Reproduce the model/transport integration test after building:
 
-These are offline regression and loading checks. They do not establish live VR tracking, real-time closed-loop tracking quality, or hardware stability on a new robot.
+```bash
+source gear_sonic_deploy/scripts/setup_env.sh
+.venv_sim/bin/python tools/check_runtime.py --planner
+```
+
+Machine-readable records: [deployment checks](deployment_validation.json), [shared C++ tests](cpp_tests.json), [runtime tests](runtime_tests.json), [MuJoCo connection test](runtime_sim_validation.json), [CPU model checks](model_validation.json), [GPU model checks](gpu_model_validation.json), and [planner checksum](planner_validation.json).
 
 ## Release inventory
 

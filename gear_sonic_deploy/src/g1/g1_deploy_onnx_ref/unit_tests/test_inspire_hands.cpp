@@ -5,47 +5,10 @@
 
 #include "hand_backend.hpp"
 #include "inspire_hands.hpp"
-#include "input_interface/input_interface.hpp"
 
 using inspire_hand_control::CombinedTarget;
 using inspire_hand_control::Dex3Target;
 using inspire_hand_control::InputGate;
-
-namespace {
-
-class HandAvailabilityInput final : public InputInterface {
- public:
-  void update() override {}
-
-  void handle_input(
-      MotionDataReader&,
-      std::shared_ptr<const MotionSequence>&,
-      int&,
-      OperatorState&,
-      bool&,
-      DataBuffer<HeadingState>&,
-      bool,
-      PlannerState&,
-      DataBuffer<MovementState>&,
-      std::mutex&,
-      bool&) override {}
-
-  void SetPayload(bool has_left, bool has_right) {
-    if (has_left) {
-      std::array<double, 7> left{};
-      left.fill(0.25);
-      left_hand_joint_.SetData(left);
-    }
-    if (has_right) {
-      std::array<double, 7> right{};
-      right.fill(-0.25);
-      right_hand_joint_.SetData(right);
-    }
-    SetHandJointAvailability(has_left, has_right);
-  }
-};
-
-}  // namespace
 
 TEST(HandBackend, ParsesEverySupportedBackend) {
   EXPECT_EQ(static_cast<int>(ParseHandBackend("none")),
@@ -55,23 +18,6 @@ TEST(HandBackend, ParsesEverySupportedBackend) {
   EXPECT_EQ(static_cast<int>(ParseHandBackend("inspire")),
             static_cast<int>(HandBackendKind::INSPIRE));
   EXPECT_THROW(ParseHandBackend("serial"), std::invalid_argument);
-}
-
-TEST(HandInputAvailability, MissingSideDoesNotReuseCachedTarget) {
-  HandAvailabilityInput input;
-  input.SetPayload(true, true);
-  EXPECT_TRUE(input.GetHandPose(true).first);
-  EXPECT_TRUE(input.GetHandPose(false).first);
-
-  input.SetPayload(true, false);
-  EXPECT_TRUE(input.GetHandPose(true).first);
-  EXPECT_FALSE(input.GetHandPose(false).first);
-  EXPECT_TRUE(input.HasHandJoints());
-
-  input.SetPayload(false, false);
-  EXPECT_FALSE(input.GetHandPose(true).first);
-  EXPECT_FALSE(input.GetHandPose(false).first);
-  EXPECT_FALSE(input.HasHandJoints());
 }
 
 TEST(InspireHands, MapsCurrentVrOpenAndClosedTargets) {

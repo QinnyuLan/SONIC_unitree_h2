@@ -4,18 +4,22 @@ This repository contains the runtime for H2 simulation, hardware deployment, and
 
 | Path | Contents |
 |---|---|
+| `runtime/` | H2 policy runtime, validated commands, observation assembly and tests |
+| `sources/planner/` | Independent G1 planner service |
+| `gear_sonic/commands/` | Python command protocol and client |
+| `gear_sonic/sources/` | Motion replay, planner requests, teleoperation and head/hand senders |
 | `models/released/` | H2 ONNX models, interface manifest, and checksums |
 | `gear_sonic/` | MuJoCo/DDS simulator, PICO input, pose mathematics, and runtime robot assets |
-| `gear_sonic_deploy/` | C++ controller, TensorRT inference, H2 settings, launchers, and reference motions |
+| `gear_sonic_deploy/` | Shared SONIC numerical code, TensorRT inference, H2 settings, launchers, and reference motions |
 | `external_dependencies/` | Unitree Python SDK and XRoboToolkit binding sources/libraries |
-| `scripts/` | Simulator launcher and native controller build |
+| `scripts/` | Independent runtime/planner/simulator launchers and native build |
 | `tools/` | Offline release and ONNX checks |
 | `requirements/` | Optional download/validation dependencies |
 | `docs/` | Installation and operation guides |
 | `release/` | Release inventory and validation records |
 | `legal/` | Third-party license notices |
 
-The retained robot assets are the H2 closed-loop MJCF/URDF and their mesh dependencies, plus G1 kinematics needed by the VR mapper. `reference/example` supplies the launchers' playback motions; `reference/bones_072925_test` is a small forward-kinematics regression fixture. Shared pose mathematics lives under `gear_sonic/utils/math`.
+The retained robot assets are the H2 closed-loop MJCF/URDF and their mesh dependencies, plus G1 kinematics needed by the VR mapper. `reference/example` supplies optional replay clips; `reference/bones_072925_test` is a small forward-kinematics regression fixture. Shared pose mathematics lives under `gear_sonic/utils/math`.
 
 Training frameworks, MotionBricks, Isaac environments, VLA/data collection, historical checkpoints, experimental motion sets, and inherited documentation-site tooling are outside this repository's scope.
 

@@ -6,7 +6,7 @@ Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Lea
 
 ## Overview
 
-The release supports motion tracking and VR teleoperation on Unitree H2, with a shared controller for simulation and hardware deployment.
+The policy runtime starts in the default standing pose and accepts commands from independent motion replay, planner, and teleoperation processes. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels.
 
 | Workflow | Description | Guide |
 |---|---|---|
@@ -22,10 +22,11 @@ cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```
 
-Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build the controller, and run simulation. H2 checkpoints are provided in [`models/released/`](models/released/). VR teleoperation also requires the [SONIC planner](docs/DEPLOYMENT.md#planner).
+Follow the [deployment guide](docs/DEPLOYMENT.md) to install dependencies, build the controller, and run simulation. H2 checkpoints are provided in [`models/released/`](models/released/). The [SONIC planner](docs/DEPLOYMENT.md#planner) is optional and runs as a separate service.
 
 ## Documentation
 
+- [Architecture and command protocol](docs/ARCHITECTURE.md): process boundaries, sparse references, and independent head/hand control.
 - [Installation and deployment](docs/DEPLOYMENT.md): environment setup, Sim2Sim, Sim2Real, and VR teleoperation.
 - [Released model](models/released/README.md): input/output interfaces and checksums.
 - [Reproducibility](release/REPRODUCIBILITY.md): model validation, inference checks, and test results.

@@ -1,16 +1,16 @@
 # G1 planner 下载与本地测试
 
-H2 VR 部署沿用 SONIC 的共享 G1 kinematic planner。正式 H2 控制器位于 `models/released/`，本下载操作仅补齐 planner。
+独立 planner 服务使用 SONIC 的共享 G1 kinematic planner。正式 H2 控制器位于 `models/released/`，本下载操作仅补齐 planner。
 
 ## 本地路径与 Git
 
-下载脚本和 VR 启动脚本使用相同路径；也可将已有权重放入此位置：
+下载脚本和 planner 服务使用相同路径；也可将已有权重放入此位置：
 
 ```text
 gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
 ```
 
-此文件已加入根目录 `.gitignore`，不会随普通 `git add` / `git push` 上传。新克隆的仓库不含该权重。文件大小为 773,952,989 字节（约 738 MiB）。sim2sim、sim2real 的动作回放入口不需要 planner；VR 部署端需要。
+此文件已加入根目录 `.gitignore`，不会随普通 `git add` / `git push` 上传。新克隆的仓库不含该权重。文件大小为 773,952,989 字节（约 738 MiB）。runtime、离线动作回放和原地 SMPL/VR 遥操作不依赖 planner；摇杆行走需要启动独立 planner 服务。
 
 ## 推荐下载方法
 
@@ -47,8 +47,8 @@ SHA256:   39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea
 git check-ignore gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx
 # 校验发布模型与 planner，不连接机器人
 python3 tools/verify_release.py --require-planner
-# 只检查 VR 部署命令
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh deploy --print-command
+# 独立 planner 服务
+bash scripts/run_planner.sh
 ```
 
 不带 `--require-planner` 的检查允许新克隆仓库缺少 planner，并给出下载提示；若文件已经存在但校验不符，检查仍会失败。完整 VR 环境、设备连接和启动步骤见 [主 README](../README.md)。

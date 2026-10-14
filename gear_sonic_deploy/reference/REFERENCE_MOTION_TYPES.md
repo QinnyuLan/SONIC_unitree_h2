@@ -1,23 +1,16 @@
-# Reference Motion Types
+# Reference Motions
 
-Every H2 reference-motion directory should contain
-`h2_lora_reference_manifest.json`. Each entry under `motions` must declare
-`reference_type`:
+The policy runtime creates its standing reference in memory and does not load this directory.
 
-```json
-{
-  "motion_name": "walk_native_g1",
-  "reference_type": "g1"
-}
+`example/` contains optional G1 CSV clips for the independent motion replay process. Pass one clip directory, not the collection root:
+
+```bash
+.venv_inputs/bin/python -m gear_sonic.sources.motion_replay \
+  gear_sonic_deploy/reference/example/walking_quip_360_R_002__A428
 ```
 
-Supported types and universal encoder selectors:
+Replay reads `joint_pos.csv`, optional `joint_vel.csv`, and the first quaternion in `body_quat.csv`. CSV columns use native G1 semantic order; the default rate is 50 Hz. It resamples the clip to ten future frames at 0.1-second intervals. Existing metadata and provenance manifests are retained with the clips and are not startup requirements.
 
-| `reference_type` | Selector | Required data |
-| --- | ---: | --- |
-| `h2` | 0 | `h2_joint_pos.csv`, `h2_joint_vel.csv` (31D) |
-| `teleop` | 1 | teleop/VR fields; normally streamed rather than preloaded |
-| `smpl` | 2 | SMPL joints and root quaternion |
-| `g1` | 3 | native G1 `joint_pos.csv`, `joint_vel.csv` (29D) |
+Offline text-to-motion can use an NPZ with `joint_pos`, `root_quat`, `fps` and optional `joint_vel`. See [replay instructions](../../docs/DEPLOYMENT.md#motion-replay-and-offline-text-to-motion) and [the wire protocol](../../docs/ARCHITECTURE.md).
 
-The default `model_encoder_full.onnx` accepts all four selectors. Planner output is native G1 reference data and uses selector 3. VR three-point control uses selector 1. The compact `model_encoder.onnx` accepts only H2 references and requires `policy/release/observation_config_h2_compact.yaml`.
+`bones_072925_test/` is a small forward-kinematics test fixture. Live SMPL and VR references are sent through the teleoperation adapter; they are not preloaded motion-library modes.

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <array>
 
-#include "input_interface/input_command.hpp"
+struct HeadPoseCommand { double pitch = 0; double yaw = 0; };
 #include "robot_parameters.hpp"
 
 namespace h2_head_control {

@@ -1,41 +1,52 @@
 {
   "date": "2026-10-14",
-  "scope": "deployment-only",
-  "platform": "Linux x86_64",
-  "python": "3.10.20",
-  "fresh_environment_install": {
-    "sim": "passed",
-    "teleop": "passed",
-    "torch_backend": "CPU (teleop only)"
-  },
-  "simulation": {
-    "tests": 27,
-    "subtests": 53,
-    "failures": 0,
-    "offline_physics_steps": 100
-  },
-  "teleoperation": {
-    "tests": 34,
-    "failures": 0,
-    "xr_binding_import": "passed",
-    "g1_h2_kinematics": "passed"
+  "scope": "independent H2 deployment runtime and command producers",
+  "environment": {
+    "python": "3.10.20",
+    "cuda": "12.6",
+    "tensorrt": "10.13.3.9",
+    "onnxruntime_cpp": "1.16.3"
   },
   "cpp": {
-    "tests": 46,
+    "shared_tests": 44,
+    "runtime_tests": 12,
     "failures": 0
   },
-  "launch_preflight": {
-    "sim2sim": "passed",
-    "sim2real": "passed",
-    "vr": "passed"
+  "python": {
+    "sim_tests": 27,
+    "sim_subtests": 53,
+    "command_tests": 12,
+    "teleop_tests": 34,
+    "failures": 0
   },
-  "hardware_control_started": false,
-  "live_vr_tested": false,
-  "closed_loop_tracking_tested": false,
-  "exported_checkout_checks": {
-    "simulation": "passed",
-    "teleoperation": "passed",
-    "file_hashes": "passed",
-    "planner_excluded": true
-  }
+  "integration": {
+    "actual_fp32_encoder_decoder": true,
+    "actual_planner": true,
+    "startup_stand": true,
+    "g1_vr_smpl_token": true,
+    "command_expiry": true,
+    "source_ownership": true,
+    "head_hands_independent": true,
+    "synthetic_pico_adapter": true,
+    "private_ipc_no_dds": true
+  },
+  "installation": {
+    "minimal_inputs_environment": "passed",
+    "sim_preflight": "passed",
+    "teleop_preflight": "passed",
+    "model_checksums": "passed",
+    "planner_checksum": "passed"
+  },
+  "launch_previews": [
+    "sim",
+    "real",
+    "pico"
+  ],
+  "hardware_connected": false,
+  "live_vr_validated": false,
+  "limitations": [
+    "No physical robot validation",
+    "No live PICO validation",
+    "MuJoCo smoke test retained elastic support"
+  ]
 }

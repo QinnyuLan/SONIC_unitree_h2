@@ -11,6 +11,7 @@ license = {text = "Apache-2.0"}
 dependencies = ["numpy==1.26.4", "scipy==1.15.3"]
 
 [project.optional-dependencies]
+inputs = ["pyzmq==27.1.0"]
 sim = [
     "mujoco==3.10.0", "tyro==1.0.15", "pyyaml==6.0.3",
     "pyzmq==27.1.0", "msgpack==1.2.1", "msgpack-numpy==0.4.8",

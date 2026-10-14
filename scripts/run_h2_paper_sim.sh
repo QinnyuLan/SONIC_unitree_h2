@@ -9,7 +9,7 @@ CAMERA_ELEVATION=-15   # 俯视角，单位度；越负越俯视
 LOOKAT_X=0.0
 LOOKAT_Y=0.0
 LOOKAT_Z=0.85          # 固定镜头的观察中心高度，单位米
-DDS_DOMAIN=0          # 与 run_h2_sim2sim.sh 中的 DDS_DOMAIN 一致
+DDS_DOMAIN=${DDS_DOMAIN:-0}          # 与 run_h2_sim2sim.sh 中的 DDS_DOMAIN 一致
 # ==========================================================
 
 H2_PAPER_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"

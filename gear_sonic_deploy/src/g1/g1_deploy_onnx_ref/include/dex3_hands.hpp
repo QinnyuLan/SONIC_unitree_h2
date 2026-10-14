@@ -113,7 +113,7 @@ public:
     double GetMaxCloseRatio() const { return max_close_ratio_; }
 
     // Perform one publish tick; call this at your own cadence from the main class/thread.
-    void writeOnce()
+    void writeOnce(bool publish_left = true, bool publish_right = true)
     {
         constexpr double MAX_DELTA_Q = 0.25;
         // Use runtime adjustable max_close_ratio_ instead of constexpr
@@ -123,7 +123,7 @@ public:
             const auto cmdPtr = left_.cmd_buffer.GetDataWithTime().data;
             const auto statePtr = left_.state_buffer.GetDataWithTime().data;
             
-            if (left_.publisher && cmdPtr)
+            if (publish_left && left_.publisher && cmdPtr)
             {
                 // Create a copy to apply clipping and smoothing
                 unitree_hg::msg::dds_::HandCmd_ smoothedCmd = *cmdPtr;
@@ -161,7 +161,7 @@ public:
             const auto cmdPtr = right_.cmd_buffer.GetDataWithTime().data;
             const auto statePtr = right_.state_buffer.GetDataWithTime().data;
             
-            if (right_.publisher && cmdPtr)
+            if (publish_right && right_.publisher && cmdPtr)
             {
                 // Create a copy to apply clipping and smoothing
                 unitree_hg::msg::dds_::HandCmd_ smoothedCmd = *cmdPtr;

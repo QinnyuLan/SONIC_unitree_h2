@@ -6,13 +6,13 @@
 
 ## 项目概览
 
-本项目支持 Unitree H2 的动作跟踪与 VR 遥操作，仿真和实机部署共用同一套控制器。
+policy runtime 启动后以默认姿态站立，接收独立 motion replay、planner 和遥操作进程的指令。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。
 
 | 工作流 | 功能 | 使用指南 |
 |---|---|---|
 | Sim2Sim | MuJoCo 仿真与 C++ 控制器通过 DDS 通信 | [仿真运行](docs/DEPLOYMENT_CN.md#sim2sim) |
 | Sim2Real | Unitree H2 实机全身动作跟踪 | [实机部署](docs/DEPLOYMENT_CN.md#sim2real) |
-| VR 遥操作 | 基于 PICO 与 XRoboToolkit 的头部、双手三点遥操作 | [遥操作](docs/DEPLOYMENT_CN.md#vr-teleoperation) |
+| VR 遥操作 | 基于 PICO 与 XRoboToolkit 的头部、双手三点遥操作 | [遥操作](docs/DEPLOYMENT_CN.md#vr-遥操作) |
 
 ## 快速开始
 
@@ -22,10 +22,11 @@ cd SONIC_unitree_h2
 python3 tools/verify_release.py
 ```
 
-按照[部署指南](docs/DEPLOYMENT_CN.md)安装依赖、编译控制器并运行仿真。H2 模型位于 [`models/released/`](models/released/)，VR 遥操作还需下载 [SONIC planner](docs/DEPLOYMENT_CN.md#planner)。
+按照[部署指南](docs/DEPLOYMENT_CN.md)安装依赖、编译控制器并运行仿真。H2 模型位于 [`models/released/`](models/released/)，需要行走规划时，可另行下载并运行 [SONIC planner](docs/DEPLOYMENT_CN.md#planner)。
 
 ## 文档
 
+- [架构与指令协议](docs/ARCHITECTURE_CN.md)：独立 runtime、稀疏参考、头部和手部通道。
 - [安装与部署](docs/DEPLOYMENT_CN.md)：环境配置、Sim2Sim、Sim2Real 和 VR 遥操作。
 - [发布模型说明](models/released/README.md)：输入输出接口与文件校验。
 - [复现记录](release/REPRODUCIBILITY.md)：模型验证、推理检查与测试结果。

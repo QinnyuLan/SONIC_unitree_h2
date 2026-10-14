@@ -29,7 +29,6 @@ import subprocess
 import threading
 import time
 
-import msgpack
 import numpy as np
 from scipy.spatial.transform import Rotation as sRot
 import torch
@@ -1819,8 +1818,8 @@ def run_pico(
 class FeedbackReader:
     """Reads feedback from robot via ZMQ and processes measured upper body position to use as frozen targets."""
 
-    def __init__(self, zmq_feedback_host: str = "localhost", zmq_feedback_port: int = 5557):
-        self.poller = ZMQPoller(host=zmq_feedback_host, port=zmq_feedback_port, topic="g1_debug")
+    def __init__(self, zmq_feedback_host: str = "localhost", zmq_feedback_port: int = 5559):
+        self.poller = ZMQPoller(host=zmq_feedback_host, port=zmq_feedback_port, topic="")
 
         self.upper_body_joint_indices = self._get_upper_body_joint_indices()
 
@@ -1857,7 +1856,12 @@ class FeedbackReader:
             print("[PlannerLoop] No feedback data received")
             return None, None, None, None
 
-        unpacked = msgpack.unpackb(data, raw=False)
+        import json
+        from gear_sonic.utils.teleop.h2_vr3pt_kinematics import g1_feedback_from_runtime_state
+        unpacked = json.loads(data)
+        if unpacked.get("schema") != "sonic.h2.state.v1" or abs(time.time() * 1000 - unpacked["sent_at_ms"]) > 500:
+            return None, None, None, None
+        unpacked["body_q_measured"] = g1_feedback_from_runtime_state(unpacked["joint_pos"])
         full_body_q = None
         if "body_q_measured" in unpacked:
             body_q_swizzled = unpacked["body_q_measured"]
@@ -1892,7 +1896,7 @@ class PlannerStreamer:
         three_point: ThreePointPose,
         poll_hz: int = 20,
         zmq_feedback_host: str = "localhost",
-        zmq_feedback_port: int = 5557,
+        zmq_feedback_port: int = 5559,
         speed_scale: float = DEFAULT_PLANNER_SPEED_SCALE,
         max_speed: float = DEFAULT_PLANNER_MAX_SPEED,
     ):
@@ -1939,7 +1943,7 @@ class PlannerStreamer:
         """
         Recalibrate VR 3-point pose tracking using the robot's current measured joints.
 
-        Polls the g1_debug feedback to get the robot's actual joint state, then
+        Polls the runtime state feedback to get the robot's actual joint state, then
         schedules recalibration so VR tracking aligns with the robot's current pose.
         This prevents sudden jumps when entering VR 3PT mode from PLANNER mode.
         """
@@ -2208,7 +2212,7 @@ def run_pico_manager(
     record_dir: str = "",
     record_format: str = "npz",
     zmq_feedback_host: str = "localhost",
-    zmq_feedback_port: int = 5557,
+    zmq_feedback_port: int = 5559,
     enable_vis_vr3pt: bool = False,
     with_g1_robot: bool = True,
     enable_waist_tracking: bool = False,
@@ -2500,7 +2504,7 @@ def run_pico_manager(
                     planner_streamer.save_upper_body_position_target()
                 elif new_mode == StreamMode.PLANNER_VR_3PT:
                     # Recalibrate VR tracking against the robot's actual current pose
-                    # (read via g1_debug feedback + FK) to prevent sudden jumps
+                    # (read via runtime state feedback + FK) to prevent sudden jumps
                     planner_streamer.recalibrate_for_vr3pt()
 
             # Run one iteration of the new mode
@@ -2687,8 +2691,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--zmq_feedback_port",
         type=int,
-        default=5557,
-        help="ZMQ feedback port (default: 5557)",
+        default=5559,
+        help="ZMQ feedback port (default: 5559)",
     )
     parser.add_argument(
         "--vr3pt_test",

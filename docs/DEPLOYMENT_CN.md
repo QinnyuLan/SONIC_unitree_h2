@@ -1,146 +1,151 @@
-# Unitree H2 部署指南
+# Unitree H2 部署
 
-[中文首页](../README_CN.md) · [English](DEPLOYMENT.md)
+[README](../README_CN.md) · [English](DEPLOYMENT.md) · [架构与协议](ARCHITECTURE_CN.md)
 
-本文介绍发布模型在 MuJoCo、H2 实机和 PICO VR 遥操作中的使用方法。除非另有说明，命令均在仓库根目录执行。
+所有命令在仓库根目录执行。先启动 H2 policy runtime，使机器人以默认姿态站立，再独立启动动作回放、planner 或遥操作发送端。
 
-## 环境配置
+## 安装
 
-使用配备 NVIDIA GPU 的 Ubuntu 工作站。Python 环境由 [uv](https://docs.astral.sh/uv/getting-started/installation/) 创建，版本为 Python 3.10。
-
-| 组件 | 验证环境 |
-|---|---|
-| Python | 3.10.20 |
-| CUDA | 12.6 |
-| TensorRT | 10.13.3.9 |
-| ONNX Runtime C++ | 1.16.3 |
-
-Python 依赖定义在 [`gear_sonic/pyproject.toml`](../gear_sonic/pyproject.toml)。原生部署依赖和平台要求见[依赖说明](../requirements/README.md)及[部署安装参考](NATIVE_SETUP.md)。
+验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6、TensorRT 10.13.3.9、ONNX Runtime C++ 1.16.3。CUDA、TensorRT 和 ONNX Runtime 安装见 [原生依赖](NATIVE_SETUP.md)。
 
 ```bash
-git clone --depth 1 https://github.com/QinnyuLan/SONIC_unitree_h2.git
-cd SONIC_unitree_h2
+sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
+  libeigen3-dev nlohmann-json3-dev zlib1g-dev
+export TensorRT_ROOT="$HOME/TensorRT"
+bash scripts/build_controller.sh
 python3 tools/verify_release.py
 ```
 
-### 编译 C++ 控制器
+生成 `gear_sonic_deploy/target/release/sonic_h2_runtime` 和 `sonic_g1_planner`。仅构建 runtime 时加 `-DBUILD_PLANNER=OFF`。runtime 启动只读取发布的 encoder / decoder，不读取动作库或 planner 模型。首次运行会在本机生成 TensorRT 缓存。
 
-先安装 CUDA、TensorRT 和 ONNX Runtime C++。检查脚本默认从 `/opt/onnxruntime` 查找 ONNX Runtime 头文件与动态库；`TensorRT_ROOT` 应指向 TensorRT 的安装目录，例如 `$HOME/TensorRT`。
-
-Ubuntu 编译依赖：
+安装 [uv](https://docs.astral.sh/uv/getting-started/installation/) 后，按需选择 Python 环境：
 
 ```bash
-sudo apt update
-sudo apt install build-essential cmake pkg-config libzmq3-dev \
-  libeigen3-dev libmsgpack-dev libyaml-cpp-dev nlohmann-json3-dev cppzmq-dev zlib1g-dev
+./install.sh inputs    # .venv_inputs：回放及指令发送
+./install.sh sim2sim   # .venv_sim：MuJoCo + DDS，也可执行回放
+./install.sh teleop    # .venv_teleop：PICO、姿态转换与运动学
 ```
 
-编译控制器：
-
-```bash
-export TensorRT_ROOT="$HOME/TensorRT"
-./verify_deploy.sh
-bash scripts/build_controller.sh
-```
-
-下述三个流程均使用该控制器。TensorRT engine 会在目标机器上根据 ONNX 模型生成。每个启动控制器的终端都需要设置 `TensorRT_ROOT`。
+回放和仿真无需 PyTorch。遥操作使用 CPU PyTorch 完成姿态数学计算。
 
 ## Sim2Sim
 
-安装仿真环境：
+终端 1 启动仿真：
 
 ```bash
-./install.sh sim2sim
-source .venv_sim/bin/activate
-python3 tools/verify_release.py --imports --sim
-```
-
-终端 1，在仓库根目录启动仿真：
-
-```bash
-source .venv_sim/bin/activate
 bash scripts/run_h2_paper_sim.sh
 ```
 
-终端 2，同样从仓库根目录启动控制器：
+终端 2 启动 runtime：
 
 ```bash
-export TensorRT_ROOT="$HOME/TensorRT"
-bash gear_sonic_deploy/scripts/run_h2_sim2sim.sh --print-command
-bash gear_sonic_deploy/scripts/run_h2_sim2sim.sh
+bash scripts/run_runtime.sh sim
 ```
 
-仿真和控制器均使用 DDS domain `0`。控制器加载 `models/released`、`reference/example` 动作集及 nominal Kp/Kd。仿真配置见 [`h2_native_sonic_unitree_ros_loop.yaml`](../gear_sonic/utils/mujoco_sim/wbc_configs/h2_native_sonic_unitree_ros_loop.yaml)。
+runtime 用三秒从测量姿态过渡到默认站姿，随后运行站立策略，等待指令。两端默认使用 loopback、DDS domain 0；更换 domain 时，在两个终端设置相同的 `DDS_DOMAIN`。仿真初始启用弹性支撑，准备好后通过仿真窗口控制解除。
+
+终端 3 发送一个 G1 动作：
+
+```bash
+.venv_sim/bin/python -m gear_sonic.sources.motion_replay \
+  gear_sonic_deploy/reference/example/walking_quip_360_R_002__A428
+```
+
+动作结束或发送端退出后回到站立。发送端的 `Ctrl+C` 释放其指令通道；runtime 的 `Ctrl+C` 结束控制并发送阻尼指令。
+
+## 动作回放与离线 text2motion
+
+两者统一使用 `motion_replay`。支持单个 SONIC CSV 动作目录，或者包含以下字段的 NPZ：
+
+| 字段 | 形状 | 含义 |
+|---|---|---|
+| `joint_pos` | `[N,29]` | G1 semantic 顺序的绝对关节角，rad |
+| `joint_vel` | `[N,29]`，可选 | rad/s；省略则通过差分计算 |
+| `root_quat` | `[N,4]` | 世界坐标系根旋转，wxyz |
+| `fps` | 标量 | 原动作帧率 |
+
+CSV 读取 `joint_pos.csv`、可选的 `joint_vel.csv` 和 `body_quat.csv` 中的第一个四元数，默认 50 Hz，其他帧率用 `--fps` 指定。关节顺序见 [协议](ARCHITECTURE.md#joint-order)。
+
+```bash
+.venv_inputs/bin/python -m gear_sonic.sources.motion_replay generated_motion.npz --inspect
+.venv_inputs/bin/python -m gear_sonic.sources.motion_replay generated_motion.npz
+```
+
+`--speed` 同时调整播放速度与关节速度。`--loop` 仅适用于首尾连续的动作。所有 G1 回放均发送未来 `0.0, 0.1, …, 0.9` 秒的稀疏 10 帧。离线 text2motion 结果需先导出为 G1 动作，本仓库不运行文本生成模型。
 
 ## Sim2Real
 
-在 [`h2_deploy.env`](../gear_sonic_deploy/config/h2_deploy.env) 中设置机器人网卡、DDS domain、动作集与关节增益。默认网卡名为 `eno1`，应修改为实际连接机器人的网卡。启动控制前确认急停和支撑措施。
+在 [`h2_deploy.env`](../gear_sonic_deploy/config/h2_deploy.env) 设置机器人网卡、DDS domain、手部后端和增益。准备好支撑与急停后运行：
 
 ```bash
-export TensorRT_ROOT="$HOME/TensorRT"
-./verify_deploy.sh
-bash gear_sonic_deploy/scripts/run_h2_sim2real_four_kp.sh --print-command
-bash gear_sonic_deploy/scripts/run_h2_sim2real_four_kp.sh
+bash scripts/run_runtime.sh real --print-command
+bash scripts/run_runtime.sh real
 ```
 
-脚踝 pitch、脚踝 roll 和膝盖的增益缩放分别由配置文件控制。该入口使用动作回放，不需要 planner。实机实验前应先完成仿真验证。
+启动器显示目标网卡，输入 `RUN` 后开始控制，并自动过渡到默认站姿。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接已有 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
 
-<a id="planner"></a>
+## Planner
 
-## Planner 下载
-
-VR 部署使用 [nvidia/GEAR-SONIC](https://huggingface.co/nvidia/GEAR-SONIC) 提供的共享 G1 planner：
+下载共享 G1 planner：
 
 ```bash
 uv venv .venv_download --python 3.10
 uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python download_from_hf.py --planner-only
-python3 tools/verify_release.py --require-planner
 ```
 
-下载目标为 `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx`，与 VR 启动脚本一致。脚本固定上游版本并校验 SHA256，已有正确文件时直接复用。该权重由 Git 忽略；校验值、缓存位置和手动下载方法见 [planner 下载说明](PLANNER.md)。
+模型路径保持 `gear_sonic_deploy/planner/target_vel/V2/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
 
-<a id="vr-teleoperation"></a>
+在 runtime 运行时，另开终端启动服务：
+
+```bash
+bash scripts/run_planner.sh
+```
+
+再开终端发送规划请求：
+
+```bash
+.venv_inputs/bin/python -m gear_sonic.sources.planner_command \
+  --mode 1 --speed 0.3 --movement 1 0 0
+```
+
+planner 独立完成推理、轨迹混合及稀疏参考输出；runtime 只接收结果。请求停止后回到站立。`--publish-only` 只在 5561 端口发布结果，供遥操作适配端组合下肢参考，不直接占用 runtime 身体通道。
 
 ## VR 遥操作
 
-先完成控制器编译与 planner 下载，再安装 Python 环境，并按照 [VR 设备设置指南](VR_SETUP.md)启动 XRoboToolkit PC Service、配对 PICO 头显。
+完成 [PICO 设备配置](VR_SETUP.md) 并启动仿真或实机 runtime 后，分别在独立终端执行：
 
 ```bash
-./install.sh teleop
-source .venv_teleop/bin/activate
-```
-
-终端 1，在仓库根目录启动 PICO 输入进程：
-
-```bash
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh pico --print-command
+# 设备读取与标定
 bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh pico
+# 转换为身体、头部和手部三路指令
+bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh bridge
+# 可选：摇杆行走和 VR 下肢规划
+bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh planner
 ```
 
-终端 2，同样从仓库根目录启动机器人控制器：
+全身姿态模式发送 SMPL，PICO 的 VR 模式发送腕部/头部三点目标。`bridge --pose-kind vr` 可让姿态模式也使用三点目标。没有 planner 时，VR 使用站立下肢参考。SMPL 为间隔 20 ms 的 10 帧；实时输入窗口约引入 180 ms 缓冲延迟。
+
+头部 pitch/yaw 和灵巧手走独立通道，不进入身体 policy。头部设置在 [`h2_head_adjust.env`](../gear_sonic_deploy/config/h2_head_adjust.env)，手部后端在 `h2_deploy.env`。PICO 状态反馈端口改为 **5559**。跨机器时显式设置 runtime 的监听地址与发送端 endpoint，并同步系统时间。
+
+## 独立头部和手部控制
 
 ```bash
-export TensorRT_ROOT="$HOME/TensorRT"
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh deploy --print-command
-bash gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh deploy
+.venv_inputs/bin/python -m gear_sonic.sources.peripherals head --pitch 0.3 --yaw -0.2
+.venv_inputs/bin/python -m gear_sonic.sources.peripherals hands --left '[0,0,0,0,0,0,0]'
 ```
 
-`deploy` 角色控制实机。网卡与增益由 [`h2_deploy.env`](../gear_sonic_deploy/config/h2_deploy.env) 配置，头部与手部由 [`h2_head_adjust.env`](../gear_sonic_deploy/config/h2_head_adjust.env) 配置，默认使用 Inspire 灵巧手与固定头部朝向。
+头部单位为 rad，指令经过关节限位和速度限制，超时缓慢回中。手部采用 7 维 Dex3 兼容目标；Inspire 将其映射为手指闭合度，须先松开扳机再允许闭合。手部超时停止发布，不生成新的开合动作。身体来源切换不会覆盖头手指令。
 
-## 模型与验证
-
-三个入口均使用 `models/released`。发布权重是直接微调后的 ONNX，无需合并适配器。接口与文件校验值见[模型说明](../models/released/README.md)。
+## 验证
 
 ```bash
-# 文件和模型校验，不连接设备。
-python3 tools/verify_release.py
-# 同时要求 planner 存在且校验通过。
-python3 tools/verify_release.py --require-planner
-# 编译后，从测试所需的工作目录执行 C++ 测试。
 sudo apt install libgtest-dev
 bash scripts/build_controller.sh -DBUILD_TESTING=ON
 ctest --test-dir gear_sonic_deploy/build --output-on-failure
+source gear_sonic_deploy/scripts/setup_env.sh
+.venv_sim/bin/python tools/check_runtime.py
+.venv_sim/bin/python tools/check_runtime.py --planner
 ```
 
-CPU/GPU 推理及 C++ 测试结果见[复现记录](../release/REPRODUCIBILITY.md)。这些检查不替代新环境中的实时仿真和实机稳定性验证。可选资源与下载排除项见[仓库维护说明](LAYOUT.md)。
+集成检查使用实际模型、合成机器人状态和私有 IPC 通道，不启动 DDS 或连接硬件，覆盖默认站立、四种身体输入、超时、来源切换以及头手独立性。已完成检查的范围见 [复现记录](../release/REPRODUCIBILITY.md)。

@@ -7,29 +7,29 @@
     "vr_teleoperation"
   ],
   "source_commit": "4716be4bcc5f8c61c5f26e946905036f78eee478",
-  "previous_release_commit": "906fdfc3ba5c0d70acfd10e36da6f0ddec5ced88",
-  "file_count": 1350,
-  "total_bytes": 317513113,
+  "previous_release_commit": "aa4b9a4d5e515c79b229c7aa88b70b8403f09423",
+  "file_count": 1344,
+  "total_bytes": 316709753,
   "components": {
     "(root)": {
       "files": 11,
-      "bytes": 23623
+      "bytes": 24218
     },
     "docs": {
-      "files": 9,
-      "bytes": 24240
+      "files": 11,
+      "bytes": 39495
     },
     "external_dependencies": {
       "files": 195,
       "bytes": 45565580
     },
     "gear_sonic": {
-      "files": 156,
-      "bytes": 46523657
+      "files": 165,
+      "bytes": 46549535
     },
     "gear_sonic_deploy": {
-      "files": 953,
-      "bytes": 101315933
+      "files": 924,
+      "bytes": 100408861
     },
     "legal": {
       "files": 4,
@@ -37,23 +37,31 @@
     },
     "models": {
       "files": 6,
-      "bytes": 123998088
+      "bytes": 123998105
     },
     "release": {
-      "files": 6,
-      "bytes": 31832
+      "files": 8,
+      "bytes": 37269
     },
     "requirements": {
-      "files": 6,
-      "bytes": 6011
+      "files": 7,
+      "bytes": 6159
+    },
+    "runtime": {
+      "files": 5,
+      "bytes": 38257
     },
     "scripts": {
-      "files": 2,
-      "bytes": 1589
+      "files": 4,
+      "bytes": 3446
+    },
+    "sources": {
+      "files": 1,
+      "bytes": 8306
     },
     "tools": {
-      "files": 2,
-      "bytes": 12128
+      "files": 3,
+      "bytes": 20090
     }
   },
   "excludes": [
@@ -99,13 +107,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 3243,
-      "sha256": "3dd3ebf341e12aff2f653b54eec76c8cc6172a36e942d1b7a7c61de955bbe74d"
+      "bytes": 3511,
+      "sha256": "bfa45281cc5abfdb55ae3c43c38cca2fcd6e6cb818bba7321134030bea1656ec"
     },
     {
       "path": "README_CN.md",
-      "bytes": 3004,
-      "sha256": "49482f87461592779c0c4ea70ddbabf02fd65fa5be5d38620236d042970193d6"
+      "bytes": 3234,
+      "sha256": "b68ada7c017b3a538767193492cb178bb56d103ae56fad05ce475a0f52bdfa24"
     },
     {
       "path": "docs/ACKNOWLEDGMENTS.md",
@@ -113,39 +121,49 @@
       "sha256": "0d5c219b8e54d4327459b025f481a4b635edda288df9e3d73eaa9d9a6f534526"
     },
     {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 7352,
+      "sha256": "591a957f97657351cb6706cea8668d8dab7ab1c40ba490e8d34fef63ea6fcd8f"
+    },
+    {
+      "path": "docs/ARCHITECTURE_CN.md",
+      "bytes": 4225,
+      "sha256": "3598b0a12e2e08ad329b3cde638f2d2fbcd48f19745c68d8eba2a2247133e0cc"
+    },
+    {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 6192,
-      "sha256": "0140dd0f087b2b9d9566362bf1fd994d664a43a91f680c0fa4c983fb635c1fd6"
+      "bytes": 8091,
+      "sha256": "a34f26dc27e8a1c6eaba50119142ed61cf30eb724571a478504e48a07a9fe40f"
     },
     {
       "path": "docs/DEPLOYMENT_CN.md",
-      "bytes": 5590,
-      "sha256": "56733d37e4c6458c52c1274e6406ff1b931d1076d9d433632ee8d994ceb9db49"
+      "bytes": 6942,
+      "sha256": "3c553f3d5eba4d16c3b9862ca92b1adaaf8d3085fbec898b6b5f0228908a287c"
     },
     {
       "path": "docs/LAYOUT.md",
-      "bytes": 1679,
-      "sha256": "730fa2c7c038e8df265855287c38175fc1e1443a7e12addaf726ea9e638bfde9"
+      "bytes": 2004,
+      "sha256": "efbdc80e763a4e2ec589f96f4c34e036c4315cafaabf4d2df5f9faa7b8fed910"
     },
     {
       "path": "docs/NATIVE_SETUP.md",
-      "bytes": 2119,
-      "sha256": "ba19ae45145f318566072c3921df4d6866fcef043acf4333a7f5fe60bc7977d2"
+      "bytes": 2069,
+      "sha256": "cc30a88e8501f3c9338923ec5c9ef2529c689deb70e87e3ae953cd715a4d6e31"
     },
     {
       "path": "docs/PLANNER.md",
-      "bytes": 2979,
-      "sha256": "125001949268f3040e25663d2753a6416210154deff3d504878dc63b98f58951"
+      "bytes": 2970,
+      "sha256": "cb70c71a3df3b6986e696fe6c261d1f056ab217968f675d48578bdeecbfe26fb"
     },
     {
       "path": "docs/README.md",
-      "bytes": 659,
-      "sha256": "a82cec3a815f314e4753b7f99eaf07566bc8ffc37d6e6c869decda0601dbb693"
+      "bytes": 754,
+      "sha256": "435baf4d0dde1ab8be9fdd6b1fe68c00bca819b2d1ef96ecb48755a95daf700e"
     },
     {
       "path": "docs/VR_SETUP.md",
-      "bytes": 2443,
-      "sha256": "51d18288ad07eb104614fafb68239794fdac4ed2f9aa17a2c0e0860ff94c2e98"
+      "bytes": 2509,
+      "sha256": "df0610d99803bb972a9db14419cd42710d820434767d261bf0b147c5c0e5ab02"
     },
     {
       "path": "docs/references.bib",
@@ -1138,6 +1156,21 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
+      "path": "gear_sonic/commands/__init__.py",
+      "bytes": 280,
+      "sha256": "564dc575ab5fe6904b91b3320f22f7976bb03ecc8e7be8a2b516bddb2d9dfafd"
+    },
+    {
+      "path": "gear_sonic/commands/client.py",
+      "bytes": 1420,
+      "sha256": "9b1314339a5e9782a6af76603f6b8804f75cd986117a847c4add4ea6df7adb4c"
+    },
+    {
+      "path": "gear_sonic/commands/protocol.py",
+      "bytes": 4394,
+      "sha256": "2221b015e096643ffe9283a5fc3db86845bc57778a269bdadf02eaa799f45070"
+    },
+    {
       "path": "gear_sonic/data/assets/robot_description/unitree_mujoco/LICENSE",
       "bytes": 1559,
       "sha256": "a5d73fc4aca9074e3e6fe0b1a0ba763cf9514b2249b7390ed20fe8d53630bf25"
@@ -1654,18 +1687,48 @@
     },
     {
       "path": "gear_sonic/pyproject.toml",
-      "bytes": 1056,
-      "sha256": "41c9f1585e6468e2733573a10f2e7c2acbd8ec5a26aef86a539ec743eac814f5"
+      "bytes": 1083,
+      "sha256": "89b1342ee3baedd01dabff9a5b1d9449d351756c8052e46a223a128a8d96d2ac"
     },
     {
       "path": "gear_sonic/scripts/pico_manager_thread_server.py",
-      "bytes": 119553,
-      "sha256": "b22ddb775d2e5465cdc6ebf76807764dad75686e1671bd97793289cd02dd6f7b"
+      "bytes": 119889,
+      "sha256": "1211281092991b9b4dfd434cea0a2d57f3dce00b0b1b8128afa6e9d2e1a5b2d5"
     },
     {
       "path": "gear_sonic/scripts/run_sim_loop.py",
       "bytes": 3264,
       "sha256": "d9a08b0a95e4d4a778f082f0582e7bf964f9f6cf3eddcc194d86bef4526e6e0c"
+    },
+    {
+      "path": "gear_sonic/sources/__init__.py",
+      "bytes": 66,
+      "sha256": "3dc5ce0f0cd04e08daa60c0ef11a3136b2ac6d301cd7927039b097e7ea8c2502"
+    },
+    {
+      "path": "gear_sonic/sources/motion_replay.py",
+      "bytes": 4663,
+      "sha256": "eb07cf631431e0f7a1ee146d27712ad534d69e8e48a43f90ad092de7ca7fd18b"
+    },
+    {
+      "path": "gear_sonic/sources/peripherals.py",
+      "bytes": 1606,
+      "sha256": "5681103700ce48d85e4cae0968fbe955fd5b0fe001f2e5d23a676e4cf61c4277"
+    },
+    {
+      "path": "gear_sonic/sources/planner_command.py",
+      "bytes": 1149,
+      "sha256": "b0db9818f79b9a359e8b43ef50009f6824117d72643bf5592c9d005b4d045c25"
+    },
+    {
+      "path": "gear_sonic/sources/teleop.py",
+      "bytes": 8301,
+      "sha256": "a166912115bf525141cd9f70aa5ef096b7aecfc058887f3194a75579cc181c52"
+    },
+    {
+      "path": "gear_sonic/tests/commands/test_sources.py",
+      "bytes": 3030,
+      "sha256": "e7066d9587c37cc317afa4d2cd3fe59efa1cb4d242b66fc9677000d45cc287b5"
     },
     {
       "path": "gear_sonic/tests/sim/test_motor_response.py",
@@ -1839,8 +1902,8 @@
     },
     {
       "path": "gear_sonic/utils/teleop/h2_vr3pt_kinematics.py",
-      "bytes": 2928,
-      "sha256": "6df830452da44860f200f8ec8af8a2360e1188444d7ecd8bb358ca86e8ae96a3"
+      "bytes": 3534,
+      "sha256": "3fe98bfaf0ae958d06746abfd3c0dc096407a3c4b2397f689362c364d51a43a1"
     },
     {
       "path": "gear_sonic/utils/teleop/head_pose_command.py",
@@ -1934,8 +1997,8 @@
     },
     {
       "path": "gear_sonic_deploy/CMakeLists.txt",
-      "bytes": 10527,
-      "sha256": "467883872614e32e7c011db0efe6365b4fc878b135d91be087c92d70dc84178f"
+      "bytes": 10515,
+      "sha256": "e7469a0ba29201b7eab17d2d7e1f63107326d03b415cacd844aa20c3b46d535f"
     },
     {
       "path": "gear_sonic_deploy/cmake/FindTensorRT.cmake",
@@ -1949,18 +2012,18 @@
     },
     {
       "path": "gear_sonic_deploy/config/h2_deploy.env",
-      "bytes": 1157,
-      "sha256": "58d9692688b4bd4fbbe6a00a1b2d76438de6b6a746cf4536e7896e7ccb571eee"
+      "bytes": 251,
+      "sha256": "663acd7b75618bbdcc6889d84a049daaca7ecf5be6040ae8fb80a1a8fafa0b6c"
     },
     {
       "path": "gear_sonic_deploy/config/h2_head_adjust.env",
-      "bytes": 597,
-      "sha256": "e99af83725facf94af512d2acff436da447670a884c65e6be81664ba66a24d99"
+      "bytes": 417,
+      "sha256": "356854eb9a299c38ab684dbb9a28ea809c923a4b0e2f134a709552237f266ae0"
     },
     {
       "path": "gear_sonic_deploy/deploy.sh",
-      "bytes": 28312,
-      "sha256": "89b076ed643e3d159af70103b0c78a2a39996e1d4ffa2627db3efec044020d86"
+      "bytes": 146,
+      "sha256": "25bccefb470a3ddb542c3fbeff30df2b5ed61d49ba34f6f1fc3a14969ef8080f"
     },
     {
       "path": "gear_sonic_deploy/policy/release/observation_config_h2_compact.yaml",
@@ -1974,8 +2037,8 @@
     },
     {
       "path": "gear_sonic_deploy/reference/REFERENCE_MOTION_TYPES.md",
-      "bytes": 914,
-      "sha256": "745c8c2023c13cb381b657a2ff41dac83b78c69620c9c070bcda46c96bc9719a"
+      "bytes": 1168,
+      "sha256": "598380b8cad3ba9b3592d5ef4ca7606dd2cef385294687c7cd650b050104d5f2"
     },
     {
       "path": "gear_sonic_deploy/reference/bones_072925_test/neutral_kick_R_001__A543_M/body_ang_vel.csv",
@@ -2553,24 +2616,19 @@
       "sha256": "c4d9e9c28f000b6b3fea6203664723742f21ba23a8284a979c5a7baa5fb067f4"
     },
     {
-      "path": "gear_sonic_deploy/scripts/run_h2_configured.sh",
-      "bytes": 2990,
-      "sha256": "9bc897b99b75f421c613add1e6fc94f550a09c8754f37a29e596fa6dc53ee7b3"
-    },
-    {
       "path": "gear_sonic_deploy/scripts/run_h2_sim2real_four_kp.sh",
-      "bytes": 248,
-      "sha256": "6b83bd0e394aa611b60e9dcccd897422a365ee166ba1c6cdf7dc0bc39994a0c2"
+      "bytes": 154,
+      "sha256": "d20b31c34ef9909b7652800eb5e2aa2aba02bebed0f34c55b2fcbaf2de7174be"
     },
     {
       "path": "gear_sonic_deploy/scripts/run_h2_sim2sim.sh",
-      "bytes": 2041,
-      "sha256": "793e21b8abdc36a09b974d81a470d2ce5ec1490d2bb5e9cd1adf7b3efe35f3b8"
+      "bytes": 153,
+      "sha256": "70b9c99eb2cde8f058ed87dbcc406dea98264f87bca34c660596a000780a068f"
     },
     {
       "path": "gear_sonic_deploy/scripts/run_h2_teleop_head_adjust.sh",
-      "bytes": 3096,
-      "sha256": "f83d502b7ebc73adfd4d289e169da75aec25ae0b2aa497d8f034ff6efc4c8b64"
+      "bytes": 1049,
+      "sha256": "0b6dd224b3e987374ee5c0d23d2f356e206c8269a1f17f836a6b4182feb5370e"
     },
     {
       "path": "gear_sonic_deploy/scripts/setup_env.sh",
@@ -2579,8 +2637,8 @@
     },
     {
       "path": "gear_sonic_deploy/src/CMakeLists.txt",
-      "bytes": 83,
-      "sha256": "803ff55a68e2141088786bea3caf8f72e052a98d97ada9f766f08b02c9a525bc"
+      "bytes": 52,
+      "sha256": "177384558f0cc86fb4875bf4e440baacdbc3eba87cf6a18077289ba4711e22fb"
     },
     {
       "path": "gear_sonic_deploy/src/TRTInference/CMakeLists.txt",
@@ -2618,34 +2676,14 @@
       "sha256": "4d3b183d9c735f20cea06c006d910f16c79427620ae0eac385dc6c764de2b11f"
     },
     {
-      "path": "gear_sonic_deploy/src/audio_thread/CMakeLists.txt",
-      "bytes": 176,
-      "sha256": "d7a3db896671e6a40f4571f0f336ba44f0671f2c3b7ea46b291862a8e194507b"
-    },
-    {
-      "path": "gear_sonic_deploy/src/audio_thread/audio_thread.cpp",
-      "bytes": 2183,
-      "sha256": "7f5640173e98bf9081ede5e88e3b580348cbfbb6675c69d8485fa3b5f8c70f46"
-    },
-    {
-      "path": "gear_sonic_deploy/src/audio_thread/audio_thread.hpp",
-      "bytes": 1025,
-      "sha256": "febe3af6ab681fa478b14bee0893b24e226a65b86913e32d8b9118d21da92998"
-    },
-    {
       "path": "gear_sonic_deploy/src/g1/CMakeLists.txt",
       "bytes": 39,
       "sha256": "8efdc74b5830efa010103bc6ab266291261588e113019b8dca063b0fb380229a"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/CMakeLists.txt",
-      "bytes": 8128,
-      "sha256": "3045d3ee2a439aff43303472cd3df48d8db89caf57564ea7e6c65bf652585600"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/cmake/ROS2.cmake",
-      "bytes": 4959,
-      "sha256": "b65a9b358e90fe936c7196daf63949d0003f35f4a88f4e2fd48131da01b1882f"
+      "bytes": 2516,
+      "sha256": "ab770d30a6db0e84fa2037f5bb1acef655ecbf3758004452f069b19bf5f6957d"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/config/fastrtps_profile.xml",
@@ -2664,23 +2702,13 @@
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/dex3_hands.hpp",
-      "bytes": 19419,
-      "sha256": "cba9e3317ab7aca24e71f70abcd641377ed91a1612ac387c29d55192bb27ab47"
+      "bytes": 19503,
+      "sha256": "daf34a75cd328b731ec2842336e5fa252c56d50fd9adf944164e259d91a44650"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/encoder.hpp",
       "bytes": 14510,
       "sha256": "0a541398b0e0e91e69f95de85fd8a141c3a7c46be8de8331440849bc85066f3b"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/error_monitor.hpp",
-      "bytes": 2971,
-      "sha256": "ce1246ff54511882e9b87a8074926935b249f08bec65bc575f46d8915fcc7903"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/file_sink.hpp",
-      "bytes": 1411,
-      "sha256": "37c39dfb7406dd81a5c02d38459488d59377b62144d9222a9cde8d4153ff91bd"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/fk.hpp",
@@ -2689,8 +2717,8 @@
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/h2_head_control.hpp",
-      "bytes": 1531,
-      "sha256": "8107483a02c769409619deda1523a4e2c3fe9c38ef1721a2701116a89c35cd0b"
+      "bytes": 1548,
+      "sha256": "e4d98c8073f0c6d05e088a72927c24985ced6f73c38894176995bf1915da7d7e"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/h2_lora_observation.hpp",
@@ -2703,69 +2731,9 @@
       "sha256": "c6bdfeeead329935f518616da065b2b7b15c57191c47c642e3c28978f8f16c5c"
     },
     {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/h2_vla_watchdog.hpp",
-      "bytes": 1378,
-      "sha256": "b0dfb71fae914165f50d63573a4f0f5b65a29f957475b02375826b704592d30b"
-    },
-    {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/hand_backend.hpp",
       "bytes": 824,
       "sha256": "6693b69585407fd0650b6f4746c0723fa4893ef50bba1aef550cd6fb138239d5"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/gamepad.hpp",
-      "bytes": 34604,
-      "sha256": "6e49b1faa4bcb63d5deadc319139eb2f9b3b6f366499f139fc070fbfc939d21b"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/gamepad_manager.hpp",
-      "bytes": 46962,
-      "sha256": "00cd1d5bed977be004c147bf152cdef1ffbb4a6de81b055f7a65fb1b4df5c355"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/input_command.hpp",
-      "bytes": 5347,
-      "sha256": "1241fae49875552eb1685ba565e8453ffd17d37881b94fe6d396b02fae497357"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/input_interface.hpp",
-      "bytes": 24981,
-      "sha256": "3eaeb51dbf74f0a03ba4391742aaed6181cd574d77ee4f8563af817eec959583"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/interface_manager.hpp",
-      "bytes": 14972,
-      "sha256": "e6b55aefe2c510fefaaf827de57951aa4f888481d3ba220bc40ad420977a014f"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/keyboard_handler.hpp",
-      "bytes": 34798,
-      "sha256": "e6067e5717c8bc7f92080ce045546d48f6eeb1b157fa5e446ca78c25bc8f5930"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/ros2_input_handler.hpp",
-      "bytes": 65772,
-      "sha256": "81490ca47246f1e0d612b7101202f425bacef12a095f737234c522ba3c4f6810"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/streamed_motion_merger.hpp",
-      "bytes": 23884,
-      "sha256": "119f9b999f6e58f6ca38a676bf9efff0267b9f9d1d7060770517e2d443c94bdc"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/zmq_endpoint_interface.hpp",
-      "bytes": 107467,
-      "sha256": "1b80446df41bddebc2262fa8e69446dc1e3be80035c8c078990f90a277df8ab5"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/zmq_manager.hpp",
-      "bytes": 55030,
-      "sha256": "99423b02cec6987b64fede2bb712657cfe5c81eb219feb7fa05ed2d159e332be"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/input_interface/zmq_packed_message_subscriber.hpp",
-      "bytes": 15965,
-      "sha256": "35d5142bfce39c0632e96dbb6f17316a0d200f044c62f1f7e9edabfa351452c4"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/inspire_hands.hpp",
@@ -2776,11 +2744,6 @@
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/localmotion_kplanner.hpp",
       "bytes": 29833,
       "sha256": "fd8d5ca6a11aa6be0a7802f3f131d23a61e777975265bcfc042a2cb8206727ca"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/localmotion_kplanner_onnx.hpp",
-      "bytes": 17201,
-      "sha256": "c9b70e04c6a1ddff3be83700342c48810b641907aa26847ec15bcc5034fcd9ba"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/localmotion_kplanner_tensorrt.hpp",
@@ -2803,26 +2766,6 @@
       "sha256": "8085f7dcdd0f265001ab18663ace0353e7f07bfa2fa5f6c005b9c0c8e9c5c9d6"
     },
     {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/ort_session.hpp",
-      "bytes": 8673,
-      "sha256": "9ceb0d2c8230c90f74703fe8c477cce2e9e0ee87ebbf8b5a21d0995ec03acdbe"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/output_interface/output_interface.hpp",
-      "bytes": 14799,
-      "sha256": "6e3d2434d7988c42e5b420dc49832c36c01d3e3c1f606cc9ab033f752ac09d08"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/output_interface/ros2_output_handler.hpp",
-      "bytes": 22824,
-      "sha256": "c84de8865a77c4a013eb57b191cdff0ba2b04756b626781f94651c3db4fbe270"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/output_interface/zmq_output_handler.hpp",
-      "bytes": 19106,
-      "sha256": "50c39ae3d7f10eb1ce8e9ef328615f0c8baf6b45851c89beb9d8c105d91f1ccf"
-    },
-    {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/policy_parameters.hpp",
       "bytes": 34070,
       "sha256": "b90e33a907baf60ede3d211f14dfbf3567650a04b2502940b3292892c3c2b9b4"
@@ -2831,11 +2774,6 @@
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/robot_parameters.hpp",
       "bytes": 5772,
       "sha256": "ca6593d0ebb847959accd477ec2dd149ed3eebf1917a0e8837a901652a66e8f1"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/state_logger.hpp",
-      "bytes": 12291,
-      "sha256": "17a0ded3b88855b9942e52a955e4d9ba13b9fcacd787f23613f673e761fb0291"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/include/utils.hpp",
@@ -2853,24 +2791,9 @@
       "sha256": "66ba14e7f40b4872ed34f673ff0eeb7d866fd77f69910edbbb18bf6a2f4a02f6"
     },
     {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/file_sink.cpp",
-      "bytes": 2743,
-      "sha256": "093d74b4637a52e36d5f226c1791771a7f37e494aac9b767825f09fb8ea3040d"
-    },
-    {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/fk.cpp",
       "bytes": 5230,
       "sha256": "2b73b889888a470fa49c6b8bf9e4be880be4c6e7344b698042f473f308905d43"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/g1_deploy_onnx_ref.cpp",
-      "bytes": 296317,
-      "sha256": "08f5d4da47e8d72c9e9056e8372f79177b7f05ff9d7d5726276f171e8d6cada5"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/src/state_logger.cpp",
-      "bytes": 25022,
-      "sha256": "76dcf464d95e53f4437225e561127c1859816d9eaa6a5a53fe967ac6cb3bf0af"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/unit_tests/fixtures/g1_kinematics.xml",
@@ -2914,18 +2837,13 @@
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/unit_tests/test_inspire_hands.cpp",
-      "bytes": 6905,
-      "sha256": "68bbb47359d41571361fc5d034530e2da204311c3383fae7ecbab9b6763596ed"
+      "bytes": 5523,
+      "sha256": "5e4fc7d7f99fc2eb0ecb858758be7ba99be125cc42538e442bab381eb97ee04e"
     },
     {
       "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/unit_tests/test_main.cpp",
       "bytes": 133,
       "sha256": "6e5581504afa789d7447d337adb82df9bde9253c0293d80eb25332d8503e124a"
-    },
-    {
-      "path": "gear_sonic_deploy/src/g1/g1_deploy_onnx_ref/unit_tests/test_streamed_motion_smpl_root.cpp",
-      "bytes": 1258,
-      "sha256": "251e06007e3ffbe70bb96c29457ad3f9d3e24a9aca598399981ddaeb0fb902ce"
     },
     {
       "path": "gear_sonic_deploy/thirdparty/unitree_sdk2/.devcontainer/Dockerfile.devcontainer",
@@ -6683,8 +6601,8 @@
     },
     {
       "path": "install.sh",
-      "bytes": 1335,
-      "sha256": "aedf19dd1855bf1ba927ecb6f210e0968bbecaf7d502d13359ec412142df33c4"
+      "bytes": 1432,
+      "sha256": "6a0e54d236d809a25dce49a6b2cc1be9e878da5f750e2fd80417f2164cffdaae"
     },
     {
       "path": "legal/Apache License - GEAR-SONIC.txt",
@@ -6708,8 +6626,8 @@
     },
     {
       "path": "models/released/README.md",
-      "bytes": 1266,
-      "sha256": "c8bef7e2cd6d405553a75c53a53b64870fc959f03d97627aca20b5f4b1e366a7"
+      "bytes": 1283,
+      "sha256": "f457126bb871812a3042a51663b172f5ccee7b217a3b8454dfe2fedf4e71babb"
     },
     {
       "path": "models/released/SHA256SUMS",
@@ -6743,18 +6661,18 @@
     },
     {
       "path": "release/REPRODUCIBILITY.md",
-      "bytes": 3704,
-      "sha256": "277d9d6407c07195e6bba5c1d50e054e24cff9834e4c9f9088737111d6159c4d"
+      "bytes": 4502,
+      "sha256": "3d5a74b411ac3cb17c100c374b3d79b84059628b8c7a372a490a2dcdcd6db0e5"
     },
     {
       "path": "release/cpp_tests.json",
-      "bytes": 22695,
-      "sha256": "7f3903b3fb5e91a1c0cff66f58392a384a19020868f281a81b1b4fea25219183"
+      "bytes": 21383,
+      "sha256": "a5bd9b42fa929445698b7a4e707405859e449dd845c42912251bbdc01b802219"
     },
     {
       "path": "release/deployment_validation.json",
-      "bytes": 884,
-      "sha256": "fdc0d22bb81f75c178fe494173cf6ca8d3400642a18985168f43b3f3a765c26f"
+      "bytes": 1215,
+      "sha256": "9ac4e75fc6413fbcc51841f6713287248cb11a1aee40a6a7c4b238a473d953c6"
     },
     {
       "path": "release/gpu_model_validation.json",
@@ -6772,14 +6690,29 @@
       "sha256": "89edda3a8d4e6d3b9010899499fb53d0b920d7d5ff6522f3da821f71af9d4c98"
     },
     {
+      "path": "release/runtime_sim_validation.json",
+      "bytes": 172,
+      "sha256": "85913b825d2e4fc5899404c9a389d8b6ae9029d0d81cc4ce6bae717cb0a57aaa"
+    },
+    {
+      "path": "release/runtime_tests.json",
+      "bytes": 5448,
+      "sha256": "5cb22519386b3ce317cc0291d68b0250114abe7dfb7b8a65abeefcd666a2aacc"
+    },
+    {
       "path": "requirements/README.md",
-      "bytes": 1405,
-      "sha256": "4c1d230486d9c63f262921ea1bdd2193a46ea9d350c1141dc7b0f019842ff555"
+      "bytes": 1511,
+      "sha256": "058fb2d87404883d9e0227564b399894c4f5591d10071093790cefa57917fc1a"
     },
     {
       "path": "requirements/download.txt",
       "bytes": 107,
       "sha256": "aa2878b5eae957df714cec70e9c9a563f9724fc791750b5710a23a31ad305120"
+    },
+    {
+      "path": "requirements/inputs.lock",
+      "bytes": 42,
+      "sha256": "66aa16a3fdbe530252fcac2fff720704b3ec57b4bb7837411af42f736f271403"
     },
     {
       "path": "requirements/model_validation.txt",
@@ -6802,14 +6735,59 @@
       "sha256": "93c4ab5f175d24229e46ec70a8ecaeb6db8b36e3f54d8005808044c060acbc92"
     },
     {
+      "path": "runtime/include/command.hpp",
+      "bytes": 7110,
+      "sha256": "007fce4edeee9da093ca6bb008bf3e2b1c8b445f55d54431e7cfc2ac6478d81a"
+    },
+    {
+      "path": "runtime/include/observations.hpp",
+      "bytes": 6638,
+      "sha256": "377bbbdea3d7263b1025eb3830dbc6122729e61957c06af05593a525b1221b1d"
+    },
+    {
+      "path": "runtime/include/transport.hpp",
+      "bytes": 1484,
+      "sha256": "de97f7f1a3d33c1ec23ab9c86a3a97e3cba48352a6d9c1df6ab5e8fe306108cf"
+    },
+    {
+      "path": "runtime/src/main.cpp",
+      "bytes": 15612,
+      "sha256": "270e1414d8b730ca97022cc8743c1c6dbb8fa8df89f86088159b9fcf13588f61"
+    },
+    {
+      "path": "runtime/tests/test_runtime.cpp",
+      "bytes": 7413,
+      "sha256": "2a59bad11e27c289915efe1b41e55b55083f8f584f9c0a9259a1b628806417db"
+    },
+    {
       "path": "scripts/build_controller.sh",
       "bytes": 357,
       "sha256": "b39985f6c39904d716716b0f6eb6406ca437c9bb66ce553dfd4a6c0e00cb9d14"
     },
     {
       "path": "scripts/run_h2_paper_sim.sh",
-      "bytes": 1232,
-      "sha256": "b23385081be05a8bacf8a6c41ed139cf4df139a8a93c2e623b7400a54c8ea9dc"
+      "bytes": 1247,
+      "sha256": "67daceadacb5e5f0afad0298139df3fbf745e20eb2dbf0dc8574395f2f3ebcef"
+    },
+    {
+      "path": "scripts/run_planner.sh",
+      "bytes": 233,
+      "sha256": "a6f55c5b4264acc3cb2e57f2b7586cb5c668810f655fb7407c98448020aa1eb5"
+    },
+    {
+      "path": "scripts/run_runtime.sh",
+      "bytes": 1609,
+      "sha256": "e77c1a3ab9fc55e22c20eee0a180299e02e40709169bdf4fa0a66e096f111d3e"
+    },
+    {
+      "path": "sources/planner/main.cpp",
+      "bytes": 8306,
+      "sha256": "d3e265707b4fbc8413ff63c8a8d93d794a29704060868f6ef068c3a6d97c0d69"
+    },
+    {
+      "path": "tools/check_runtime.py",
+      "bytes": 7858,
+      "sha256": "782ae74f488be326b628b980ea3b7e99d2e139e109cb8a4ec4920d919cc70ffa"
     },
     {
       "path": "tools/validate_released_models.py",
@@ -6818,8 +6796,8 @@
     },
     {
       "path": "tools/verify_release.py",
-      "bytes": 6143,
-      "sha256": "45eaec08e0c1ad70ed9eefb45cff2719d9c1875080d997fca5934c9cbed2c18a"
+      "bytes": 6247,
+      "sha256": "2fb29a795c8769abf03829a5edf996d03265706bd6e424a74f2bfaa383d99873"
     },
     {
       "path": "verify_deploy.sh",
