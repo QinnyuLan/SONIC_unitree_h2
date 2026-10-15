@@ -1,118 +1,113 @@
 # Unitree H2 部署
 
-[README](../README_CN.md) · [English](DEPLOYMENT.md) · [架构与协议](ARCHITECTURE_CN.md)
+[README](../README_CN.md) · [English](DEPLOYMENT.md) · [故障排查](TROUBLESHOOTING_CN.md)
 
-所有命令在仓库根目录执行。先启动 H2 policy runtime，使机器人以默认姿态站立，再独立启动动作回放、planner 或遥操作发送端。
+所有命令均在仓库根目录执行。仿真使用三个终端：**仿真器 → policy runtime → 输入端**；实机只需 runtime 和输入端两个终端。
 
-## 安装
+- [准备环境](#准备环境)
+- [Sim2Sim：动作回放或键盘 planner](#sim2sim)
+- [Sim2Real：分阶段验证与实机操作](#sim2real)
+- [播放指定动作](#动作回放)
+- [Planner 安装与程序化控制](#planner)
+- [VR 遥操作](#vr-遥操作)
+- [独立头部和手部控制](#独立头部和手部控制)
 
-如果此前没有递归克隆，先运行 `git submodule update --init --recursive`。上游依赖固定在仓库记录的提交，详见[第三方依赖](../third_party/README.md)。
+## 准备环境
 
-验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6、TensorRT 10.13.3.9。CUDA 和 TensorRT 安装见 [原生依赖](NATIVE_SETUP.md)。
+先按[原生依赖说明](NATIVE_SETUP.md)安装系统依赖、CUDA 和 TensorRT，并安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)。已验证环境为 Ubuntu x86_64、Python 3.10.20、CUDA 12.6 和 TensorRT 10.13.3.9。
+
+随后编译 runtime，安装回放和仿真环境：
 
 ```bash
-sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
-  libeigen3-dev nlohmann-json3-dev
+git submodule update --init --recursive
 export TensorRT_ROOT="$HOME/TensorRT"
+export CUDAToolkit_ROOT=/usr/local/cuda-12.6
 bash scripts/build_controller.sh
+./install.sh inputs
+./install.sh sim2sim
 python3 tools/validation/verify_release.py
 ```
 
-编译生成 `build/runtime/bin/sonic_h2_runtime`。runtime 启动读取发布的 encoder / decoder 及其 `deployment_manifest.json`。planner 为独立 Python 服务。首次运行会在本机生成 TensorRT 缓存。
+将两个 SDK 路径改为本机实际安装位置，并在各启动终端中设置。编译产物为 `build/runtime/bin/sonic_h2_runtime`；启动脚本自动选择 `models/sonic_h2_released/` 中的 H2 模型。以下命令使用各环境的 Python 完整相对路径，无需手动激活环境。
 
-安装 [uv](https://docs.astral.sh/uv/getting-started/installation/) 后，按需选择 Python 环境：
-
-```bash
-./install.sh inputs    # .venv_inputs：回放及指令发送
-./install.sh planner   # .venv_planner：TensorRT Python planner
-./install.sh sim2sim   # .venv_sim：MuJoCo + DDS，也可执行回放
-./install.sh teleop    # .venv_teleop：PICO、姿态转换与运动学
-```
-
-回放和仿真无需 PyTorch。遥操作使用 CPU PyTorch 完成姿态数学计算。
+需要 planner 时，继续完成 [planner 安装](#planner)；需要 VR 时，完成 [VR 配置](#vr-遥操作)。安装报错、GPU 启动异常等问题见[故障排查](TROUBLESHOOTING_CN.md)。
 
 ## Sim2Sim
 
-分别打开三个终端，均进入仓库根目录。
-
-终端 1：启动仿真器。
+### 终端 1：启动仿真器
 
 ```bash
 bash scripts/run_h2_paper_sim.sh
 ```
 
-终端 2：启动 SONIC policy runtime。
+runtime 初始化期间保持弹力带支撑。
+
+### 终端 2：启动并开启 policy runtime
 
 ```bash
 bash scripts/run_sonic_h2_runtime.sh sim
 ```
 
-runtime 用三秒从测量姿态过渡到配置的站姿，显示 **[READY]** 后通过 PD 保持姿态，policy 尚未启用。在**终端 2** 按 **]** 或 **s** 开启 policy，无需回车；初始化结束前按下的启动键会被忽略，需要在就绪后重新按键。按 **o** 停止 policy 并进入阻尼模式，停止后需重新启动 runtime，不能直接按启动键恢复。两端默认使用 loopback、DDS domain 0；更换 domain 时，在两个终端设置相同的 `DDS_DOMAIN`。站立策略开始运行后，点击仿真窗口并按 **9** 解除弹力带，观察无支撑站立，再发送动作指令。
+1. 等待 **[READY]**。收到机器人状态后，runtime 用三秒过渡到配置的站姿，再通过 PD 保持姿态。
+2. 切换到**终端 2**，按 **]** 或 **s** 开启 policy，无需回车。**[READY]** 前按下的启动键会被忽略。
+3. policy 运行后，点击**仿真窗口**，按 **9** 解除弹力带。
+4. 确认无支撑站立稳定后，再发送动作。
 
-终端 3：启动交互式 motion replay。
+PD 等待阶段只保持关节姿态，第 2 步之后才启用 policy 平衡控制。仿真器与 runtime 默认使用 loopback DDS domain 0；如需更换，在终端 1、2 启动前设置相同的 `DDS_DOMAIN`。
+
+### 终端 3：选择一种输入
+
+**动作回放**
 
 ```bash
 .venv_inputs/bin/python -m interface.motion_replay --keyboard
 ```
 
-按 **1 / 2 / 3 / 4** 选择 G1 / G1 探索 / H2 / SMPL 集合，用 **上下方向键** 选择动作，按 **Enter** 播放。**空格** 暂停/继续；**n/p** 切换并播放下一条/上一条；**x** 停止并回到动作开头。仅选择动作不会自动播放。暂停、播放结束或退出时释放身体指令，runtime 回到站立。**q**、**Esc** 或 **Ctrl+C** 退出回放界面。
+| 终端 3 中的按键 | 操作 |
+|---|---|
+| `1` / `2` / `3` / `4` | 选择 G1 / G1 探索 / H2 / SMPL 集合 |
+| 上 / 下方向键 | 选择动作，不自动播放 |
+| Enter | 从头播放选中的动作 |
+| 空格 | 暂停 / 继续 |
+| `n` / `p` | 切换并播放下一条 / 上一条 |
+| `x` | 停止并回到开头，机器人返回站立 |
+| `q` / Esc / Ctrl+C | 退出回放 |
 
-使用 planner 时，保持终端 1、2 运行，退出 replay，将终端 3 改为：
+暂停、播放结束和退出都会释放身体输入，由 policy 返回站立。循环播放和其他按键见[接口说明](../src/interface/README.md#keyboard-playback)。
+
+**键盘 planner**
+
+先完成 [planner 安装](#planner)。退出回放程序后运行：
 
 ```bash
 bash scripts/run_planner.sh --keyboard
 ```
 
-该终端同时运行 TensorRT planner 工作进程和键盘面板。**1 / 2 / 3** 选择慢走 / 行走 / 跑步，**0** 选择静止；**W/S** 前进/后退，**A/D** 左右平移，**Q/E** 转向，**+/-** 调整速度。**空格** 停止并返回站立，**Esc** 或 **Ctrl+C** 退出面板及 planner 工作进程。完整按键及全部模式切换见[接口说明](../src/interface/README.md#planner-keyboard-control)。
+| 终端 3 中的按键 | 操作 |
+|---|---|
+| `0` / `1` / `2` / `3` | 选择静止 / 慢走 / 行走 / 跑步 |
+| 按住 `w` / `s` | 前进 / 后退 |
+| 按住 `a` / `d` | 左移 / 右移 |
+| `q` / `e` | 向左 / 向右调整朝向 |
+| `+` / `-` | 加速 / 减速 |
+| Enter | 激活 / 取消激活所选模式 |
+| 空格或 `x` | 清除请求，返回站立 |
+| Esc / Ctrl+C | 退出面板和 planner 工作进程 |
 
-两个输入面板均等待 runtime 的新鲜状态后才发送动作。状态中断后，回放会暂停且不会自动恢复，planner 会清除键盘指令。退出输入端后，仿真器和 runtime 继续运行。planner 需要单独安装环境、下载权重，首次构建引擎可能需要数分钟。安装与测试范围见 [planner 配置](PLANNER.md)和[验证记录](REPRODUCIBILITY.md)。
+等 planner 和 runtime 均就绪后再按移动键。仅选择模式或速度不会启动已停止的 planner。先以慢走模式和低速测试，完整按键见[planner 控制说明](../src/interface/README.md#planner-keyboard-control)。
 
-### 站姿配置与 runtime 按键
+### 切换输入与结束运行
 
-初始化以及 **[READY]** 阶段保持弹力带支撑。此时 PD 只保持关节姿态，按 **]** 或 **s** 后才开启 policy 平衡控制。按键在 runtime 所在终端生效，无需回车。**o** 将位置增益设为零、阻尼设为 8，停止控制并要求重启 runtime；无支撑的机器人可能在停止后倒下。
+切换输入时，先停止当前动作，退出终端 3 中的输入程序，再启动另一输入端。终端 1、2 保持运行。runtime 连接中断后，回放会暂停，planner 请求会清空；连接恢复后需要手动重新操作。
 
-站姿参考位于 [`config/runtime/standing_pose.json`](../config/runtime/standing_pose.json)。双腿统一采用：髋俯仰 **−0.10 rad**、膝关节 **0.25 rad**（约 **14°**）、踝俯仰 **−0.15 rad**，减小屈膝幅度并保留轻微弯曲。双臂位于身体两侧，肘部保留自然弯曲：肩俯仰 **0.25 rad**、左右肩侧摆分别为 **+0.10/−0.10 rad**、肘关节 **1.00 rad**。这组肩肘参考经过 policy 闭环验证，在保持双手位于身体两侧的同时减小躯干前倾。H2 的肘关节坐标带有几何偏置，零角度对应前臂朝前。该参考同时用于初始化、PD 等待，以及没有身体输入时的 policy 站立；仿真器的初始姿态与此预设一致。头部仍独立接收指令。
+结束运行时：
 
-可以通过 `--standing-pose /absolute/path/to/standing_pose.json` 指定其他参考，角度单位为 rad。`arm_joint_angles_rad` 中的 `shoulder_roll` 为左肩角度，右肩取相反数；省略该配置段时，手臂沿用模型的默认参考，以兼容原有仅配置腿部的文件。调整作用于输入 policy 的参考姿态，decoder 训练时的关节基准角与动作缩放保持原定义。修改参考后，先验证仿真中的站立和动作跟踪，再用于实机。
+1. 在回放中按 **x**，或在 planner 中按**空格**，使机器人回到站立，再退出输入端。
+2. 在仿真窗口按 **9** 重新挂上弹力带。
+3. 在**终端 2** 按 **o**，进入阻尼并锁定停止；恢复控制需重启 runtime。**Ctrl+C** 也会退出 runtime。
+4. 最后关闭仿真器。
 
-### Runtime 启动故障排查
-
-启动日志会分别显示 CUDA 设备初始化、TensorRT 缓存复用或引擎构建，以及 CUDA graph 捕获。缓存缺失或不兼容时，构建引擎可能需要数分钟；兼容的缓存会直接复用。两个模型全部就绪后才启动 DDS 控制。模型初始化阶段按 **Ctrl+C** 直接终止进程；初始化完成后则通过控制循环执行正常退出。
-
-如果长期停在 `Initializing CUDA device ...`，可在另一终端查看进程，不需要再次发起 GPU 查询：
-
-```bash
-ps -C sonic_h2_runtime,nvidia-smi -o pid,stat,etime,wchan:40,args
-```
-
-如果进程持续处于 `D` 状态，等待位置为 `uvm_gpu_retain_by_uuid`、`uvm_va_space_destroy` 等，说明正在 NVIDIA 驱动内部等待。信号可能要等内核调用返回后才能处理；不可中断等待中的进程，即使执行 `kill -9` 也无法立即结束。这种情况并非 TensorRT 引擎编译，不要反复启动 runtime 或 `nvidia-smi`。
-
-如果驱动持续阻塞，先保存其他工作，再安排重启主机。GPU reset 要求设备没有活跃客户端，且不保证能恢复已卡住的 GPU，参见 [NVIDIA 的恢复条件](https://docs.nvidia.com/deploy/nvidia-smi/index.html#r-gpu-reset)。恢复后，先确认 `nvidia-smi` 能正常返回，再重新启动三个终端。删除模型缓存不能解决驱动等待问题。
-
-## 动作回放
-
-统一使用 `interface.motion_replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ。
-
-| `motions/` 下的目录 | 输入类型 | 数量 |
-|---|---|---:|
-| `example_g1_replay` | G1 基础动作 | 13 |
-| `example_g1_explore_replay` | G1 探索动作 | 7 |
-| `example_h2_replay` | H2 原生动作 | 8 |
-| `example_smpl_replay` | SMPL 动作 | 8 |
-
-```bash
-.venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
-.venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_smpl_replay/walking_quip_360_R_002__A428
-.venv_inputs/bin/python -m interface.motion_replay generated_motion.npz --inspect
-```
-
-`--inspect` 只检查数据，不连接 runtime。类型优先读取集合的 `manifest.json` 和动作元数据；未标注且存在歧义的外部数据使用 `--type g1|h2|smpl`，不能覆盖已有的不同类型声明。`--fps` 覆盖原始帧率；CSV 未记录帧率时默认 50 Hz。`--speed` 同时调整播放速度与关节速度，`--loop` 仅适用于首尾连续的动作。
-
-G1、H2 发送未来 `0.0, 0.1, …, 0.9` 秒的 10 帧；SMPL 发送 `0.00, 0.02, …, 0.18` 秒的 10 帧，以匹配模型输入。H2 读取原生 31 维文件，排除头部并重排为 29 维原生身体关节，不使用其附带的 G1 映射文件。SMPL 使用独立的 SMPL 根旋转、关节点及腕部角度。头部仍通过独立通道控制。
-
-CSV 文件、NPZ 字段与坐标约定见[动作格式说明](../motions/README.md)，发送协议见[架构文档](ARCHITECTURE_CN.md)。
+阻尼模式不维持平衡；没有支撑时停止 runtime，机器人可能倒下。
 
 ## Sim2Real
 
@@ -140,84 +135,123 @@ Unitree H2 可能存在较大的仿真到实机差异。应重点检查连杆传
 
 上述条件与分阶段验证要求同时适用。任何条件尚未满足时，应先完成整改，再进行大动态动作测试。
 
-### 启动
+### 1. 配置实机参数
 
-在 [`h2_deploy.env`](../config/h2_deploy.env) 设置机器人网卡、DDS domain、手部后端和增益。准备好支撑与急停后运行：
+启动前编辑 [`config/h2_deploy.env`](../config/h2_deploy.env)：
+
+| 配置项 | 需要设置的内容 |
+|---|---|
+| `NETWORK_INTERFACE` | 工作站连接 H2 的网卡 |
+| `DDS_DOMAIN` | 与机器人一致的 DDS domain |
+| `HAND_BACKEND` | `none`、`inspire` 或 `dex3` |
+| 关节增益比例 | 与当前测试硬件配置对应的脚踝和膝关节比例 |
+
+增益比例同时作用于初始化和 policy 控制。使用 Inspire 灵巧手时，先按[手部服务指南](INSPIRE_HANDS_CN.md)部署独立的 PC2 服务，完成串口映射、自启动和看门狗配置。
+
+### 2. 终端 1：启动 runtime
+
+准备好机器人支撑和可立即操作的急停。先预览命令，再启动：
 
 ```bash
 bash scripts/run_sonic_h2_runtime.sh real --print-command
 bash scripts/run_sonic_h2_runtime.sh real
 ```
 
-启动器显示目标网卡，输入 `y`（也接受 `Y`）并回车后开始控制，并自动过渡到配置的站姿；直接回车或输入其他内容则取消。显示 **[READY]** 后，在 runtime 终端按 **]** 或 **s** 开启 policy；按 **o** 进入阻尼并锁定停止，恢复时需重启 runtime。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接机器人端 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
+核对输出的网卡和 DDS domain。输入 **y** 并回车后开始控制，直接回车或输入其他内容则取消。runtime 将关节过渡到站姿；等待 **[READY]** 后，在此终端按 **]** 或 **s** 开启 policy。先确认站立稳定，再发送动作。
 
-使用 Inspire 灵巧手时，先在 H2 PC2 部署仓库中的 `tools/robot_services/inspire_hands/` 服务。串口映射、开机自启动、看门狗和只读验收见[机器人端手部服务指南](INSPIRE_HANDS_CN.md)。该服务独立于身体 policy 运行。
+### 3. 终端 2：启动输入端
+
+使用上文的[动作回放或键盘 planner 命令](#终端-3选择一种输入)，无需启动仿真器。每个新动作都按分阶段验证顺序测试。
+
+结束时，先停止动作并退出输入端，支撑好机器人，再在 runtime 终端按 **o**。runtime 进入阻尼并停止，恢复控制需重新启动。该软件停止操作不能替代机器人急停。
+
+## 动作回放
+
+播放指定动作时，先检查数据，再在 policy 已运行的情况下回放：
+
+```bash
+.venv_inputs/bin/python -m interface.motion_replay \
+  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
+.venv_inputs/bin/python -m interface.motion_replay \
+  motions/example_h2_replay/walking_quip_360_R_002__A428
+```
+
+`--inspect` 只校验文件，不连接 runtime。回放支持 G1、原生 H2 和 SMPL 的 CSV 动作目录或 NPZ 文件。`--speed` 调整播放速度，`--fps` 覆盖源帧率；缺少明确类型元数据的外部动作可用 `--type g1|h2|smpl` 指定类型。`--loop` 仅用于首尾连续的动作。
+
+四个示例集合及输入字段见[动作格式说明](../motions/README.md)，稀疏采样和发送字段见[指令协议](ARCHITECTURE_CN.md)。
 
 ## Planner
 
-下载共享 G1 planner：
+首次使用键盘或程序接口前，完成安装和下载：
 
 ```bash
 uv venv .venv_download --python 3.10
 uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python tools/model_download/download_planner.py
+./install.sh planner
+python3 tools/validation/verify_release.py --require-planner
 ```
 
-模型下载到 `models/motion_planner_g1/planner_sonic.onnx`，已被 Git 忽略，详见 [下载说明](PLANNER.md)。
+模型路径为 `models/motion_planner_g1/planner_sonic.onnx`。来源和校验信息见 [planner 说明](PLANNER.md)；键盘操作使用 [Sim2Sim](#sim2sim) 中的终端 3 命令。
 
-执行 `./install.sh planner` 安装 planner 环境。安装脚本使用 `$TensorRT_ROOT/python` 中与 C++ SDK 配套的 TensorRT Python wheel；文件位于其他位置时设置 `TENSORRT_WHEEL`。
-
-上面的三终端流程中，在终端 3 同时启动键盘面板和推理工作进程：
+程序化控制时，先启动不带键盘面板的服务：
 
 ```bash
-bash scripts/run_planner.sh --keyboard
+bash scripts/run_planner.sh
 ```
 
-需要程序化控制时，使用不带 `--keyboard` 的 `bash scripts/run_planner.sh` 启动服务，再从独立客户端发送规划请求：
+确认 policy 已运行后，从另一终端发送请求：
 
 ```bash
 .venv_inputs/bin/python -m interface.planner.client \
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
-Python planner 独立完成 TensorRT 推理、轨迹混合及稀疏参考输出；runtime 只接收结果。请求停止后回到站立。`--publish-only` 只在 5561 端口发布结果，供遥操作适配端组合下肢参考，不直接占用 runtime 身体通道。键盘模式的工作进程日志保存在 `outputs/planner/`。
+退出请求客户端后返回站立。服务参数见[接口说明](../src/interface/README.md#planner-and-teleoperation)。
 
 ## VR 遥操作
 
-完成 [PICO 设备配置](VR_SETUP.md) 并启动仿真或实机 runtime 后，分别在独立终端执行：
+安装遥操作环境，并完成 [PICO 连接与标定配置](VR_SETUP.md)：
 
 ```bash
-# 设备读取与标定
+./install.sh teleop
+```
+
+按上面的仿真或实机流程启动 runtime 并开启 policy。以下进程各占一个终端：
+
+```bash
+# PICO 设备读取与标定
 bash scripts/run_h2_teleop_head_adjust.sh pico
-# 转换为身体、头部和手部三路指令
+```
+
+```bash
+# 发送身体、头部和手部指令
 bash scripts/run_h2_teleop_head_adjust.sh bridge
-# 可选：摇杆行走和 VR 下肢规划
+```
+
+需要摇杆行走时，先完成 [planner 安装](#planner)，再启动：
+
+```bash
 bash scripts/run_h2_teleop_head_adjust.sh planner
 ```
 
-全身姿态模式发送 SMPL，PICO 的 VR 模式发送腕部/头部三点目标。`bridge --pose-kind vr` 可让姿态模式也使用三点目标。没有 planner 时，VR 使用站立下肢参考。SMPL 为间隔 20 ms 的 10 帧；实时输入窗口约引入 180 ms 缓冲延迟。
-
-头部 pitch/yaw 和灵巧手走独立通道，不进入身体 policy。头部设置在 [`h2_head_adjust.env`](../config/h2_head_adjust.env)，手部后端在 `h2_deploy.env`。PICO 状态反馈端口改为 **5559**。跨机器时显式设置 runtime 的监听地址与发送端 endpoint，并同步系统时间。
+没有 planner 时，VR 使用站立下肢参考。头部设置位于 [`config/h2_head_adjust.env`](../config/h2_head_adjust.env)，实机手部后端位于 `config/h2_deploy.env`。头手指令通过独立通道发送；跨机器 endpoint 配置见[架构说明](ARCHITECTURE.md)。
 
 ## 独立头部和手部控制
 
+runtime 已运行时，按需在各自终端启动：
+
 ```bash
+# 头部 pitch/yaw，单位 rad
 .venv_inputs/bin/python -m interface.peripherals.client head --pitch 0.3 --yaw -0.2
+# 7 维 Dex3 兼容目标，Inspire 将其映射为手指闭合度
 .venv_inputs/bin/python -m interface.peripherals.client hands --left '[0,0,0,0,0,0,0]'
 ```
 
-头部单位为 rad，指令经过关节限位和速度限制，超时缓慢回中。手部采用 7 维 Dex3 兼容目标；Inspire 将其映射为手指闭合度，须先松开扳机再允许闭合。手部超时停止发布，不生成新的开合动作。身体来源切换不会覆盖头手指令。
+各客户端持续刷新目标，直到被中断。头部超时后回中；手部超时后停止发布，不生成新的开合指令。身体来源切换不重置头手通道。Inspire 接受闭合指令前，需先松开扳机。
 
-## 验证
+## 配置与检查
 
-```bash
-sudo apt install libgtest-dev zlib1g-dev
-bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir build/runtime --output-on-failure
-source scripts/setup_env.sh
-.venv_sim/bin/python tools/validation/check_runtime.py
-./install.sh planner
-.venv_planner/bin/python tools/validation/check_runtime.py --planner
-```
-
-集成检查使用实际模型、合成机器人状态和私有 IPC 通道，不启动 DDS 或连接硬件，覆盖默认站立、四种身体输入、超时、来源切换以及头手独立性。已完成检查的范围见 [复现记录](REPRODUCIBILITY.md)。
+- [站姿配置](../src/runtime/README.md#standing-pose-configuration)：参考角度与自定义站姿。
+- [故障排查](TROUBLESHOOTING_CN.md)：环境、编译、GPU 启动和连接异常。
+- [验证与复现](REPRODUCIBILITY.md)：离线测试、模型检查及已完成验证的范围。

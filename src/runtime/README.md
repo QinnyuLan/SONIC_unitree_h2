@@ -24,7 +24,7 @@ bash scripts/build_controller.sh
 bash scripts/run_sonic_h2_runtime.sh sim
 ```
 
-After **[READY]**, press **]** or **s** in this terminal to enable policy. Press **o** to stop with damping; restart the runtime to resume. No Enter is needed. Early start keys are discarded. Keep support engaged during PD waiting. The standing reference is in `config/runtime/standing_pose.json`; use `--standing-pose PATH` to select another reference. Details are in the [deployment guide](../../docs/DEPLOYMENT.md#standing-pose-and-runtime-keys).
+After **[READY]**, press **]** or **s** in this terminal to enable policy. Press **o** to stop with damping; restart the runtime to resume. No Enter is needed. Early start keys are discarded. Keep support engaged during PD waiting. The standing reference is in `config/runtime/standing_pose.json`; use `--standing-pose PATH` to select another reference. See [standing pose configuration](#standing-pose-configuration) below.
 
 The build produces `build/runtime/bin/sonic_h2_runtime`. Launch scripts supply the model directory and library paths. Hardware settings are in `config/h2_deploy.env`; teleoperation settings are in `config/h2_head_adjust.env`.
 
@@ -35,6 +35,12 @@ source scripts/setup_env.sh
 cmake -S src/runtime -B build/runtime -DCMAKE_BUILD_TYPE=Release
 cmake --build build/runtime --parallel 4
 ```
+
+## Standing pose configuration
+
+The standing reference is configured in [`config/runtime/standing_pose.json`](../../config/runtime/standing_pose.json). Both legs use hip pitch **−0.10 rad**, knee **0.25 rad** (about **14°**), and ankle pitch **−0.15 rad**. The preset reduces knee flexion while retaining a slight bend. Both arms rest at the sides with a slight elbow bend: shoulder pitch **0.25 rad**, shoulder roll **+0.10/−0.10 rad** (left/right), and elbow **1.00 rad**. This shoulder/elbow combination was checked with the running policy to reduce torso lean as well as keep the hands at the sides. H2's elbow coordinate is offset: an elbow value of zero points the forearm forward. The preset is used during initialization, PD waiting, and policy standing when no body input is active. The simulator's reset pose matches this preset. Head commands remain independent.
+
+To use another reference, pass `--standing-pose /absolute/path/to/standing_pose.json`. Angles are in radians. In `arm_joint_angles_rad`, `shoulder_roll` specifies the left shoulder angle; the right shoulder uses its negative. Omitting this section retains the model's nominal arm reference for compatibility with existing leg-only configurations. This changes the reference supplied to the policy, preserving the decoder's trained joint offsets and action scales. Validate adjusted references in simulation before hardware use.
 
 ## Tests
 

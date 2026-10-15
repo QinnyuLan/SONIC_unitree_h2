@@ -40,6 +40,7 @@ python3 tools/validation/verify_release.py
 - [架构与指令协议](docs/ARCHITECTURE_CN.md)：独立 runtime、稀疏参考、头部和手部通道。
 - [工程结构](docs/LAYOUT.md)：C++ runtime、Python 服务、模型、配置与动作示例。
 - [安装与部署](docs/DEPLOYMENT_CN.md)：环境配置、Sim2Sim、Sim2Real 和 VR 遥操作。
+- [故障排查](docs/TROUBLESHOOTING_CN.md)：安装、GPU 启动与连接问题。
 - [机器人端手部服务](docs/INSPIRE_HANDS_CN.md)：Inspire DDS/RS-485 部署、开机自启动与看门狗。
 - [发布模型说明](models/sonic_h2_released/README.md)：输入输出接口与文件校验。
 - [复现记录](docs/REPRODUCIBILITY.md)：模型验证、推理检查与测试结果。

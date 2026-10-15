@@ -1,118 +1,113 @@
 # Unitree H2 Deployment
 
-[README](../README.md) · [中文](DEPLOYMENT_CN.md) · [Architecture](ARCHITECTURE.md)
+[README](../README.md) · [中文](DEPLOYMENT_CN.md) · [Troubleshooting](TROUBLESHOOTING.md)
 
-Run commands from the repository root. The H2 runtime starts in a standing pose; motion replay, locomotion planning and teleoperation run as separate processes.
+Run all commands from the repository root. For simulation, use three terminals: **simulator → policy runtime → input interface**. On hardware, use the runtime and input terminals only.
 
-## Installation
+- [Prepare the environment](#prepare-the-environment)
+- [Sim2Sim: motion replay or keyboard planner](#sim2sim)
+- [Sim2Real: staged validation and operation](#sim2real)
+- [Replay a specific motion](#motion-replay)
+- [Planner setup and programmatic control](#planner)
+- [VR teleoperation](#vr-teleoperation)
+- [Independent head and hand commands](#independent-head-and-hand-commands)
 
-For an existing checkout, run `git submodule update --init --recursive`. Upstream dependencies are pinned to the commits recorded by this repository; see [third-party setup](../third_party/README.md).
+## Prepare the environment
 
-Validated on Ubuntu x86_64 with Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9. Follow [native setup](NATIVE_SETUP.md) for CUDA and TensorRT installation.
+Complete [native setup](NATIVE_SETUP.md) for system packages, CUDA and TensorRT, and install [uv](https://docs.astral.sh/uv/getting-started/installation/). The validated environment is Ubuntu x86_64, Python 3.10.20, CUDA 12.6 and TensorRT 10.13.3.9.
+
+Then build the runtime and install the replay and simulation environments:
 
 ```bash
-sudo apt install build-essential cmake pkg-config libzmq3-dev cppzmq-dev \
-  libeigen3-dev nlohmann-json3-dev
+git submodule update --init --recursive
 export TensorRT_ROOT="$HOME/TensorRT"
+export CUDAToolkit_ROOT=/usr/local/cuda-12.6
 bash scripts/build_controller.sh
+./install.sh inputs
+./install.sh sim2sim
 python3 tools/validation/verify_release.py
 ```
 
-The build produces `build/runtime/bin/sonic_h2_runtime`. It requires the released encoder, decoder and their `deployment_manifest.json` at startup. The planner runs independently as a Python service. TensorRT caches are generated locally on first use.
+Set the two SDK paths to your actual installations and make them available in each launch terminal. The runtime executable is `build/runtime/bin/sonic_h2_runtime`; launchers select the H2 model in `models/sonic_h2_released/` automatically. Use the explicit Python paths below; environment activation is optional.
 
-Install the Python environment needed for each process using [uv](https://docs.astral.sh/uv/getting-started/installation/):
-
-```bash
-./install.sh inputs    # .venv_inputs: replay and command clients
-./install.sh planner   # .venv_planner: TensorRT Python planner
-./install.sh sim2sim   # .venv_sim: MuJoCo and DDS; includes replay dependencies
-./install.sh teleop    # .venv_teleop: PICO, pose conversion and kinematics
-```
-
-Only install the environments you use. No Python training framework is needed for replay or simulation. The teleoperation environment uses CPU PyTorch for pose mathematics.
+For planner control, also complete [planner setup](#planner). For VR, complete [VR setup](#vr-teleoperation). Installation errors and GPU startup issues are covered in [Troubleshooting](TROUBLESHOOTING.md).
 
 ## Sim2Sim
 
-Run three separate terminals from the repository root.
-
-Terminal 1 — simulator:
+### Terminal 1: start the simulator
 
 ```bash
 bash scripts/run_h2_paper_sim.sh
 ```
 
-Terminal 2 — SONIC policy runtime:
+Keep the elastic support engaged while the runtime initializes.
+
+### Terminal 2: start and enable the policy runtime
 
 ```bash
 bash scripts/run_sonic_h2_runtime.sh sim
 ```
 
-The runtime transitions from the measured initial pose to the configured standing pose over three seconds, then prints **[READY]** and holds that pose with PD control. In **terminal 2**, press **]** or **s** to enable policy control; no Enter is needed. Start keys pressed before initialization finishes are discarded. Press **o** to stop with damping; this stop is latched and requires restarting the runtime. Both processes use loopback DDS domain 0; set the same `DDS_DOMAIN` in both terminals to change it. Once the standing policy is running, click the simulator window and press **9** to release the elastic support. Observe unsupported standing before sending motion commands.
+1. Wait for **[READY]**. After receiving robot state, the runtime takes three seconds to reach the configured standing pose, then holds it with PD control.
+2. Focus **terminal 2** and press **]** or **s** to enable policy control. No Enter is needed. Keys pressed before **[READY]** are discarded.
+3. Once the policy is running, focus the **simulator window** and press **9** to release the elastic support.
+4. Confirm stable standing without support before sending motion commands.
 
-Terminal 3 — interactive motion replay:
+PD waiting only positions the joints; policy balance control starts at step 2. The simulator and runtime default to loopback DDS domain 0. To use another domain, set the same `DDS_DOMAIN` in terminals 1 and 2 before launch.
+
+### Terminal 3: choose one input
+
+**Motion replay**
 
 ```bash
 .venv_inputs/bin/python -m interface.motion_replay --keyboard
 ```
 
-Press **1 / 2 / 3 / 4** to choose G1 / G1 exploration / H2 / SMPL. Use **Up/Down** to select a clip and **Enter** to play it. **Space** pauses/resumes; **n/p** switches to and plays the next/previous clip; **x** stops and rewinds. Selection alone does not start motion. Pausing, finishing or quitting releases the body channel so the runtime returns to standing. **q**, **Esc** or **Ctrl+C** closes the replay interface.
+| Key in terminal 3 | Action |
+|---|---|
+| `1` / `2` / `3` / `4` | Select G1 / G1 exploration / H2 / SMPL |
+| Up / Down | Select a clip without starting it |
+| Enter | Play the selected clip from the beginning |
+| Space | Pause / resume |
+| `n` / `p` | Switch to and play the next / previous clip |
+| `x` | Stop and rewind; return to standing |
+| `q` / Esc / Ctrl+C | Exit replay |
 
-For planner control, keep terminals 1 and 2 running, exit replay, and replace terminal 3 with:
+Pause, completion and exit release the body input, so the policy returns to standing. See [the interface guide](../src/interface/README.md#keyboard-playback) for looping and additional controls.
+
+**Keyboard planner**
+
+Complete [planner setup](#planner) first. Exit replay, then run:
 
 ```bash
 bash scripts/run_planner.sh --keyboard
 ```
 
-This terminal runs the TensorRT planner worker and its keyboard panel. **1 / 2 / 3** selects slow walk / walk / run; **0** selects idle. **W/S** moves forward/backward, **A/D** strafes, **Q/E** changes heading, and **+/-** adjusts speed. **Space** returns to standing; **Esc** or **Ctrl+C** closes the panel and planner worker. Full controls, including all planner modes, are in the [interface guide](../src/interface/README.md#planner-keyboard-control).
+| Key in terminal 3 | Action |
+|---|---|
+| `0` / `1` / `2` / `3` | Select idle / slow walk / walk / run |
+| Hold `w` / `s` | Move forward / backward |
+| Hold `a` / `d` | Strafe left / right |
+| `q` / `e` | Adjust heading left / right |
+| `+` / `-` | Increase / decrease speed |
+| Enter | Activate / deactivate the selected mode |
+| Space or `x` | Clear requests and return to standing |
+| Esc / Ctrl+C | Exit the panel and planner worker |
 
-Both input panels wait for fresh runtime state before sending motion. Replay does not automatically resume after a state interruption, and planner keyboard commands are cleared. Closing an input panel leaves the simulator and policy runtime running. The planner environment/model must be installed separately; first engine construction may take several minutes. See [planner setup](PLANNER.md) and [validation records](REPRODUCIBILITY.md).
+Wait for both planner and runtime readiness before using movement keys. Mode and speed selection alone do not start a stopped planner. Begin with slow walking and a low speed. See [all planner controls](../src/interface/README.md#planner-keyboard-control).
 
-### Standing pose and runtime keys
+### Switch inputs or finish the session
 
-Keep elastic support engaged during initialization and the **[READY]** PD hold. This hold positions the joints; balance control begins only after **]** or **s** enables the policy. Keys act in the runtime terminal without Enter. **o** sets position gains to zero and damping to 8, stops control, and requires a runtime restart. An unsupported robot can fall after this stop.
+To change input, stop the current motion, exit terminal 3's input program, then start the other input. Terminals 1 and 2 stay running. After a runtime connection interruption, replay pauses and planner requests are cleared; a new operator action is needed to resume.
 
-The standing reference is configured in [`config/runtime/standing_pose.json`](../config/runtime/standing_pose.json). Both legs use hip pitch **−0.10 rad**, knee **0.25 rad** (about **14°**), and ankle pitch **−0.15 rad**. The preset reduces knee flexion while retaining a slight bend. Both arms rest at the sides with a slight elbow bend: shoulder pitch **0.25 rad**, shoulder roll **+0.10/−0.10 rad** (left/right), and elbow **1.00 rad**. This shoulder/elbow combination was checked with the running policy to reduce torso lean as well as keep the hands at the sides. H2's elbow coordinate is offset: an elbow value of zero points the forearm forward. The preset is used during initialization, PD waiting, and policy standing when no body input is active. The simulator's reset pose matches this preset. Head commands remain independent.
+To end the session:
 
-To use another reference, pass `--standing-pose /absolute/path/to/standing_pose.json`. Angles are in radians. In `arm_joint_angles_rad`, `shoulder_roll` specifies the left shoulder angle; the right shoulder uses its negative. Omitting this section retains the model's nominal arm reference for compatibility with existing leg-only configurations. This changes the reference supplied to the policy, preserving the decoder's trained joint offsets and action scales. Validate adjusted references in simulation before hardware use.
+1. Return to standing with replay **x** or planner **Space**, then exit the input program.
+2. Re-engage the simulator's elastic support with **9**.
+3. In **terminal 2**, press **o** to stop with damping. This stop is latched: restart the runtime to control the robot again. **Ctrl+C** also exits the runtime.
+4. Close the simulator last.
 
-### Runtime startup troubleshooting
-
-Startup logs distinguish CUDA device initialization, TensorRT cache reuse or engine construction, and CUDA graph capture. Engine construction can take several minutes when a cache is missing or incompatible; compatible caches are reused. DDS control starts only after both policy models are ready. During model initialization, **Ctrl+C** terminates the process directly; after initialization it requests an orderly control shutdown.
-
-If startup remains at `Initializing CUDA device ...`, inspect the process from another terminal without starting another GPU query:
-
-```bash
-ps -C sonic_h2_runtime,nvidia-smi -o pid,stat,etime,wchan:40,args
-```
-
-A persistent `D` state with a wait location such as `uvm_gpu_retain_by_uuid` or `uvm_va_space_destroy` indicates a wait inside the NVIDIA driver. Signals may remain pending until the kernel call returns; even `kill -9` cannot force immediate termination in an uninterruptible wait. This is not TensorRT engine construction. Avoid repeatedly launching runtimes or `nvidia-smi` while this condition persists.
-
-Save other work and arrange a host reboot if the driver remains blocked. GPU reset requires the GPU to have no active clients and is not guaranteed to recover a hung GPU; see [NVIDIA's recovery requirements](https://docs.nvidia.com/deploy/nvidia-smi/index.html#r-gpu-reset). After recovery, verify that `nvidia-smi` returns normally, then restart the three terminals. Clearing model caches does not resolve a driver wait.
-
-## Motion replay
-
-Replay accepts **G1, H2 and SMPL** CSV clip directories or NPZ files. Input type is detected from the collection manifest and clip metadata. The bundled collections are:
-
-| Directory under `motions/` | Type | Clips |
-|---|---|---:|
-| `example_g1_replay` | G1 basic | 13 |
-| `example_g1_explore_replay` | G1 exploration | 7 |
-| `example_h2_replay` | Native H2 | 8 |
-| `example_smpl_replay` | SMPL | 8 |
-
-```bash
-.venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
-.venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_smpl_replay/walking_quip_360_R_002__A428
-.venv_inputs/bin/python -m interface.motion_replay generated_motion.npz --inspect
-```
-
-`--inspect` validates the clip without connecting. `--type g1|h2|smpl` labels otherwise ambiguous external data and must agree with declared metadata. `--fps` overrides the recorded frame rate; CSV defaults to 50 Hz if unspecified. `--speed` adjusts playback and velocity together; `--loop` requires a continuous loop boundary.
-
-G1 and H2 use ten samples at offsets `0.0, 0.1, …, 0.9` seconds. SMPL uses ten samples at `0.00, 0.02, …, 0.18` seconds. H2 reads the native 31D files, excludes head joints and sends native body policy angles. SMPL reads its own joints/root and semantic wrist angles. Head control remains independent.
-
-See [motion formats and NPZ fields](../motions/README.md) for export conventions, and [the protocol](ARCHITECTURE.md#body-data) for transmitted fields.
+Damping does not maintain balance; stopping the runtime without support can cause a fall.
 
 ## Sim2Real
 
@@ -140,86 +135,123 @@ If standing or tracking becomes unstable, stop the test and resolve the mechanic
 
 These conditions apply in addition to the staged validation above. Resolve any unmet condition before attempting highly dynamic motions.
 
-### Launch
+### 1. Configure hardware
 
-Set the robot interface, DDS domain, hand backend and joint gain scales in [`h2_deploy.env`](../config/h2_deploy.env). Prepare robot support and emergency stop before enabling control.
+Edit [`config/h2_deploy.env`](../config/h2_deploy.env) before launching:
+
+| Setting | What to configure |
+|---|---|
+| `NETWORK_INTERFACE` | The workstation interface connected to H2 |
+| `DDS_DOMAIN` | The domain used by the robot |
+| `HAND_BACKEND` | `none`, `inspire` or `dex3` |
+| Joint gain scales | The ankle and knee scales for the tested hardware configuration |
+
+Gain scales apply during initialization and policy control. For Inspire hands, deploy the independent PC2 service using the [hand service guide](INSPIRE_HANDS.md), including serial mapping, autostart and watchdog configuration.
+
+### 2. Terminal 1: start the runtime
+
+Prepare robot support and an accessible emergency stop. Preview the command, then launch:
 
 ```bash
 bash scripts/run_sonic_h2_runtime.sh real --print-command
 bash scripts/run_sonic_h2_runtime.sh real
 ```
 
-The launcher prints the target interface. Enter `y` (or `Y`) and press Enter to start; an empty response or any other input cancels. The robot moves to its configured standing pose, then waits at **[READY]**. Press **]** or **s** in the runtime terminal to enable policy; **o** stops with damping and requires a runtime restart. Start replay or another producer separately using the same commands as simulation. Gain settings affect initialization and policy control; damping on shutdown is unchanged. `HAND_BACKEND=none` disables hand DDS, `inspire` connects to the robot's Inspire service, and `dex3` uses Unitree Dex3.
+Check the printed network interface and DDS domain. Enter **y** and press Enter to start; an empty response or any other input cancels. The runtime moves the joints to the standing pose. Wait for **[READY]**, then press **]** or **s** in this terminal to enable policy control. Establish stable standing before sending motion.
 
-For Inspire hands, install the included `tools/robot_services/inspire_hands/` service on H2 PC2 first. Follow the [robot hand service guide](INSPIRE_HANDS.md) for serial mapping, autostart, watchdog setup and read-only checks. This service runs independently of the body policy.
+### 3. Terminal 2: start the input
+
+Use either the [motion replay or keyboard planner command above](#terminal-3-choose-one-input). No simulator is needed. Follow the staged validation order for every new motion.
+
+To finish, stop and exit the input first, secure the robot with support, then press **o** in the runtime terminal. The runtime stops with damping and must be restarted before control can resume. This software stop does not replace the robot's emergency stop.
+
+## Motion replay
+
+For a specific clip, inspect it first, then replay it with the policy already running:
+
+```bash
+.venv_inputs/bin/python -m interface.motion_replay \
+  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
+.venv_inputs/bin/python -m interface.motion_replay \
+  motions/example_h2_replay/walking_quip_360_R_002__A428
+```
+
+`--inspect` validates files without connecting to the runtime. Replay accepts G1, native H2 and SMPL CSV directories or NPZ files. Use `--speed` to change playback speed, `--fps` to override the source frame rate, and `--type g1|h2|smpl` for external data without unambiguous type metadata. Use `--loop` only for clips with continuous boundaries.
+
+The four bundled collections and input fields are documented in [motion formats](../motions/README.md). Sparse sampling and transmitted fields are described in [the command protocol](ARCHITECTURE.md#body-data).
 
 ## Planner
 
-Download the optional shared G1 model:
+Set up the planner once before using its keyboard or programmatic interface:
 
 ```bash
 uv venv .venv_download --python 3.10
 uv pip install --python .venv_download/bin/python -r requirements/download.txt
 .venv_download/bin/python tools/model_download/download_planner.py
+./install.sh planner
+python3 tools/validation/verify_release.py --require-planner
 ```
 
-The model is downloaded to `models/motion_planner_g1/planner_sonic.onnx`, ignored by Git. See [download details](PLANNER.md).
+The model is stored at `models/motion_planner_g1/planner_sonic.onnx`. Source and checksum details are in the [planner guide](PLANNER.md). For interactive operation, use terminal 3 in [Sim2Sim](#sim2sim).
 
-Install its environment with `./install.sh planner`. The installer uses the TensorRT Python wheel from `$TensorRT_ROOT/python`, matching the native SDK; set `TENSORRT_WHEEL` if the wheel is stored elsewhere.
-
-For the three-terminal simulation workflow above, start the keyboard panel and inference worker together in terminal 3:
+For programmatic control, start the service without the keyboard panel:
 
 ```bash
-bash scripts/run_planner.sh --keyboard
+bash scripts/run_planner.sh
 ```
 
-For programmatic control, run `bash scripts/run_planner.sh` without `--keyboard`, then send requests from a separate client:
+Then send requests from a separate terminal while the policy is running:
 
 ```bash
 .venv_inputs/bin/python -m interface.planner.client \
   --mode 1 --speed 0.3 --movement 1 0 0
 ```
 
-The Python planner owns TensorRT inference, trajectory blending and conversion to sparse G1 references. The runtime only receives those references. Stopping planner requests returns the runtime to standing. The service also publishes its output on port 5561; `--publish-only` disables direct body-channel forwarding for use by the teleoperation bridge. Keyboard worker logs are saved under `outputs/planner/`.
+Stop the request client to return to standing. See [the interface guide](../src/interface/README.md#planner-and-teleoperation) for service options.
 
 ## VR teleoperation
 
-Follow [PICO setup](VR_SETUP.md), then start the runtime in simulation or on the supported robot. In separate terminals:
+Install the teleoperation environment and complete [PICO connection and calibration setup](VR_SETUP.md):
+
+```bash
+./install.sh teleop
+```
+
+Start and enable the runtime using the simulation or hardware procedure above. Run each of the following in a separate terminal:
 
 ```bash
 # PICO tracking and calibration
 bash scripts/run_h2_teleop_head_adjust.sh pico
-# Translate tracking into body/head/hand messages
+```
+
+```bash
+# Send body, head and hand commands
 bash scripts/run_h2_teleop_head_adjust.sh bridge
-# Optional: joystick locomotion and lower-body planning during VR control
+```
+
+For joystick locomotion, also complete [planner setup](#planner), then run:
+
+```bash
 bash scripts/run_h2_teleop_head_adjust.sh planner
 ```
 
-The bridge sends SMPL references for the full-body pose mode and VR three-point references for the PICO VR mode. `bridge --pose-kind vr` uses wrist/head targets in pose mode too. Without a planner, VR uses a standing lower-body reference. SMPL packets contain ten samples at 20 ms intervals; the live tracking window introduces about 180 ms of reference buffering. Head pitch/yaw and hand targets use separate sockets and never enter the body policy.
-
-Head settings belong to [`h2_head_adjust.env`](../config/h2_head_adjust.env); the hand backend belongs to `h2_deploy.env`. The PICO feedback port is **5559**. For multi-machine operation, explicitly bind the relevant runtime sockets to the network interface and pass matching endpoints to the bridge. Synchronize system clocks; commands carry wall-clock timestamps and expire.
+Without a planner, VR uses a standing lower-body reference. Head settings are in [`config/h2_head_adjust.env`](../config/h2_head_adjust.env); the hardware hand backend is in `config/h2_deploy.env`. Head and hand commands use independent channels. Multi-machine endpoint configuration is described in [the architecture guide](ARCHITECTURE.md).
 
 ## Independent head and hand commands
 
+With the runtime running, start each needed client in its own terminal:
+
 ```bash
-# Radians; this changes only the two head joints.
+# Head pitch/yaw in radians
 .venv_inputs/bin/python -m interface.peripherals.client head --pitch 0.3 --yaw -0.2
-# Seven Dex3-compatible values; Inspire maps this representation to finger closure.
+# Seven Dex3-compatible targets; Inspire maps them to finger closure
 .venv_inputs/bin/python -m interface.peripherals.client hands --left '[0,0,0,0,0,0,0]'
 ```
 
-Each process refreshes its own command until interrupted. Head targets are clamped and slew-limited; expiry returns the head to neutral. Expired hand input stops hand publishing without generating a new grip command. Inspire requires a released trigger before accepting closure. Body-source changes do not reset these independent channels.
+Each client refreshes its targets until interrupted. Head expiry returns to neutral; hand expiry stops publishing without issuing a new grip command. Body-source changes do not reset these channels. Inspire requires a released trigger before accepting closure.
 
-## Validation
+## Configuration and checks
 
-```bash
-sudo apt install libgtest-dev zlib1g-dev
-bash scripts/build_controller.sh -DBUILD_TESTING=ON
-ctest --test-dir build/runtime --output-on-failure
-source scripts/setup_env.sh
-.venv_sim/bin/python tools/validation/check_runtime.py
-./install.sh planner
-.venv_planner/bin/python tools/validation/check_runtime.py --planner
-```
-
-The integration check runs the actual models with synthetic robot state and private IPC sockets. It does not initialize DDS or connect to hardware. It tests manual policy activation, rejection of early start keys and queued body commands, stopping with o, terminal restoration, all body input formats, expiry, source ownership and independent head/hand commands. See [validation records](REPRODUCIBILITY.md) for the scope of completed checks.
+- [Standing pose configuration](../src/runtime/README.md#standing-pose-configuration): reference angles and custom presets.
+- [Troubleshooting](TROUBLESHOOTING.md): environment, build, GPU startup and connection issues.
+- [Validation and reproducibility](REPRODUCIBILITY.md): offline tests, model checks and recorded validation scope.

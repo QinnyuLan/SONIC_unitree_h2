@@ -1,6 +1,6 @@
 # Native Controller Setup
 
-[Deployment guide](DEPLOYMENT.md) · [中文部署指南](DEPLOYMENT_CN.md)
+[Deployment guide](DEPLOYMENT.md) · [中文部署指南](DEPLOYMENT_CN.md) · [Troubleshooting](TROUBLESHOOTING.md)
 
 The validated workstation uses Ubuntu x86_64, CUDA 12.6, TensorRT 10.13.3.9. The Python simulator and the C++ controller run in separate processes.
 
