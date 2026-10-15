@@ -7,6 +7,8 @@
 
 论文 [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999) 的 Unitree H2 部署官方实现。
 
+> **实验分支：`text2motion_offline_demo`。** 本分支保留离线 ECHO-G 语音与动作生成及回放 demo，实机效果仍在验证中。使用方法见[生成与回放说明](docs/TEXT2MOTION_CN.md)。
+
 ## 项目概览
 
 ![基于 TRACE 的 SONIC Unitree H2 部署及多种动作与指令接口](docs/images/deployment_overview.png)
@@ -29,7 +31,7 @@
 runtime 完成站姿初始化后，等待按 **]** 或 **s** 开启 policy，再接收独立 motion replay、planner 和遥操作进程的指令；按 **o** 进入阻尼并停止。仿真与实机共用同一 runtime；头部 pitch/yaw 和灵巧手分别使用独立通道。输入端与 planner 统一使用 Python，实时 policy runtime 使用 C++，policy 与 planner 推理使用 TensorRT。可选的 ECHO-G 生成器离线生成语音和 G1 手势，再通过 motion replay 展示。
 
 ```bash
-git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 --branch text2motion_offline_demo --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/validation/verify_release.py
 ```

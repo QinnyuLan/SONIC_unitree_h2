@@ -7,6 +7,8 @@
 
 Official Unitree H2 deployment implementation for [TRACE: Efficient Transfer Learning for Neural Whole-Body Control Across Humanoid Embodiments](https://arxiv.org/abs/2610.17999).
 
+> **Experimental branch — `text2motion_offline_demo`.** This branch contains the offline ECHO-G speech and gesture implementation and its replay demos. Hardware behavior is still under evaluation. See [setup and playback](docs/TEXT2MOTION.md).
+
 ## Overview
 
 ![SONIC deployment on Unitree H2 with TRACE and multiple motion and command interfaces](docs/images/deployment_overview.png)
@@ -29,7 +31,7 @@ Source code is organized as [`src/runtime/`](src/runtime/README.md) (C++ policy)
 The runtime initializes a standing pose, waits for **]** or **s** to enable the policy, then accepts commands from independent motion replay, planner, and teleoperation processes. Press **o** to stop with damping. Simulation and hardware use the same runtime. Head pitch/yaw and dexterous hands have separate command channels. Input services and the planner use Python; the real-time policy runtime uses C++. Policy and planner inference use TensorRT. The optional ECHO-G generator prepares speech and G1 gestures offline for motion replay.
 
 ```bash
-git clone --depth 1 --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
+git clone --depth 1 --branch text2motion_offline_demo --recurse-submodules https://github.com/QinnyuLan/SONIC_unitree_h2.git
 cd SONIC_unitree_h2
 python3 tools/validation/verify_release.py
 ```
