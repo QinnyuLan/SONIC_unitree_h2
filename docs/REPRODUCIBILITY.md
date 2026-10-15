@@ -4,7 +4,7 @@ The release contains the H2 runtime for MuJoCo, hardware deployment, and PICO VR
 
 ## Validated environment
 
-Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and CUDA Python bindings 12.9.4. Python runtime dependencies are pinned in `requirements/inputs.lock`, `requirements/planner.lock`, `requirements/sim.lock`, `requirements/teleop.lock` and the optional `requirements/text2motion.lock`. The simulator and teleoperation environments were installed independently from empty environments.
+Ubuntu x86_64, Python 3.10.20, CUDA 12.6, TensorRT 10.13.3.9, and CUDA Python bindings 12.9.4. Python runtime dependencies are pinned in `requirements/inputs.lock`, `requirements/planner.lock`, `requirements/sim.lock` and `requirements/teleop.lock`. The simulator and teleoperation environments were installed independently from empty environments.
 
 ## Offline checks
 
@@ -85,50 +85,6 @@ This change was not tested with GPU inference, closed-loop simulation or hardwar
 On 2026-10-15, the Unitree Python SDK and XRoboToolkit binding were replaced with pinned, unmodified upstream submodules under `third_party/`. The simulator's odometry extension moved to `src/sim/odometry.py`; its DDS type identifier, type information and serialized sample bytes match the previous implementation. The native XR SDK artifacts retain their previous SHA256 hashes.
 
 Simulation and teleoperation installations, dependency checks, preflights and all 93 Python tests passed. A fresh clone fetched both pinned submodules from their official GitHub URLs, installed simulation and teleoperation into empty environments, and passed both preflights. The parent repository and both submodules remained clean after installation. A separate headless simulator published 120 finite LowState and 120 finite odometry messages through loopback DDS domain 217. This check did not start the policy runtime or exercise GPU inference. ARM64 artifact hashes were checked, but ARM64 execution and physical devices were not tested.
-
-## Offline ECHO-G speech/gesture validation
-
-The initial integration on 2026-10-15 used CPU PyTorch 2.12.1, Transformers 5.2.0, and the official ECHO-G implementation at `60b85fb932b124b1a2ddd0868f4917a73c383901` as a reference. The current implementation loads the same weights using local model and feature code; the upstream package and submodule have been removed. Dependency checks passed, and all 15 local model files matched their pinned SHA256 values.
-
-Fresh Chinese and English text each completed Edge TTS with word timestamps, CPU audio/text feature extraction, and official EMA motion inference (eight Euler steps, guidance scale 1, seed 0). The Chinese example has 163 motion frames at 50 Hz and 3.264 seconds of speech; the English example has 177 frames and 3.528 seconds of speech. The three-file bundles are included under `motions/example_text2motion_replay/`. Cached-condition generation also passed. Generation commands are documented in [text-to-motion](TEXT2MOTION.md).
-
-After this integration, all 62 Python command/interface tests and 59 C++ tests passed. The command suite includes the two shipped bundle checks, canonical joint ordering, the 6D rotation convention, SLERP across a yaw wrap, velocity resampling, file integrity, audio startup and failure cleanup. The native audio player built successfully, and release preflight passed.
-
-The following check starts a mock voice service on loopback DDS and a private IPC body receiver; it does not start the policy runtime, contact hardware, or emit sound:
-
-```bash
-.venv_sim/bin/python tools/validation/check_audio_replay.py
-```
-
-Normal playback delivered 112896 PCM bytes in eight chunks, identical to the English WAV, after the first G1 command. A second run interrupted playback and verified that only the matching audio stream stopped and the body channel was released to `stand`. Both cases passed. The check writes its report and subprocess logs under `outputs/validation/`; choose an unused loopback DDS domain with `--domain` if needed.
-
-The inference implementation was then reduced to the local CLI, feature extraction and model modules. The ECHO-G submodule/package, training YAML configuration, librosa, soundfile and their unused dependencies were removed. A synchronized environment contains 50 pinned dependencies plus this project (test tools are separate). No upstream source checkout is required to download models or generate motion.
-
-On CPU with four PyTorch threads, both Chinese and English recordings were processed again from their WAVs and word-timestamp manifests. Audio features, text tokens, token times, pooled text and all exported motion arrays matched the original implementation bit for bit. EMA inference also matched for seed 7. The comparison reports are `outputs/validation/echo_minimal_model.json` and `echo_minimal_pipeline.json`. Cached-condition generation and the 15-file model check passed without the upstream package installed.
-
-The 62 command/interface regressions and 11 additional inference-input tests passed. Run the latter in the optional generation environment:
-
-```bash
-uv pip install --python .venv_text2motion/bin/python -r requirements/test.txt
-.venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
-```
-
-These tests do not establish H2 firmware compatibility, speaker latency, motion quality, or closed-loop tracking. No GPU generation, robot motion or physical speaker playback was performed for this integration.
-
-## Layout and tool-entry validation
-
-Motion replay is packaged under `src/interface/motion_replay/`; offline ECHO-G generation is packaged separately under `tools/text2motion_offline/echo_g/`. Downloads, build preparation and validation scripts are grouped by purpose in `tools/`. All five installed Python environments were refreshed after this reorganization.
-
-The 57 command/replay regressions and 16 offline generation tests passed. From outside the checkout, the installed replay and generation module entry points resolved correctly, the planner downloader verified the existing model at its original destination, and simulation/teleoperation preflights passed. The relocated native prerequisite check, XRoboToolkit preparation and ONNX CPU validation tools also passed. The runtime GPU test's command-line entry was checked without starting inference.
-
-The new ECHO-G entry completed English WAV/text feature extraction and CPU motion generation; every exported motion array was identical to the published English example. The generated bundle loaded in the minimal replay environment. The relocated audio integration tool passed normal and interrupted playback against loopback mocks. These checks exercised no hardware or GPU inference.
-
-Current regression commands:
-
-```bash
-.venv_sim/bin/python -m pytest tests/interface/commands tests/interface/motion_replay -q
-.venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
-```
 
 ## Robot hand service
 
@@ -213,29 +169,11 @@ A separate six-second H2 walking replay followed by eight seconds of standing al
 
 Local comparison records are `outputs/validation/standing_pose/closed_loop_044936/posture.json`, `outputs/validation/standing_pose/closed_loop_050343/posture.json`, and `outputs/validation/standing_pose/replay_transition_050436/posture.json`. These measurements assess posture in simulation and do not establish hardware balance margins.
 
-## Complete H2 introduction demos
+## Core deployment regression checks
 
-The supplied Chinese script was preserved and translated into English. Each language uses seven Edge TTS utterances and seven genuine ECHO-G audio+text predictions, with seeds 0–6, the pinned EMA checkpoint, eight Euler steps and guidance scale 1. The default Chinese/English voices are recorded in each manifest. Generation ran in the CPU text-to-motion environment.
+The current deployment package passed 86 Python tests and 53 subtests covering simulation, command validation, all 36 G1/H2/SMPL reference clips and keyboard interfaces. Six additional CLI processes sent G1, H2 and SMPL references over private IPC, covering normal completion and interruption during looping; every process released its body channel to `stand`. These checks used synthetic references and no robot connection.
 
-Four portable bundles are included: Chinese (73.04 s) and English (78.48 s), each with standing and full-body references. Each pair shares identical PCM speech, scripts, subtitles, waist/arm references and paragraph timing. The standing version replaces twelve G1 leg references with the standard G1 standing pose and sets the root reference upright. The full-body version retains generated leg/root motion within each paragraph. Both use bounded quintic transitions and heading-aligned quaternion interpolation between paragraphs; large endpoint velocities cannot cause transition angle overshoot. Audio is padded with silence to the 50 Hz frame grid and between paragraphs, without stretching or overlapping speech.
-
-The generation/composition suite passed 22 tests and the motion-replay suite passed 31 tests. Checks cover paragraph preservation, incremented seeds, exact PCM preservation, subtitle timing, heading continuity, bounded transitions with high endpoint velocities, semantic standing-leg indices, published bundle checksums and equivalence of paired upper-body references. All four bundles load in the minimal input environment without PyTorch, ECHO-G weights or a speech service.
-
-```bash
-.venv_text2motion/bin/python -m pytest tests/tools/text2motion_offline/echo_g -q
-.venv_sim/bin/python -m pytest tests/interface/motion_replay -q
-```
-
-Closed-loop measurements use the actual C++ policy and headless H2 MuJoCo simulator over loopback DDS domain 223. Policy control starts with **]** after initialization, elastic support is released, the complete speech motion plays once, and eight seconds of idle standing follow. Measurements cover unsupported control with position gains active, excluding final stop damping. The audio backend is ALSA null: file decoding and process lifecycle are exercised, while real speaker latency is not measured. Recorded simulation states can be rendered afterward without changing the physics timestep or its 20 ms realtime-lag limit. No physical robot was used.
-
-| Bundle | Minimum base height | Maximum pelvis tilt | Maximum horizontal displacement | Maximum sim lag |
-|---|---:|---:|---:|---:|
-| `h2_trace_intro_zh` | 0.990 m | 4.44° | 0.201 m | 2.56 ms |
-| `h2_trace_intro_full_body_zh` | 0.965 m | 14.06° | 0.278 m | 18.28 ms |
-| `h2_trace_intro_en` | 0.990 m | 4.27° | 0.183 m | 18.28 ms |
-| `h2_trace_intro_full_body_en` | 0.985 m | 9.48° | 0.341 m | 6.74 ms |
-
-All four full-length runs completed without falls or non-finite states, returned to the idle body channel, restored terminal settings and sent damping commands on **o**. These are completion and stability checks, not a joint-tracking accuracy benchmark or hardware acceptance. Neither standing nor full-body references hold an absolute world position. Local reports are indexed in `outputs/validation/echo_g_intro/results.json`; paired comparison videos under the same directory are rendered from recorded simulation states with the corresponding WAV.
+The native runtime configured and built successfully, and all three CTest suites passed. The minimal inputs environment installed successfully, and the built Python wheel contains the interface and simulator packages with the documented dependencies. Release preflight, shell syntax and changed documentation links passed. Local reports are under `outputs/validation/main_release_cleanup/`. This check did not repeat GPU inference or physical robot tests.
 
 ## Saving validation reports
 

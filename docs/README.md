@@ -6,12 +6,11 @@
 - [PICO setup](VR_SETUP.md): headset, trackers, XRoboToolkit, head and hand configuration.
 - [Robot hand service](INSPIRE_HANDS.md) / [中文](INSPIRE_HANDS_CN.md): PC2 build, RS-485 mapping, autostart, watchdog and rollback.
 - [Planner download](PLANNER.md): pinned source, destination, and integrity checks.
-- [Offline text-to-motion](TEXT2MOTION.md) / [中文](TEXT2MOTION_CN.md): ECHO-G speech and G1 gestures, portable replay bundles, and Unitree speaker playback.
 - [Reference motion format](../motions/README.md).
 - [Released models](../models/sonic_h2_released/README.md) and [validation](REPRODUCIBILITY.md).
 - [Repository layout](LAYOUT.md).
 - [Tools](../tools/README.md): model downloads, environment preparation, validation and offline generation.
-- [Motion replay](../src/interface/README.md#motion-replay): motion sampling, playback and audio support.
+- [Motion replay](../src/interface/README.md#motion-replay): motion loading, sampling and playback.
 - [Third-party dependencies](../third_party/README.md): pinned source submodules and native SDK artifacts.
 - [Acknowledgments](ACKNOWLEDGMENTS.md).
 - [Licenses and notices](../licenses/README.md): SONIC, robot assets and bundled dependencies.

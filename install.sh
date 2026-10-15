@@ -7,14 +7,13 @@ case "$ENV_KIND" in
   inputs) ENV_DIR="$ROOT/.venv_inputs"; EXTRA=inputs ;;
   sim2sim) ENV_DIR="$ROOT/.venv_sim"; EXTRA=sim ;;
   teleop) ENV_DIR="$ROOT/.venv_teleop"; EXTRA=teleop ;;
-  text2motion) ENV_DIR="$ROOT/.venv_text2motion"; EXTRA=text2motion ;;
-  *) echo "Usage: $0 {inputs|planner|sim2sim|teleop|text2motion}" >&2; exit 2 ;;
+  *) echo "Usage: $0 {inputs|planner|sim2sim|teleop}" >&2; exit 2 ;;
 esac
 command -v uv >/dev/null || { echo "Install uv: https://docs.astral.sh/uv/getting-started/installation/" >&2; exit 1; }
 if [[ ! -x "$ENV_DIR/bin/python" ]]; then
   uv venv "$ENV_DIR" --python 3.10 --prompt "sonic_h2_${ENV_KIND}"
 fi
-# CPU PyTorch serves teleoperation math and optional offline ECHO-G generation.
+# CPU PyTorch serves teleoperation math.
 uv pip install --python "$ENV_DIR/bin/python" --torch-backend=cpu \
   -c "$ROOT/requirements/$EXTRA.lock" -e "$ROOT[$EXTRA]"
 if [[ "$ENV_KIND" == planner ]]; then

@@ -1,6 +1,6 @@
 # Reference Motions
 
-The 36 reference clips and six generated speech/gesture bundles are inputs to the independent Python motion replay process. The policy runtime creates its startup standing reference in memory and does not load motion files.
+The 36 reference clips are inputs to the independent Python motion replay process. The policy runtime creates its startup standing reference in memory and does not load motion files.
 
 | Directory | Input type | Clips | Encoder selector |
 |---|---|---:|---:|
@@ -8,7 +8,6 @@ The 36 reference clips and six generated speech/gesture bundles are inputs to th
 | `example_g1_explore_replay/` | Native G1 exploration demos | 7 | 3 |
 | `example_h2_replay/` | Native H2 basic demos | 8 | 0 |
 | `example_smpl_replay/` | SMPL demos | 8 | 2 |
-| `example_text2motion_replay/` | ECHO-G Chinese/English speech and G1 gestures | 6 | 3 |
 
 The exploration set includes kneeling, crawling and jumping. Clips with the same name in different collections contain different reference representations. Each reference collection's `manifest.json` records input type, frame rate, frame count, source collection and file SHA256 hashes. Motion data was copied from the corresponding `SONIC-H2/gear_sonic_deploy/reference/` collections; original clip metadata is retained as provenance. The extreme H2 collection is not included.
 
@@ -50,7 +49,7 @@ SMPL uses its own root quaternion, not the robot quaternion in `body_quat.csv`. 
 
 G1 and H2 send ten samples spaced **0.1 s** apart. SMPL sends ten samples spaced **0.02 s** apart, matching the model's SMPL observation contract. Producers send updates at 50 Hz. Terminal G1/H2 velocities are zero.
 
-## NPZ inputs and offline text-to-motion
+## NPZ inputs
 
 NPZ files use the following arrays, plus scalar `fps`. An optional scalar string `reference_type` declares `g1`, `h2` or `smpl`.
 
@@ -60,30 +59,11 @@ NPZ files use the following arrays, plus scalar `fps`. An optional scalar string
 | H2 | `h2_joint_pos[N,31]`, `root_quat[N,4]` | `h2_joint_vel[N,31]` |
 | SMPL | `joints[N,24,3]`, `root_quat[N,4]`, `wrist_joints[N,6]` | — |
 
-These use the same coordinate and joint conventions as CSV. For offline text-to-motion, export the generated motion to one of these formats. The optional [ECHO-G integration](../docs/TEXT2MOTION.md) generates G1 motion with matching speech.
+These use the same coordinate and joint conventions as CSV.
 
 ```bash
 .venv_inputs/bin/python -m interface.motion_replay generated_motion.npz --inspect
 .venv_inputs/bin/python -m interface.motion_replay generated_motion.npz
 ```
 
-## Speech and motion bundles
-
-Pass a directory under `motions/example_text2motion_replay/` to the same replay entry point:
-
-| Bundle | Content | Duration |
-|---|---|---:|
-| `h2_trace_intro_zh` | Chinese H2/TRACE introduction, standing | 73.04 s |
-| `h2_trace_intro_en` | English H2/TRACE introduction, standing | 78.48 s |
-| `h2_trace_intro_full_body_zh` | Chinese introduction, generated full-body comparison | 73.04 s |
-| `h2_trace_intro_full_body_en` | English introduction, generated full-body comparison | 78.48 s |
-| `echo_g_zh` | Short Chinese lab greeting | 3.26 s |
-| `echo_g_en` | Short English lab greeting | 3.53 s |
-
-Standing and full-body pairs use identical speech and timing. The standing versions preserve generated waist/arm gestures and use a fixed G1 leg/root reference. The full-body comparisons retain generated leg/root motion; compare their behavior in simulation. Neither mode locks the H2 to a world position.
-
-Each contains `motion.npz`, `speech.wav` and a `replay.json` manifest with relative paths and SHA256 hashes. The complete introductions also contain `script.txt` and paragraph subtitles in `subtitles.srt`. Their manifests record the seven source utterances and the silent motion transitions between them. All files needed for playback are included; ECHO-G models are not loaded during replay.
-
-Replay checks both files before sending, plays audio locally by default, and supports an independent Unitree speaker adapter. Use `--inspect` to validate without playback or `--mute` for motion only. Timing overrides and looping require muted playback. See [generation and audio setup](../docs/TEXT2MOTION.md).
-
-See [deployment](../docs/DEPLOYMENT.md#motion-replay-and-offline-text-to-motion) and [the command protocol](../docs/ARCHITECTURE.md). Loading, sampling and observation checks do not establish closed-loop tracking performance; validation scope is recorded in [Reproducibility](../docs/REPRODUCIBILITY.md).
+See [deployment](../docs/DEPLOYMENT.md#motion-replay) and [the command protocol](../docs/ARCHITECTURE.md). Loading, sampling and observation checks do not establish closed-loop tracking performance; validation scope is recorded in [Reproducibility](../docs/REPRODUCIBILITY.md).

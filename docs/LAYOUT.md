@@ -6,7 +6,7 @@ Source code is split into three components:
 src/
 ├── runtime/             # C++ SONIC policy execution and Unitree DDS output
 ├── interface/          # Online Python command producers and planner
-│   ├── motion_replay/  # Motion sampling, playback and optional audio
+│   ├── motion_replay/  # Motion loading, sampling and playback
 │   ├── planner/
 │   ├── teleop/
 │   └── peripherals/
@@ -16,15 +16,14 @@ tools/
 ├── model_download/     # Download model assets
 ├── setup/              # Prepare build dependencies
 ├── validation/         # Check files, models and integration
-└── text2motion_offline/
-    └── echo_g/         # Offline speech and G1 motion generation
+└── robot_services/     # Robot-side peripheral services
 ```
 
 | Path | Contents |
 |---|---|
 | `src/runtime/` | Encoder/decoder inference, observations, command arbitration, head/hand output, native SDK and CMake build |
 | `src/interface/commands/` | Message schema, validation and Python command client |
-| `src/interface/motion_replay/` | G1/H2/SMPL motion loading, reference sampling, playback and optional audio |
+| `src/interface/motion_replay/` | G1/H2/SMPL motion loading, reference sampling and playback |
 | `src/interface/planner/` | Planner service, request client, TensorRT engine and trajectory processing |
 | `src/interface/teleop/` | PICO input, SMPL/VR adapter, calibration, tracking transport and visualization |
 | `src/interface/peripherals/` | Head/hand command client and optional Inspire serial tools |
@@ -36,8 +35,7 @@ tools/
 | `assets/` | Shared G1/H2 URDF, MJCF, meshes and human joint data |
 | `models/sonic_h2_released/` | H2 ONNX models, interface manifest and checksums |
 | `models/motion_planner_g1/` | Optional local G1 planner weight and TensorRT cache |
-| `models/text2motion_echo_g/` | Optional local ECHO-G checkpoint and feature encoders |
-| `motions/` | G1, native H2 and SMPL references, plus generated speech/gesture replay bundles |
+| `motions/` | G1, native H2 and SMPL reference motions |
 | `config/` | Hardware, teleoperation and simulator settings |
 | `scripts/` | Environment setup, native build and process launchers |
 | `tests/` | Python interface and simulator regression tests |
@@ -48,16 +46,15 @@ tools/
 | `tools/model_download/` | Pinned model downloads and checksums |
 | `tools/setup/` | Native dependency build preparation |
 | `tools/validation/` | Release preflight, model and integration checks |
-| `tools/text2motion_offline/echo_g/` | Offline speech/gesture generation using ECHO-G weights |
 | `tools/robot_services/inspire_hands/` | Independent C++ Inspire hand service and robot systemd configuration |
 | `docs/` | Installation, deployment, architecture and reproducibility guides |
 | `licenses/` | Upstream software notices and robot-asset licenses |
 | `outputs/validation/` | Local validation reports, ignored by Git |
 
-`runtime` accepts commands from `interface` through ZeroMQ. `sim` exchanges robot state and motor targets with `runtime` through DDS. The simulator does not import the Python input services, and the input services do not import the simulator. Both read shared robot resources from `assets/`. Offline generation writes motion/audio bundles for replay and does not run inside the online interface. See [tool categories and commands](../tools/README.md).
+`runtime` accepts commands from `interface` through ZeroMQ. `sim` exchanges robot state and motor targets with `runtime` through DDS. The simulator does not import the Python input services, and the input services do not import the simulator. Both read shared robot resources from `assets/`. See [tool categories and commands](../tools/README.md).
 
-The root `pyproject.toml` installs `interface` and `sim` from `src/`, and `text2motion_offline` from `tools/`. Use `./install.sh` with the environment profile for the process you need. The installer uses an editable installation, so resources resolve against this checkout even when a process starts from another working directory. Keep `assets/`, `config/` and `models/` with the checkout.
+The root `pyproject.toml` installs `interface` and `sim` from `src/`. Use `./install.sh` with the environment profile for the process you need. The installer uses an editable installation, so resources resolve against this checkout even when a process starts from another working directory. Keep `assets/`, `config/` and `models/` with the checkout.
 
 Build the C++ runtime with `bash scripts/build_controller.sh`; the executable is `build/runtime/bin/sonic_h2_runtime`. See the [runtime guide](../src/runtime/README.md), [interface guide](../src/interface/README.md), and [simulator guide](../src/sim/README.md).
 
-Optional ECHO-G weights under `models/text2motion_echo_g/` are downloaded separately; see [text-to-motion](TEXT2MOTION.md). The planner weight at `models/motion_planner_g1/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](REPRODUCIBILITY.md).
+The planner weight at `models/motion_planner_g1/planner_sonic.onnx`, environments, native build products, TensorRT engines and recordings are local files ignored by Git. See [planner setup](PLANNER.md) and [validation](REPRODUCIBILITY.md).

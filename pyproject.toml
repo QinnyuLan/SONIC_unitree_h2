@@ -13,10 +13,6 @@ dependencies = ["numpy==1.26.4", "scipy==1.15.3"]
 [project.optional-dependencies]
 inputs = ["pyzmq==27.1.0"]
 planner = ["pyzmq==27.1.0", "cuda-bindings==12.9.4"]
-text2motion = [
-    "pyzmq==27.1.0", "torch==2.12.1", "transformers==5.2.0",
-    "edge-tts==7.3.1",
-]
 sim = [
     "mujoco==3.10.0", "tyro==1.0.15", "pyyaml==6.0.3",
     "pyzmq==27.1.0", "msgpack==1.2.1", "msgpack-numpy==0.4.8",
@@ -31,11 +27,10 @@ joystick = ["pygame==2.6.1"]
 
 [tool.setuptools.package-dir]
 "" = "src"
-text2motion_offline = "tools/text2motion_offline"
 
 [tool.setuptools.packages.find]
-where = ["src", "tools"]
-include = ["interface*", "sim*", "text2motion_offline*"]
+where = ["src"]
+include = ["interface*", "sim*"]
 namespaces = false
 
 [tool.pytest.ini_options]

@@ -16,7 +16,6 @@ The released H2 weights are derived from SONIC, whose [upstream model card](http
 
 Dependency license files and notices are retained at:
 
-- ECHO-G: [source license](echo_g/LICENSE) (PolyForm Noncommercial), [data/weight terms](echo_g/LICENSE-DATA-WEIGHTS) (CC BY-NC 4.0), and [notice](echo_g/NOTICE). The adapted model and feature code retain their upstream terms; see [source provenance](echo_g/README.md). Optional weights are downloaded separately.
 - [Unitree C++ SDK](../src/runtime/third_party/unitree_sdk2/LICENSE).
 - Inspire hand service: [BSD 3-Clause license](inspire_hands/LICENSE) and [source notice](inspire_hands/NOTICE).
 - [Unitree Python SDK](../third_party/unitree_sdk2_python/LICENSE).

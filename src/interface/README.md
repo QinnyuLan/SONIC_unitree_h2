@@ -5,7 +5,7 @@ These modules produce commands for the independent C++ policy runtime. Replay ac
 | Module | Purpose |
 |---|---|
 | `interface.commands` | Validated protocol and `RuntimeClient` |
-| [`interface.motion_replay`](#motion-replay) | Replay G1/H2/SMPL clips and motion/audio bundles |
+| [`interface.motion_replay`](#motion-replay) | Replay G1/H2/SMPL clips |
 | `interface.planner.service` | TensorRT Python planner and trajectory publisher |
 | `interface.planner.client` | Locomotion requests |
 | `interface.teleop.pico` | PICO tracking, calibration and pose processing |
@@ -18,14 +18,13 @@ These modules produce commands for the independent C++ policy runtime. Replay ac
 
 ## Motion replay
 
-`interface.motion_replay` reads G1, native H2 or SMPL trajectories and sends timed references to the independent policy runtime. A motion/audio bundle can also start a separate local or Unitree audio player.
+`interface.motion_replay` reads G1, native H2 or SMPL trajectories and sends timed references to the independent policy runtime.
 
 | File | Responsibility |
 |---|---|
 | `motion_replay/motion.py` | CSV/NPZ loading, input-type detection, joint ordering and reference sampling |
 | `motion_replay/cli.py` | Playback timing, runtime connection, command publishing and cleanup |
 | `motion_replay/keyboard.py` | Collection browser and manual playback controls |
-| `motion_replay/playback.py` | Bundle paths/checksums and the audio-player lifecycle |
 | `motion_replay/__main__.py` | `python -m interface.motion_replay` entry point |
 
 From the repository root:
@@ -35,12 +34,10 @@ From the repository root:
 .venv_inputs/bin/python -m interface.motion_replay \
   motions/example_g1_replay/walking_quip_360_R_002__A428 --inspect
 .venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_text2motion_replay/echo_g_zh
+  motions/example_h2_replay/walking_quip_360_R_002__A428
 ```
 
-Start the simulator or robot runtime before playback. `--inspect` only validates files. Use `--mute` for motion-only playback; see [motion formats](../../motions/README.md) and [audio setup](../../docs/TEXT2MOTION.md).
-
-The complete H2 introductions are `motions/example_text2motion_replay/h2_trace_intro_zh` (Chinese, 73 s) and `h2_trace_intro_en` (English, 78 s). Pass either directory to the same replay command. These use standing leg references with generated waist/arm gestures; `h2_trace_intro_full_body_zh` / `h2_trace_intro_full_body_en` retain the full-body references for simulation comparison. Their motion, audio, scripts and subtitles are included; playback does not load ECHO-G or call a speech service.
+Start the simulator or robot runtime before playback. `--inspect` only validates files. See [motion formats](../../motions/README.md).
 
 The shared Python motion API is `from interface.motion_replay import Motion, SmplMotion`.
 
@@ -65,7 +62,7 @@ With the simulator and policy runtime running in terminals 1 and 2, start the br
 
 Selecting a collection does not play it automatically. Playback waits for fresh runtime state in the `running` phase. After the runtime prints `[READY]`, press **]** or **s** in its terminal to enable policy control. **o** in that terminal stops with damping and requires a runtime restart. A state or command-connection loss pauses playback; reconnecting does not resume it. Pausing returns the robot to its default standing reference rather than holding an intermediate motion pose. Space resumes from the saved reference time; Enter starts from the beginning. The runtime status and current input owner are shown above the collection list.
 
-Use `--endpoint` and `--state` for custom runtime sockets, or `--motions-root` for another directory containing the four named collections. `--speed` sets playback speed. Speech/audio bundles continue to use the direct motion-path CLI above; the keyboard browser handles the four typed motion collections.
+Use `--endpoint` and `--state` for custom runtime sockets, or `--motions-root` for another directory containing the four named collections. `--speed` sets playback speed.
 
 ## Planner and teleoperation
 
@@ -99,7 +96,3 @@ Mode and speed selection alone do not activate a stopped planner. Movement and h
 `--model`, `--device`, `--runtime`, `--state`, `--input-bind`, `--output-bind` and `--publish-only` remain available. `--startup-timeout` bounds engine startup in keyboard mode (default 600 seconds). Worker output goes to `outputs/planner/keyboard-*.log`. Run `bash scripts/run_planner.sh` without `--keyboard` for the standalone service used by programmatic clients and teleoperation.
 
 `terminal.py` provides the shared terminal display; `commands/status.py` reads runtime status. Neither starts DDS nor imports the simulator.
-
-## Offline generation
-
-The offline ECHO-G generator lives under [`tools/text2motion_offline/echo_g/`](../../tools/text2motion_offline/echo_g/). Install it with `./install.sh text2motion`; see [text-to-motion](../../docs/TEXT2MOTION.md). Its outputs replay in the minimal input environment without loading generation models.

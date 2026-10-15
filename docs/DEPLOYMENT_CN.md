@@ -27,7 +27,6 @@ python3 tools/validation/verify_release.py
 ./install.sh planner   # .venv_planner：TensorRT Python planner
 ./install.sh sim2sim   # .venv_sim：MuJoCo + DDS，也可执行回放
 ./install.sh teleop    # .venv_teleop：PICO、姿态转换与运动学
-./install.sh text2motion # .venv_text2motion：可选 ECHO-G 离线生成器
 ```
 
 回放和仿真无需 PyTorch。遥操作使用 CPU PyTorch 完成姿态数学计算。
@@ -90,11 +89,9 @@ ps -C sonic_h2_runtime,nvidia-smi -o pid,stat,etime,wchan:40,args
 
 如果驱动持续阻塞，先保存其他工作，再安排重启主机。GPU reset 要求设备没有活跃客户端，且不保证能恢复已卡住的 GPU，参见 [NVIDIA 的恢复条件](https://docs.nvidia.com/deploy/nvidia-smi/index.html#r-gpu-reset)。恢复后，先确认 `nvidia-smi` 能正常返回，再重新启动三个终端。删除模型缓存不能解决驱动等待问题。
 
-## 动作回放与离线 text2motion
+## 动作回放
 
-需要语音与配套手势时，参见 [ECHO-G text2motion 指南](TEXT2MOTION_CN.md)：包含中英文示例、离线生成，以及通过 `interface.motion_replay` 同时播放动作与本机或 Unitree 扬声器音频。仓库内的语音动作示例只需安装 inputs 环境即可回放。
-
-统一使用 `interface.motion_replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ；离线 text2motion 结果也通过此入口发送。
+统一使用 `interface.motion_replay`，自动识别 **G1、H2、SMPL** 动作。输入可以是单个 CSV 动作目录或 NPZ。
 
 | `motions/` 下的目录 | 输入类型 | 数量 |
 |---|---|---:|
@@ -115,7 +112,7 @@ ps -C sonic_h2_runtime,nvidia-smi -o pid,stat,etime,wchan:40,args
 
 G1、H2 发送未来 `0.0, 0.1, …, 0.9` 秒的 10 帧；SMPL 发送 `0.00, 0.02, …, 0.18` 秒的 10 帧，以匹配模型输入。H2 读取原生 31 维文件，排除头部并重排为 29 维原生身体关节，不使用其附带的 G1 映射文件。SMPL 使用独立的 SMPL 根旋转、关节点及腕部角度。头部仍通过独立通道控制。
 
-CSV 文件、NPZ 字段与坐标约定见[动作格式说明](../motions/README.md)，发送协议见[架构文档](ARCHITECTURE_CN.md)。可选的 ECHO-G 生成进程独立运行，输出语音动作包，仍通过同一个 replay 入口播放。
+CSV 文件、NPZ 字段与坐标约定见[动作格式说明](../motions/README.md)，发送协议见[架构文档](ARCHITECTURE_CN.md)。
 
 ## Sim2Real
 

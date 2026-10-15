@@ -5,8 +5,7 @@
 ## 模块边界
 
 - `src/runtime/`：默认站立、参考采样、encoder / decoder 推理、指令仲裁和 H2 DDS 输出。启动不依赖动作文件或 planner。
-- `src/interface/motion_replay/`：识别离线 G1、原生 H2 和 SMPL 动作，包括已生成的 text2motion 结果，输出对应类型的 10 帧参考。
-- `tools/text2motion_offline/echo_g/cli.py`：使用独立 PyTorch 环境离线生成语音及 G1 手势，输出带校验值的标准回放包，不连接 runtime。通用 replay 调度身体参考与独立音频播放器，见 [text2motion](TEXT2MOTION_CN.md)。
+- `src/interface/motion_replay/`：识别离线 G1、原生 H2 和 SMPL 动作，输出对应类型的 10 帧参考。
 - `src/interface/planner/service.py`：Python planner 服务；`src/interface/planner/` 完成轨迹处理，`src/interface/planner/engine.py` 直接调用 TensorRT Python API，输出相同的稀疏 10 帧。
 - `src/interface/teleop/bridge.py`：把 PICO 跟踪数据转换为 SMPL / VR 身体参考，并独立发送头部与手部指令。可订阅 planner 的下肢参考。
 - `src/interface/commands/`：轻量 Python 发送接口，无机器人 SDK 或模型依赖。仅预留 64 维 token 输入，不包含 VLA 或 GR00T 实现。
@@ -39,7 +38,7 @@ runtime 用三秒过渡到配置站姿（`phase=initializing`），随后通过 
 
 ## 参考数据
 
-G1 回放、planner 和 G1 格式的离线 text2motion 统一发送 `joint_pos[10,29]`、`joint_vel[10,29]`、`root_quat[10,4]`，时间偏移为 0.0–0.9 秒，每 0.1 秒一帧。关节使用原生 G1 semantic 顺序，角度 rad、速度 rad/s，不在 runtime 内投影为 H2。
+G1 回放和 planner 统一发送 `joint_pos[10,29]`、`joint_vel[10,29]`、`root_quat[10,4]`，时间偏移为 0.0–0.9 秒，每 0.1 秒一帧。关节使用原生 G1 semantic 顺序，角度 rad、速度 rad/s，不在 runtime 内投影为 H2。
 
 H2 回放读取原生 31 维 MuJoCo 关节文件，排除头部并重排为 29 维原生身体策略顺序，发送 `h2` 类型。字段与时间间隔和 G1 一致，但使用原生 H2 物理角度，不能将两种输入混用；不进行 G1/H2 运动学投影。
 
