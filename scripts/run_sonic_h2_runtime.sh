@@ -32,7 +32,7 @@ source "$ROOT/scripts/setup_env.sh"
 if [[ "$MODE" == real ]]; then
   echo "H2 will move to its standing pose on $NETWORK_INTERFACE (DDS $DDS_DOMAIN)."
   echo "After [READY], press ] or s to enable policy. Press o to stop with damping."
-  read -r -p "Type RUN to start robot control: " RESPONSE
-  [[ "$RESPONSE" == RUN ]] || exit 1
+  read -r -p "Start robot control? [y/N]: " RESPONSE
+  [[ "$RESPONSE" == [yY] ]] || exit 1
 fi
 exec "${COMMAND[@]}"

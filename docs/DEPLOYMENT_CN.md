@@ -152,7 +152,7 @@ bash scripts/run_sonic_h2_runtime.sh real --print-command
 bash scripts/run_sonic_h2_runtime.sh real
 ```
 
-启动器显示目标网卡，输入 `RUN` 后开始控制，并自动过渡到配置的站姿。显示 **[READY]** 后，在 runtime 终端按 **]** 或 **s** 开启 policy；按 **o** 进入阻尼并锁定停止，恢复时需重启 runtime。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接机器人端 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
+启动器显示目标网卡，输入 `y`（也接受 `Y`）并回车后开始控制，并自动过渡到配置的站姿；直接回车或输入其他内容则取消。显示 **[READY]** 后，在 runtime 终端按 **]** 或 **s** 开启 policy；按 **o** 进入阻尼并锁定停止，恢复时需重启 runtime。回放等发送端仍在其他终端独立运行。`HAND_BACKEND=none` 禁用手部 DDS；`inspire` 对接机器人端 Inspire 服务；`dex3` 使用 Unitree Dex3。增益设置作用于初始化和 policy 控制，不改变退出时的阻尼。
 
 使用 Inspire 灵巧手时，先在 H2 PC2 部署仓库中的 `tools/robot_services/inspire_hands/` 服务。串口映射、开机自启动、看门狗和只读验收见[机器人端手部服务指南](INSPIRE_HANDS_CN.md)。该服务独立于身体 policy 运行。
 
