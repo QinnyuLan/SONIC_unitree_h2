@@ -66,4 +66,4 @@ These use the same coordinate and joint conventions as CSV.
 .venv_inputs/bin/python -m interface.motion_replay generated_motion.npz
 ```
 
-See [deployment](../docs/DEPLOYMENT.md#motion-replay) and [the command protocol](../docs/ARCHITECTURE.md). Loading, sampling and observation checks do not establish closed-loop tracking performance; validation scope is recorded in [Reproducibility](../docs/REPRODUCIBILITY.md).
+See [testing your own motions](../docs/DEPLOYMENT.md#how-to-test-your-own-motions) and [the command protocol](../docs/ARCHITECTURE.md). Loading, sampling and observation checks do not establish closed-loop tracking performance; validation scope is recorded in [Reproducibility](../docs/REPRODUCIBILITY.md).

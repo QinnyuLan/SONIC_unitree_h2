@@ -1,6 +1,7 @@
 # Documentation
 
 - [Deployment](DEPLOYMENT.md) / [中文部署指南](DEPLOYMENT_CN.md): Sim2Sim, Sim2Real, and VR launch commands.
+- [Sim2Real safety](SIM2REAL_SAFETY.md) / [实机风险与验证](SIM2REAL_SAFETY_CN.md): simulation-to-reality differences and staged hardware validation.
 - [Troubleshooting](TROUBLESHOOTING.md) / [中文故障排查](TROUBLESHOOTING_CN.md): environments, builds, GPU startup, connections and simulator issues.
 - [Runtime architecture and command protocol](ARCHITECTURE.md) / [中文](ARCHITECTURE_CN.md).
 - [Native dependencies](NATIVE_SETUP.md): CUDA, TensorRT, Python planner bindings, and the C++ build.

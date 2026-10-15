@@ -73,6 +73,15 @@ source scripts/setup_env.sh
 .venv_planner/bin/python -m interface.planner.service
 ```
 
+服务启动且 policy 已运行后，在另一终端发送请求：
+
+```bash
+.venv_inputs/bin/python -m interface.planner.client \
+  --mode 1 --speed 0.3 --movement 1 0 0
+```
+
+退出请求客户端后，runtime 返回站立。
+
 程序调用入口为 `interface.planner.motion.G1Planner`：`initialize(h2_joints)` 接收 31 维 H2 DDS 关节状态，`update(trajectory, cursor, command)` 生成后续轨迹。`Trajectory.sparse(cursor)` 输出与 replay 相同的 G1 稀疏参考。指令字段和端口见 [架构文档](ARCHITECTURE_CN.md)。
 
 运行实际模型与通信集成检查：

@@ -6,9 +6,9 @@ Run all commands from the repository root. For simulation, use three terminals: 
 
 - [Prepare the environment](#prepare-the-environment)
 - [Sim2Sim: motion replay or keyboard planner](#sim2sim)
-- [Sim2Real: staged validation and operation](#sim2real)
-- [Replay a specific motion](#motion-replay)
-- [Planner setup and programmatic control](#planner)
+- [How to test your own motions](#how-to-test-your-own-motions)
+- [Planner](#planner)
+- [Sim2Real: hardware startup](#sim2real)
 - [VR teleoperation](#vr-teleoperation)
 - [Independent head and hand commands](#independent-head-and-hand-commands)
 
@@ -57,7 +57,7 @@ PD waiting only positions the joints; policy balance control starts at step 2. T
 
 ### Terminal 3: choose one input
 
-**Motion replay**
+#### Motion replay
 
 ```bash
 .venv_inputs/bin/python -m interface.motion_replay --keyboard
@@ -75,9 +75,38 @@ PD waiting only positions the joints; policy balance control starts at step 2. T
 
 Pause, completion and exit release the body input, so the policy returns to standing. See [the interface guide](../src/interface/README.md#keyboard-playback) for looping and additional controls.
 
-**Keyboard planner**
+##### How to test your own motions
 
-Complete [planner setup](#planner) first. Exit replay, then run:
+Export a G1, native H2 or SMPL motion as a CSV clip directory or NPZ file following the [motion format specification](../motions/README.md). Replace the path below with your file or clip directory and inspect it first:
+
+```bash
+MOTION=/absolute/path/to/your_motion.npz
+.venv_inputs/bin/python -m interface.motion_replay "$MOTION" --inspect
+```
+
+`--inspect` checks the data without connecting to the runtime. Once inspection passes, keep the simulator and policy running in terminals 1 and 2 and confirm stable standing. Exit any keyboard replay or planner process, then run in terminal 3:
+
+```bash
+.venv_inputs/bin/python -m interface.motion_replay "$MOTION"
+```
+
+This starts playback immediately. Completion or **Ctrl+C** releases the body input and returns the policy to standing. Check tracking in simulation before attempting the motion on hardware.
+
+Use `--speed` to change playback speed, `--fps` to override the source frame rate, and `--type g1|h2|smpl` for data without unambiguous type metadata. Use `--loop` only for motions with continuous boundaries. Joint ordering, units and required fields are defined in the [motion format specification](../motions/README.md).
+
+#### Planner
+
+Install and download the planner once before its first use:
+
+```bash
+uv venv .venv_download --python 3.10
+uv pip install --python .venv_download/bin/python -r requirements/download.txt
+.venv_download/bin/python tools/model_download/download_planner.py
+./install.sh planner
+python3 tools/validation/verify_release.py --require-planner
+```
+
+The model is stored at `models/motion_planner_g1/planner_sonic.onnx`. Keep terminals 1 and 2 running, exit replay, then start the planner in terminal 3:
 
 ```bash
 bash scripts/run_planner.sh --keyboard
@@ -94,7 +123,7 @@ bash scripts/run_planner.sh --keyboard
 | Space or `x` | Clear requests and return to standing |
 | Esc / Ctrl+C | Exit the panel and planner worker |
 
-Wait for both planner and runtime readiness before using movement keys. Mode and speed selection alone do not start a stopped planner. Begin with slow walking and a low speed. See [all planner controls](../src/interface/README.md#planner-keyboard-control).
+Wait for both planner and runtime readiness before using movement keys. Mode and speed selection alone do not start a stopped planner. Begin with slow walking and a low speed. See [all planner controls](../src/interface/README.md#planner-keyboard-control). Download details and programmatic requests are in the [planner guide](PLANNER.md).
 
 ### Switch inputs or finish the session
 
@@ -111,103 +140,21 @@ Damping does not maintain balance; stopping the runtime without support can caus
 
 ## Sim2Real
 
-### Risks and staged validation
+Before using hardware, read the [risk and staged-validation requirements](SIM2REAL_SAFETY.md). No simulator is needed on the hardware control host.
 
-> [!WARNING]
-> Real-robot testing can cause falls, collisions, equipment damage and injury. Before attempting any motion on hardware, verify stable tracking of that motion in simulation with the intended policy, reference motion and control settings. Successful simulation is a prerequisite, not a guarantee of stable hardware behavior.
-
-Unitree H2 can exhibit a substantial simulation-to-reality gap. Pay particular attention to damping and mechanical backlash in the linkage-driven joints, especially the ankles, as well as IMU calibration and joint zero-position offsets. These differences can affect posture estimation and joint targets, alter the robot's posture and center-of-mass position, and reduce its balance margin.
-
-Validate on hardware in the following order, advancing only after the current stage is consistently stable:
-
-1. **Default standing:** establish stable balance in the default pose before sending motion commands.
-2. **Low-difficulty motions:** verify stable tracking of slow motions with small amplitudes and limited balance demands.
-3. **Progressively harder motions:** increase motion speed, amplitude and coordination demands gradually, confirming stable tracking at each step.
-
-If standing or tracking becomes unstable, stop the test and resolve the mechanical, calibration or control issue before progressing. Passing a simpler motion does not validate a more demanding one; each candidate motion must first pass simulation.
-
-### Before testing highly dynamic motions
-
-- Reduce and characterize the remaining simulation-to-reality mismatch as far as practicable. Check linkage damping and backlash, particularly at the ankles, and verify IMU and joint zero-position calibration. Do not proceed with unresolved mechanical looseness or calibration errors.
-- Use a clear, controlled test area with suitable footing and sufficient space for the full motion and a possible fall. Keep people outside the motion and fall zone, and have appropriate robot support and an accessible emergency stop ready.
-- Fully charge the robot battery before testing and confirm normal power-system status.
-- Remove dexterous hands and other fragile, nonessential attachments before testing. Disable their command backends; for the hands, set `HAND_BACKEND=none`. After removal, check that the simulation's mass and inertia settings represent the tested hardware, then repeat standing and low-difficulty validation.
-
-These conditions apply in addition to the staged validation above. Resolve any unmet condition before attempting highly dynamic motions.
-
-### 1. Configure hardware
-
-Edit [`config/h2_deploy.env`](../config/h2_deploy.env) before launching:
-
-| Setting | What to configure |
-|---|---|
-| `NETWORK_INTERFACE` | The workstation interface connected to H2 |
-| `DDS_DOMAIN` | The domain used by the robot |
-| `HAND_BACKEND` | `none`, `inspire` or `dex3` |
-| Joint gain scales | The ankle and knee scales for the tested hardware configuration |
-
-Gain scales apply during initialization and policy control. For Inspire hands, deploy the independent PC2 service using the [hand service guide](INSPIRE_HANDS.md), including serial mapping, autostart and watchdog configuration.
-
-### 2. Terminal 1: start the runtime
-
-Prepare robot support and an accessible emergency stop. Preview the command, then launch:
+1. Set the robot-facing `NETWORK_INTERFACE`, `DDS_DOMAIN`, `HAND_BACKEND` and joint gain scales in [`config/h2_deploy.env`](../config/h2_deploy.env). If using Inspire hands, deploy the [PC2 hand service](INSPIRE_HANDS.md) first.
+2. Prepare robot support and an accessible emergency stop. In **terminal 1**, preview the configuration, then launch:
 
 ```bash
 bash scripts/run_sonic_h2_runtime.sh real --print-command
 bash scripts/run_sonic_h2_runtime.sh real
 ```
 
-Check the printed network interface and DDS domain. Enter **y** and press Enter to start; an empty response or any other input cancels. The runtime moves the joints to the standing pose. Wait for **[READY]**, then press **]** or **s** in this terminal to enable policy control. Establish stable standing before sending motion.
+3. Check the printed interface and DDS domain. Enter **y** and press Enter to begin; an empty response or any other input cancels.
+4. Wait for **[READY]**, then press **]** or **s** in the runtime terminal to enable policy control.
+5. Once standing is stable, open **terminal 2** and use the [input commands above](#terminal-3-choose-one-input).
 
-### 3. Terminal 2: start the input
-
-Use either the [motion replay or keyboard planner command above](#terminal-3-choose-one-input). No simulator is needed. Follow the staged validation order for every new motion.
-
-To finish, stop and exit the input first, secure the robot with support, then press **o** in the runtime terminal. The runtime stops with damping and must be restarted before control can resume. This software stop does not replace the robot's emergency stop.
-
-## Motion replay
-
-For a specific clip, inspect it first, then replay it with the policy already running:
-
-```bash
-.venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_h2_replay/walking_quip_360_R_002__A428 --inspect
-.venv_inputs/bin/python -m interface.motion_replay \
-  motions/example_h2_replay/walking_quip_360_R_002__A428
-```
-
-`--inspect` validates files without connecting to the runtime. Replay accepts G1, native H2 and SMPL CSV directories or NPZ files. Use `--speed` to change playback speed, `--fps` to override the source frame rate, and `--type g1|h2|smpl` for external data without unambiguous type metadata. Use `--loop` only for clips with continuous boundaries.
-
-The four bundled collections and input fields are documented in [motion formats](../motions/README.md). Sparse sampling and transmitted fields are described in [the command protocol](ARCHITECTURE.md#body-data).
-
-## Planner
-
-Set up the planner once before using its keyboard or programmatic interface:
-
-```bash
-uv venv .venv_download --python 3.10
-uv pip install --python .venv_download/bin/python -r requirements/download.txt
-.venv_download/bin/python tools/model_download/download_planner.py
-./install.sh planner
-python3 tools/validation/verify_release.py --require-planner
-```
-
-The model is stored at `models/motion_planner_g1/planner_sonic.onnx`. Source and checksum details are in the [planner guide](PLANNER.md). For interactive operation, use terminal 3 in [Sim2Sim](#sim2sim).
-
-For programmatic control, start the service without the keyboard panel:
-
-```bash
-bash scripts/run_planner.sh
-```
-
-Then send requests from a separate terminal while the policy is running:
-
-```bash
-.venv_inputs/bin/python -m interface.planner.client \
-  --mode 1 --speed 0.3 --movement 1 0 0
-```
-
-Stop the request client to return to standing. See [the interface guide](../src/interface/README.md#planner-and-teleoperation) for service options.
+Press **o** to stop with damping; support the robot before stopping. Restart the runtime to resume control.
 
 ## VR teleoperation
 
